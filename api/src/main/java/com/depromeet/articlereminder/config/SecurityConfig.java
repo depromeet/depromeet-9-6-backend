@@ -13,6 +13,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login().userInfoEndpoint().userService(kakaoOAuth2UserService);
+        http.authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/h2-console/**").permitAll();
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+        http
+                .oauth2Login().userInfoEndpoint().userService(kakaoOAuth2UserService)
+                .and()
+                .defaultSuccessUrl("/swagger-ui.html")
+                .failureUrl("/loginFailure");
     }
 }
