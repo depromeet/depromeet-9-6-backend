@@ -1,4 +1,4 @@
-# depromeet-9-6-backend(article-reminder?)
+# depromeet-9-6-backend(article-reminder)
 - 디프만 9기 6조 백엔드 https://www.notion.so/depromeet/6-7508bdb9345c45a4a6836e446f35a7a9 
 - 아이디어 회의 https://www.notion.so/depromeet/3-27-12320b2b806849d8a00d99240e5472d9
 - 기술스택 회의 https://www.notion.so/depromeet/Backend-7bd3b3b7934c47c8b8373d4c92bc2aa6
