@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
@@ -29,6 +30,11 @@ public class MemberController {
 
         memberService.join(member);
         return "redirect:/";
+    }
+
+    @PostMapping("/members/login")
+    public String login(){
+        return null;
     }
 
 }

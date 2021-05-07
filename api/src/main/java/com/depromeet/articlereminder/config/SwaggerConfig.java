@@ -15,7 +15,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
     @Bean
     public Docket swaggerApi() {
-        return new Docket(DocumentationType.SWAGGER_2).apiInfo(swaggerInfo()).select()
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(swaggerInfo())
+                .select()
                 .apis(RequestHandlerSelectors.basePackage("com.depromeet.articlereminder"))
                 .paths(PathSelectors.any())
                 .build()

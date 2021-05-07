@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Date;
 
 @Entity
 @Setter
@@ -16,9 +17,10 @@ public class Member {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-
-    private String name;
-
     private String email;
+    private String name;
+    private String token;
+    private Date tokenStartTime;
+    private Date tokenExpiredTime;
 
 }
