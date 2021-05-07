@@ -2,10 +2,7 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.domain.Hashtag;
 import com.depromeet.articlereminder.domain.Link;
-import com.depromeet.articlereminder.dto.HashtagDTO;
-import com.depromeet.articlereminder.dto.LinkAlarmDTO;
-import com.depromeet.articlereminder.dto.LinkDTO;
-import com.depromeet.articlereminder.dto.LinkResponse;
+import com.depromeet.articlereminder.dto.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Response;
@@ -15,18 +12,22 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 
+import java.io.PushbackReader;
 import java.time.LocalDateTime;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Api(tags = {"links"})
 @RestController
 @RequestMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LinkController {
 
-    @ApiOperation("사용자가 저장한 링크 리스트를 가져옵니다.")
+    @ApiOperation("사용자가 저장한 링크 리스트를 가져옵니다. - 다 읽은 링크만을 조회하고 싶다면 completed 파라미터를 T로 주시면 됩니다.")
     @GetMapping("")
     public ResponseEntity<Page<LinkResponse>> getLinks(@RequestParam(required = true) Long userId,
+                                                       @RequestParam(required = false, defaultValue = "F") String completed,
                                                        @RequestParam(required = false, defaultValue = "0") int pageNumber,
                                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
 
@@ -61,8 +62,8 @@ public class LinkController {
                 .build();
 
 
-        List<HashtagDTO> hashtags = List.of(hashtagDTO1, hashtagDTO2, hashtagDTO3);
-        List<HashtagDTO> hashtags2 = List.of(hashtagDTO1, hashtagDTO4, hashtagDTO5);
+        List<HashtagDTO> hashtags = Stream.of(hashtagDTO1, hashtagDTO2, hashtagDTO3).collect(Collectors.toList());
+        List<HashtagDTO> hashtags2 = Stream.of(hashtagDTO1, hashtagDTO4, hashtagDTO5).collect(Collectors.toList());
 
         LinkResponse linkDTO1 = LinkResponse.builder()
                 .linkId(1L)
@@ -86,7 +87,7 @@ public class LinkController {
                 .completedAt(null)
                 .build();
 
-        List<LinkResponse> links = List.of(linkDTO1, linkDTO2);
+        List<LinkResponse> links = Stream.of(linkDTO1, linkDTO2).collect(Collectors.toList());
         Page<LinkResponse> page = new PageImpl<>(links);
         return ResponseEntity.ok(page);
     }
@@ -95,6 +96,15 @@ public class LinkController {
     @PostMapping("")
     public ResponseEntity<Void> postLink(@RequestParam(required = true) Long userId,
                                          @RequestBody LinkDTO linkDTO) {
+
+
+//        LinkResponse newLink = LinkResponse.builder()
+//                                        .linkId(3L)
+//                                        .userId(userId)
+//                                        .linkURL(linkDTO.getLinkURL())
+//                                        .isRead(false)
+//                                        .hasReminder(false)
+//                                        .hashtags()
         return ResponseEntity.ok().build();
     }
 
@@ -120,7 +130,7 @@ public class LinkController {
                 .createdAt(LocalDateTime.now().minusDays(20L))
                 .build();
 
-        List<HashtagDTO> hashtags2 = List.of(hashtagDTO1, hashtagDTO4, hashtagDTO5);
+        List<HashtagDTO> hashtags2 = Stream.of(hashtagDTO1, hashtagDTO4, hashtagDTO5).collect(Collectors.toList());
         LinkResponse linkDTO2 = LinkResponse.builder()
                 .linkId(2L)
                 .userId(1L)
@@ -145,25 +155,32 @@ public class LinkController {
 
     @ApiOperation("특정 링크에 대해 삭제합니다. - 링크 id 필요")
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> putLink(@PathVariable Long id,
+    public ResponseEntity<Void> deleteLink(@PathVariable Long id,
                                         @RequestParam(required = true) Long userId) {
         return ResponseEntity.ok().build();
     }
 
     @ApiOperation("특정 링크에 대해 읽음 완료 표시를 합니다. - 링크 id 필요")
-    @PostMapping("{id}/read")
-    public ResponseEntity<Void> postLinkCompletion(@PathVariable Long id,
+    @PatchMapping("{id}")
+    public ResponseEntity<Void> patchLink(@PathVariable Long id,
                                                    @RequestParam(required = true) Long userId) {
         return ResponseEntity.ok().build();
     }
 
-//    @ApiOperation("특정 링크에 존재하는 개별 알람을 조회합니다 - 링크 id 필요")
-//    @GetMapping("{id}/alarm")
-//    public ResponseEntity<LinkAlarmResponse> postLinkAlarm(@PathVariable Long id,
-//                                              @RequestParam(required = true) Long userId,
-//                                              @RequestBody LinkAlarmDTO linkAlarmDTO) {
-//        return ResponseEntity.ok().build();
-//    }
+    @ApiOperation("특정 링크에 존재하는 개별 알람을 조회합니다 - 링크 id 필요")
+    @GetMapping("{id}/alarm")
+    public ResponseEntity<LinkAlarmResponse> getLinkAlarm(@PathVariable Long id,
+                                                           @RequestParam(required = true) Long userId) {
+
+        LinkAlarmResponse linkAlarm = LinkAlarmResponse.builder()
+                                        .linkId(1L)
+                                        .alarmId(1L)
+                                        .notifyTime(LocalDateTime.now().plusDays(2L))
+                                        .isEnabled(true)
+                                        .createdAt(LocalDateTime.now().minusDays(3L))
+                                        .build();
+        return ResponseEntity.ok(linkAlarm);
+    }
 
     @ApiOperation("특정 링크에 개별 알람을 추가합니다 - 링크 id 필요")
     @PostMapping("{id}/alarm")
@@ -172,5 +189,21 @@ public class LinkController {
                                               @RequestBody LinkAlarmDTO linkAlarmDTO) {
         return ResponseEntity.ok().build();
     }
+
+    @ApiOperation("특정 링크에 존재하는 개별 알람을 수정합니다 - 링크 id 필요")
+    @PutMapping("{id}/alarm")
+    public ResponseEntity<Void> putLinkAlarm(@PathVariable Long id,
+                                             @RequestParam(required = true) Long userId,
+                                             @RequestBody LinkAlarmDTO linkAlarmDTO) {
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation("특정 링크에 존재하는 개별 알람을 삭제합니다 - 링크 id 필요")
+    @DeleteMapping("{id}/alarm")
+    public ResponseEntity<Void> deleteLinkAlarm(@PathVariable Long id,
+                                                @RequestParam(required = true) Long userId) {
+        return ResponseEntity.ok().build();
+    }
+
 
 }

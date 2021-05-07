@@ -1,20 +1,22 @@
 package com.depromeet.articlereminder.dto;
 
+import com.depromeet.articlereminder.domain.RepeatedDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class LinkAlarmResponse {
-    private Long linkId; // 링크 id
-    private Long alarmId; // 개별 알람 id
+public class AlarmResponse {
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm")
-    private LocalDateTime notifyTime; // 알람 시각
+    private Long alarmId; // 알람 id
+    private Long userId; // 사용자 id
+
+    private String notifyTime; // 알람 시각
+
+    private RepeatedDate repeatedDate; // 반복 요일 (매일 / 공휴일 제외 매일 / 평일 / 공휴일 제외 평일 / 주말 / 공휴일 제외 주말
 
     private boolean isEnabled; // 활성화 여부
 
