@@ -1,8 +1,11 @@
 package com.depromeet.articlereminder.domain;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
 public enum RepeatedDate {
-    EVERYDAYS,
-    EVERYDAYS_EXCEPT_HOLIDAYS,
+    EVERYDAY,
+    EVERYDAY_EXCEPT_HOLIDAYS,
     WEEKDAYS,
     WEEKDAYS_EXCEPT_HOLIDAYS,
     WEEKENDS,
