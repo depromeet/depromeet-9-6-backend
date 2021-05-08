@@ -104,9 +104,24 @@ public class LinkController {
     @ApiOperation("새로운 링크를 등록(추가)합니다. 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @PostMapping("")
-    public ResponseEntity<String> postLink(@RequestParam(required = true) Long userId,
+    public ResponseEntity<LinkResponse> postLink(@RequestParam(required = true) Long userId,
                                          @RequestBody LinkDTO linkDTO) {
-        return new ResponseEntity<>("링크 등록에 성공했습니다.", HttpStatus.OK);
+        List<HashtagDTO> hashtags = linkDTO.getHashtags()
+                .stream()
+                .map(item -> HashtagDTO.builder().hashtagId(1L).hashtagName(item.toString()).createdAt(LocalDateTime.now()).build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(
+                LinkResponse.builder()
+                            .linkId(10L)
+                            .userId(userId)
+                            .linkURL(linkDTO.getLinkURL())
+                            .hasReminder(false)
+                            .isCompleted(false)
+                            .completedAt(null)
+                            .createdAt(LocalDateTime.now())
+                            .build()
+        );
     }
 
     @ApiOperation("특정 링크에 대해 상세 조회를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
