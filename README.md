@@ -40,7 +40,7 @@ http://localhost:8080/h2-console/
 
 Swagger
 ---
-http://localhost:8080/swagger-ui.html
+http://ec2-3-35-234-167.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui.html
 
 UML
 ---
