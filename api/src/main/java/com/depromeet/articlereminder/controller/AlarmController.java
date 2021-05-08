@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 @Api(tags = {"alarms"})
 @RestController
-@RequestMapping(value = "/alarms", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/alarms", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AlarmController {
 
     @ApiOperation("어플 알람 리스트를 가져옵니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")

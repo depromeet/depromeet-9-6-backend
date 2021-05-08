@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 @Api(tags = {"ranking"})
 @RestController
-@RequestMapping(value = "/ranking", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/ranking", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RankingController {
 
     @ApiOperation("랭킹 TOP 10을 조회합니다. 인증이 필요한 요청입니다. 순위별 오름차순으로 정렬")

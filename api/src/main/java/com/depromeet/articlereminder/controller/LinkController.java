@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 @Api(tags = {"links"})
 @RestController
-@RequestMapping(value = "/links", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/v1/links", produces = MediaType.APPLICATION_JSON_VALUE)
 public class LinkController {
 
     @ApiOperation("사용자가 저장한 링크 리스트를 가져옵니다. - 다 읽은 링크만을 조회하고 싶다면 completed 파라미터를 T로 주시면 됩니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
