@@ -14,9 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -27,11 +25,12 @@ import java.util.stream.Stream;
 @Api(tags = {"members"})
 @Controller
 @RequiredArgsConstructor
+@RequestMapping(value = "/v1/members")
 public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/members/new")
+    @PostMapping("/new")
     public String create(@Valid MemberForm form, BindingResult result) {
         if (result.hasErrors()) {
             return "members/createMemberForm";
@@ -45,15 +44,15 @@ public class MemberController {
         return "redirect:/";
     }
 
-    @PostMapping("/members/login")
+    @PostMapping("login")
     public String login(){
         return null;
     }
 
     @ApiOperation("사용자의 정보를(마이페이지를) 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("/mypage/{id}")
-    public ResponseEntity<UserMyPageResponse> getUserInfo() {
+    @GetMapping("mypage/{id}")
+    public ResponseEntity<UserMyPageResponse> getUserInfo(@PathVariable Long id) {
         BadgeResponse badge = BadgeResponse.builder()
                 .badgeId(1L)
                 .badgeName("0~5000 포인트 뱃지")
@@ -61,6 +60,7 @@ public class MemberController {
                 .category(BadgeCategory.POINT)
                 .conditions("포인트가 5000점 이하인 경우 획득")
                 .createdAt(LocalDateTime.now())
+                .userId(1L)
                 .build();
 
         UserMyPageResponse myPageResponse = UserMyPageResponse.builder()
@@ -78,8 +78,9 @@ public class MemberController {
 
     @ApiOperation("사용자의 뱃지 히스토리를 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("/mypage/{id}/badges")
-    public ResponseEntity<Page<BadgeResponse>> getUserBadges(@RequestParam(required = false, defaultValue = "0") int pageNumber,
+    @GetMapping("mypage/{id}/badges")
+    public ResponseEntity<Page<BadgeResponse>> getUserBadges(@PathVariable Long id,
+                                                             @RequestParam(required = false, defaultValue = "0") int pageNumber,
                                                              @RequestParam(required = false, defaultValue = "12") int pageSize) {
         BadgeResponse badge1 = BadgeResponse.builder()
                 .badgeId(1L)
@@ -89,6 +90,7 @@ public class MemberController {
                 .category(BadgeCategory.POINT)
                 .conditions("포인트가 5000점 이하인 경우 획득")
                 .createdAt(LocalDateTime.now())
+                .userId(1L)
                 .build();
 
         BadgeResponse badge2 = BadgeResponse.builder()
@@ -99,6 +101,7 @@ public class MemberController {
                 .category(BadgeCategory.POINT)
                 .conditions("포인트가 5001~10000점인 경우 획득")
                 .createdAt(LocalDateTime.now())
+                .userId(1L)
                 .build();
 
         BadgeResponse badge3 = BadgeResponse.builder()
@@ -109,6 +112,7 @@ public class MemberController {
                 .category(BadgeCategory.SEASON)
                 .conditions("2021년 4월 시즌 뱃지 획득")
                 .createdAt(LocalDateTime.now())
+                .userId(1L)
                 .build();
 
         List<BadgeResponse> badges = Stream.of(badge1, badge2, badge3).collect(Collectors.toList());
