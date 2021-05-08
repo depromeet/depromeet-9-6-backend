@@ -45,6 +45,11 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @PostMapping("/members/login")
+    public String login(){
+        return null;
+    }
+
     @ApiOperation("사용자의 정보를(마이페이지를) 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("/mypage/{id}")
