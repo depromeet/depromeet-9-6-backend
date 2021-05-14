@@ -14,16 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,35 +34,23 @@ public class MemberController {
 
     private final MemberService memberService;
 
-
-    @GetMapping("/members/kakaoLogin")
+    @GetMapping("kakaoLogin")
     public String kakaoMemberCreate() {
         return "redirect:/oauth2/authorization/kakao";
     }
 
     @LoginCheck(type = LoginCheck.UserType.USER)
-    @GetMapping("/members/info")
-    public ResponseEntity<Member> memberInfo(String email, HttpSession session) {
+    @GetMapping("members/info")
+    public ResponseEntity<Member> memberInfo(@RequestParam(required = false) String email) {
         Member memberInfo = memberService.findOneByEmail(email);
         return new ResponseEntity<Member>(memberInfo, HttpStatus.OK);
-    @PostMapping("/new")
-    public String create(@Valid MemberForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "members/createMemberForm";
-        }
-
-        Member member = new Member();
-        member.setName(form.getName());
-        member.setEmail(form.getEmail());
-
-        memberService.join(member);
-        return "redirect:/";
     }
 
+    @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 정보를(마이페이지를) 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("mypage/{id}")
-    public ResponseEntity<UserMyPageResponse> getUserInfo(@PathVariable Long id) {
+    @GetMapping("mypage/info")
+    public ResponseEntity<UserMyPageResponse> userPageInfo(@RequestParam(required = false)String email) {
         BadgeResponse badge = BadgeResponse.builder()
                 .badgeId(1L)
                 .badgeName("0~5000 포인트 뱃지")
@@ -89,12 +74,13 @@ public class MemberController {
         return ResponseEntity.ok(myPageResponse);
     }
 
+    @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 뱃지 히스토리를 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("mypage/{id}/badges")
-    public ResponseEntity<Page<BadgeResponse>> getUserBadges(@PathVariable Long id,
-                                                             @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                                             @RequestParam(required = false, defaultValue = "12") int pageSize) {
+    @GetMapping("mypage/badges")
+    public ResponseEntity<Page<BadgeResponse>> userBadges(@RequestParam(required = false) String email,
+                                                          @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                          @RequestParam(required = false, defaultValue = "12") int pageSize) {
         BadgeResponse badge1 = BadgeResponse.builder()
                 .badgeId(1L)
                 .userId(1L)
