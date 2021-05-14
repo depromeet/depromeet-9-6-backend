@@ -2,15 +2,20 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.RepeatedDate;
+import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.dto.AlarmDTO;
 import com.depromeet.articlereminder.dto.AlarmResponse;
+import com.depromeet.articlereminder.service.AlarmService;
+import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,7 +23,10 @@ import java.util.stream.Stream;
 @Api(tags = {"alarms"})
 @RestController
 @RequestMapping(value = "/v1/alarms", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AlarmController {
+
+    private final AlarmService alarmService;
 
     @ApiOperation("어플 알람 리스트를 가져옵니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
@@ -63,7 +71,11 @@ public class AlarmController {
     public ResponseEntity<String> postAlarm(@RequestParam(required = false) String email,
                                             @RequestParam(required = true) Long userId,
                                             @RequestBody AlarmDTO alarmDTO) {
-
+        Alarm alarm = new Alarm();
+        alarm.setUserEmail(email);
+        alarm.setCreateTime(new Date());
+        alarm.setNotifyTime(null);
+        alarmService.saveAlarm(alarm);
         return new ResponseEntity<>("알람 등록에 성공했습니다.", HttpStatus.OK);
     }
 
