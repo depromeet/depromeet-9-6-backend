@@ -34,4 +34,39 @@ public class MemberService {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
     }
+
+    /**
+     * 회원 전체 조회
+     *
+     * @return
+     */
+    public List<Member> findMembers() {
+        return memberRepository.findAll();
+    }
+
+    /**
+     * 회원 조회
+     *
+     * @return
+     */
+    public Member findOne(Long memberId) {
+        return memberRepository.findById(memberId).get();
+    }
+
+    public Member findOneByEmail(String email) {
+        return (Member) memberRepository.findByEmail(email);
+    }
+
+
+    /**
+     * 회원 변경
+     *
+     * @param id
+     * @param name
+     */
+    @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
+    public void update(Long id, String name) {
+        Member member = memberRepository.findById(id).get();
+        member.setName(name);
+    }
 }
