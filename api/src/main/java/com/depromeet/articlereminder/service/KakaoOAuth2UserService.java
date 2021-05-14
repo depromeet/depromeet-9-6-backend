@@ -2,6 +2,7 @@ package com.depromeet.articlereminder.service;
 
 import com.depromeet.articlereminder.domain.Member;
 import com.depromeet.articlereminder.repository.MemberRepository;
+import com.depromeet.articlereminder.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,14 +41,19 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         member.setName(attributes3.get("nickname").toString());
         member.setEmail(attributes2.get("email").toString());
         member.setToken(userRequest.getAccessToken().getTokenValue());
+
+        // default ExpriedTIME: 현재시간 + 6시간
         member.setTokenExpiredTime(Date.from(userRequest.getAccessToken().getExpiresAt()));
         member.setTokenStartTime(Date.from(userRequest.getAccessToken().getIssuedAt()));
         memberService.validateDuplicateMember(member);
         memberRepository.save(member);
 
-        log.info("accesstoekn :: " + userRequest.getAccessToken().getTokenValue());
-        log.info("attributes :: " + attributes);
-        httpSession.setAttribute("login_info", attributes);
+        log.debug("accesstoekn :: " + userRequest.getAccessToken().getTokenValue());
+        log.debug("attributes :: " + attributes);
+
+        SessionUtil.setLoginMemberId(httpSession,member.getEmail());
+        SessionUtil.setTokenExpiredTime(httpSession,member.getTokenExpiredTime());
+        SessionUtil.setToken(httpSession,member.getToken());
 
         return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
     }

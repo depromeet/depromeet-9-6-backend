@@ -1,15 +1,16 @@
 package com.depromeet.articlereminder.controller;
 
+import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.Member;
 import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import javax.servlet.http.HttpSession;
 
-import javax.validation.Valid;
 
 @Api(tags = {"members"})
 @Controller
@@ -18,23 +19,16 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/members/new")
-    public String create(@Valid MemberForm form, BindingResult result) {
-        if (result.hasErrors()) {
-            return "members/createMemberForm";
-        }
-
-        Member member = new Member();
-        member.setName(form.getName());
-        member.setEmail(form.getEmail());
-
-        memberService.join(member);
-        return "redirect:/";
+    @GetMapping("/members/kakaoLogin")
+    public String kakaoMemberCreate() {
+        return "redirect:/oauth2/authorization/kakao";
     }
 
-    @PostMapping("/members/login")
-    public String login(){
-        return null;
+    @LoginCheck(type = LoginCheck.UserType.USER)
+    @GetMapping("/members/info")
+    public ResponseEntity<Member> memberInfo(String email, HttpSession session) {
+        Member memberInfo = memberService.findOneByEmail(email);
+        return new ResponseEntity<Member>(memberInfo, HttpStatus.OK);
     }
 
 }

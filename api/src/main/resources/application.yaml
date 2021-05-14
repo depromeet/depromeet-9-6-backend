@@ -23,7 +23,7 @@ spring:
           kakao:
             authorization-grant-type: authorization_code
             client-id: 87dca4c9e15f3cc8166d1c49a7ca875a
-            client-secret: QVaDi50QdTWmullKlz4r64rwMmxv8Tuj
+            client-secret: NlIN72TRlekVrqoTtFd875bvSFceP5W4
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope:
               - profile
