@@ -126,8 +126,8 @@ public class LinkController {
 
     @ApiOperation("특정 링크에 대해 상세 조회를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{id}")
-    public ResponseEntity<LinkResponse> getLink(@PathVariable Long id,
+    @GetMapping("{linkId}")
+    public ResponseEntity<LinkResponse> getLink(@PathVariable Long linkId,
                                                 @RequestParam(required = true) Long userId) {
         HashtagDTO hashtagDTO1 = HashtagDTO.builder()
                 .hashtagId(1L)
@@ -171,8 +171,8 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PutMapping("{id}")
-    public ResponseEntity<LinkResponse> putLink(@PathVariable Long id,
+    @PutMapping("{linkId}")
+    public ResponseEntity<LinkResponse> putLink(@PathVariable Long linkId,
                                         @RequestParam(required = true) Long userId,
                                         @RequestBody LinkDTO linkDTO) {
         List<HashtagDTO> hashtags = linkDTO.getHashtags()
@@ -182,7 +182,7 @@ public class LinkController {
 
         return ResponseEntity.ok(
                 LinkResponse.builder()
-                .linkId(id)
+                .linkId(linkId)
                 .userId(userId)
                 .linkURL(linkDTO.getLinkURL())
                 .hashtags(hashtags)
@@ -202,8 +202,8 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteLink(@PathVariable Long id,
+    @DeleteMapping("{linkId}")
+    public ResponseEntity<Object> deleteLink(@PathVariable Long linkId,
                                         @RequestParam(required = true) Long userId) {
         return ResponseEntity.noContent().build();
     }
@@ -216,8 +216,8 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PatchMapping("{id}")
-    public ResponseEntity<LinkResponse> patchLink(@PathVariable Long id,
+    @PatchMapping("{linkId}")
+    public ResponseEntity<LinkResponse> patchLink(@PathVariable Long linkId,
                                           @RequestParam(required = true) Long userId,
 
                                           @ApiParam(name = "completed",
@@ -261,8 +261,8 @@ public class LinkController {
 
     @ApiOperation("특정 링크에 존재하는 개별 알람을 조회합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{id}/alarm")
-    public ResponseEntity<LinkAlarmResponse> getLinkAlarm(@PathVariable Long id,
+    @GetMapping("{linkId}/alarm")
+    public ResponseEntity<LinkAlarmResponse> getLinkAlarm(@PathVariable Long linkId,
                                                            @RequestParam(required = true) Long userId) {
 
         LinkAlarmResponse linkAlarm = LinkAlarmResponse.builder()
@@ -283,8 +283,8 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PostMapping("{id}/alarm")
-    public ResponseEntity<String> postLinkAlarm(@PathVariable Long id,
+    @PostMapping("{linkId}/alarm")
+    public ResponseEntity<String> postLinkAlarm(@PathVariable Long linkId,
                                               @RequestParam(required = true) Long userId,
                                               @RequestBody LinkAlarmDTO linkAlarmDTO) {
         return new ResponseEntity<>("개별 링크 알람 등록에 성공했습니다.", HttpStatus.OK);
@@ -298,13 +298,13 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PutMapping("{id}/alarm")
-    public ResponseEntity<LinkAlarmResponse> putLinkAlarm(@PathVariable Long id,
+    @PutMapping("{linkId}/alarm")
+    public ResponseEntity<LinkAlarmResponse> putLinkAlarm(@PathVariable Long linkId,
                                              @RequestParam(required = true) Long userId,
                                              @RequestBody LinkAlarmDTO linkAlarmDTO) {
         return ResponseEntity.ok(
                 LinkAlarmResponse.builder()
-                .linkId(id)
+                .linkId(linkId)
                 .alarmId(1L)
                 .notifyTime(linkAlarmDTO.getNotifiyTime())
                 .isEnabled(true)
@@ -321,8 +321,8 @@ public class LinkController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @DeleteMapping("{id}/alarm")
-    public ResponseEntity<Object> deleteLinkAlarm(@PathVariable Long id,
+    @DeleteMapping("{linkId}/alarm")
+    public ResponseEntity<Object> deleteLinkAlarm(@PathVariable Long linkId,
                                                 @RequestParam(required = true) Long userId) {
         return ResponseEntity.noContent().build();
     }

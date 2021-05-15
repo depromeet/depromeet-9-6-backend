@@ -120,8 +120,8 @@ public class RankingController {
 
     @ApiOperation("특정 사용자의 랭킹을 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{id}")
-    public ResponseEntity<RankingResponse> getRanking(@PathVariable Long id) {
+    @GetMapping("{userId}")
+    public ResponseEntity<RankingResponse> getRanking(@PathVariable Long userId) {
         BadgeResponse pointBadge = BadgeResponse.builder()
                 .badgeId(1L)
                 .badgeName("0~500 포인트 뱃지")
