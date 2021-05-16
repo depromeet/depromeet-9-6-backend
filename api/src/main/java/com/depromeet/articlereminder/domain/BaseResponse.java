@@ -4,31 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
-@Setter
+@RequiredArgsConstructor
 @Getter
-@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 public class BaseResponse<T> {
 
-    @JsonInclude
-    @JsonProperty("status")
-    long status;
+    public static final BaseResponse<String> OK = new BaseResponse<>("", "", "OK");
 
-    @JsonProperty("comment")
-    String comment;
+    private final String status;
+    private final String comment;
+    private final T data;
 
-    @JsonProperty("data")
-    T data;
-
-    public BaseResponse(T t) {
-        data = t;
-    }
-
-    @JsonIgnoreType
-    public static class RESULT {
-        public static final long OK = 0;
+    public static <T> BaseResponse<T> of(T data) {
+        return new BaseResponse<>("", "", data);
     }
 }
