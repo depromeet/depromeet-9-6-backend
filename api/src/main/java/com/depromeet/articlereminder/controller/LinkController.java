@@ -79,7 +79,6 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@delight412/351")
                 .isCompleted(false)
-                .hasReminder(true)
                 .hashtags(hashtags)
                 .createdAt(LocalDateTime.now().minusDays(3L))
                 .completedAt(null)
@@ -90,7 +89,6 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(false)
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(null)
@@ -116,7 +114,6 @@ public class LinkController {
                             .linkId(10L)
                             .userId(userId)
                             .linkURL(linkDTO.getLinkURL())
-                            .hasReminder(false)
                             .isCompleted(false)
                             .completedAt(null)
                             .createdAt(LocalDateTime.now())
@@ -154,7 +151,6 @@ public class LinkController {
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(false)
                 .isCompleted(false)
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(null)
@@ -187,7 +183,6 @@ public class LinkController {
                 .linkURL(linkDTO.getLinkURL())
                 .hashtags(hashtags)
                 .isCompleted(false)
-                .hasReminder(false)
                 .completedAt(null)
                 .createdAt(LocalDateTime.now())
                 .build()
@@ -250,81 +245,12 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(completed.equals("T"))
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(LocalDateTime.now())
                 .build();
 
         return ResponseEntity.ok(linkDTO2);
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 조회합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{linkId}/alarm")
-    public ResponseEntity<LinkAlarmResponse> getLinkAlarm(@PathVariable Long linkId,
-                                                           @RequestParam(required = true) Long userId) {
-
-        LinkAlarmResponse linkAlarm = LinkAlarmResponse.builder()
-                                        .linkId(1L)
-                                        .alarmId(1L)
-                                        .notifyTime(LocalDateTime.now().plusDays(2L))
-                                        .isEnabled(true)
-                                        .createdAt(LocalDateTime.now().minusDays(3L))
-                                        .build();
-        return ResponseEntity.ok(linkAlarm);
-    }
-
-    @ApiOperation("특정 링크에 개별 알람을 등록(추가)합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PostMapping("{linkId}/alarm")
-    public ResponseEntity<String> postLinkAlarm(@PathVariable Long linkId,
-                                              @RequestParam(required = true) Long userId,
-                                              @RequestBody LinkAlarmDTO linkAlarmDTO) {
-        return new ResponseEntity<>("개별 링크 알람 등록에 성공했습니다.", HttpStatus.OK);
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 수정합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PutMapping("{linkId}/alarm")
-    public ResponseEntity<LinkAlarmResponse> putLinkAlarm(@PathVariable Long linkId,
-                                             @RequestParam(required = true) Long userId,
-                                             @RequestBody LinkAlarmDTO linkAlarmDTO) {
-        return ResponseEntity.ok(
-                LinkAlarmResponse.builder()
-                .linkId(linkId)
-                .alarmId(1L)
-                .notifyTime(linkAlarmDTO.getNotifiyTime())
-                .isEnabled(true)
-                .createdAt(LocalDateTime.now())
-                .build()
-        );
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 삭제합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @DeleteMapping("{linkId}/alarm")
-    public ResponseEntity<Object> deleteLinkAlarm(@PathVariable Long linkId,
-                                                @RequestParam(required = true) Long userId) {
-        return ResponseEntity.noContent().build();
     }
 
 
