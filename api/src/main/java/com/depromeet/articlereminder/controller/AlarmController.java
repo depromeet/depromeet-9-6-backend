@@ -106,7 +106,7 @@ public class AlarmController {
             @ApiResponse(code = 200, message = "Success"),
 //            @ApiResponse(code = 401, message = "Access token is not valid"),
 //            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-//            @ApiResponse(code = 500, message = "Server error")
+            @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
@@ -136,7 +136,7 @@ public class AlarmController {
             @ApiResponse(code = 200, message = "Success"),
 //            @ApiResponse(code = 401, message = "Access token is not valid"),
 //            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-//            @ApiResponse(code = 500, message = "Server error")
+            @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
