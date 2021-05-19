@@ -50,5 +50,11 @@ public class UserMyPageResponse {
             position = 4)
     private Long seasonCount; // 이번 시즌 읽은 개수
 
+    @ApiModelProperty(notes = "푸시 알림 활성화 여부",
+            example = "true",
+            required = true,
+            position = 5)
+    private boolean alarmEnabled; // 푸시 알림 활성화 여부
+
     private BadgeResponse badge; // 사용자의 포인트 뱃지
 }

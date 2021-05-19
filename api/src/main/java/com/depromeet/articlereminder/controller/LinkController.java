@@ -101,7 +101,7 @@ public class LinkController {
 
         List<LinkResponse> links = Stream.of(linkDTO2, linkDTO1).collect(Collectors.toList());
         Page<LinkResponse> page = new PageImpl<>(links);
-//        return ResponseEntity.ok(page);
+
         return BaseResponse.of("202", "사용자가 저장한 링크 리스트 조회에 성공했습니다.", page);
     }
 
