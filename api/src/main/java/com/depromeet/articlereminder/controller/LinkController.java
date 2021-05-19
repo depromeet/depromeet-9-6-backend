@@ -26,9 +26,13 @@ import java.util.stream.Stream;
 public class LinkController {
 
     @ApiOperation("사용자가 저장한 링크 리스트를 가져옵니다. - 다 읽은 링크만을 조회하고 싶다면 completed 파라미터를 T로 주시면 됩니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("")
-    public ResponseEntity<Page<LinkResponse>> getLinks(@RequestParam(required = true) Long userId,
+    public ResponseEntity<Page<LinkResponse>> getLinks(@RequestHeader(name = "Authorization") String authorization,
+                                                       @RequestHeader(name = "userId") Long userId,
 
                                                        @ApiParam(name = "completed",
                                                                type = "string",
@@ -100,9 +104,13 @@ public class LinkController {
     }
 
     @ApiOperation("새로운 링크를 등록(추가)합니다. 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PostMapping("")
-    public ResponseEntity<LinkResponse> postLink(@RequestParam(required = true) Long userId,
+    public ResponseEntity<LinkResponse> postLink(@RequestHeader(name = "Authorization") String authorization,
+                                                 @RequestHeader(name = "userId") Long userId,
                                          @RequestBody LinkDTO linkDTO) {
         List<HashtagDTO> hashtags = linkDTO.getHashtags()
                 .stream()
@@ -122,10 +130,14 @@ public class LinkController {
     }
 
     @ApiOperation("특정 링크에 대해 상세 조회를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("{linkId}")
-    public ResponseEntity<LinkResponse> getLink(@PathVariable Long linkId,
-                                                @RequestParam(required = true) Long userId) {
+    public ResponseEntity<LinkResponse> getLink(@RequestHeader(name = "Authorization") String authorization,
+                                                @RequestHeader(name = "userId") Long userId,
+                                                @PathVariable Long linkId) {
         HashtagDTO hashtagDTO1 = HashtagDTO.builder()
                 .hashtagId(1L)
                 .hashtagName("디자인")
@@ -166,10 +178,14 @@ public class LinkController {
             @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PutMapping("{linkId}")
-    public ResponseEntity<LinkResponse> putLink(@PathVariable Long linkId,
-                                        @RequestParam(required = true) Long userId,
+    public ResponseEntity<LinkResponse> putLink(@RequestHeader(name = "Authorization") String authorization,
+                                                @RequestHeader(name = "userId") Long userId,
+                                                @PathVariable Long linkId,
                                         @RequestBody LinkDTO linkDTO) {
         List<HashtagDTO> hashtags = linkDTO.getHashtags()
                 .stream()
@@ -196,10 +212,14 @@ public class LinkController {
             @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @DeleteMapping("{linkId}")
-    public ResponseEntity<Object> deleteLink(@PathVariable Long linkId,
-                                        @RequestParam(required = true) Long userId) {
+    public ResponseEntity<Object> deleteLink(@RequestHeader(name = "Authorization") String authorization,
+                                             @RequestHeader(name = "userId") Long userId,
+                                             @PathVariable Long linkId) {
         return ResponseEntity.noContent().build();
     }
 
@@ -210,10 +230,14 @@ public class LinkController {
             @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PatchMapping("{linkId}")
-    public ResponseEntity<LinkResponse> patchLink(@PathVariable Long linkId,
-                                          @RequestParam(required = true) Long userId,
+    public ResponseEntity<LinkResponse> patchLink(@RequestHeader(name = "Authorization") String authorization,
+                                                  @RequestHeader(name = "userId") Long userId,
+                                                  @PathVariable Long linkId,
 
                                           @ApiParam(name = "completed",
                                                    type = "string",

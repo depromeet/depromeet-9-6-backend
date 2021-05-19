@@ -20,9 +20,13 @@ import java.util.stream.Stream;
 public class AlarmController {
 
     @ApiOperation("어플 알람 리스트를 가져옵니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("")
-    public ResponseEntity<List<AlarmResponse>> getAlarms(@RequestParam(required = true) Long userId) {
+    public ResponseEntity<List<AlarmResponse>> getAlarms(@RequestHeader(name = "Authorization") String authorization,
+                                                         @RequestHeader(name = "userId") Long userId) {
         AlarmResponse alarmResponse1 = AlarmResponse.builder()
                                                     .alarmId(1L)
                                                     .userId(1L)
@@ -56,7 +60,10 @@ public class AlarmController {
     }
 
     @ApiOperation("어플 알람을 추가합니다. 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PostMapping("")
     public ResponseEntity<String> postAlarm(@RequestParam(required = true) Long userId,
                                           @RequestBody AlarmDTO alarmDTO) {
@@ -64,10 +71,14 @@ public class AlarmController {
     }
 
     @ApiOperation("특정한 어플 알람의 세부 내용을 조회합니다. - 어플 알람 id 필요, 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("{alarmId}")
-    public ResponseEntity<AlarmResponse> getAlarm(@PathVariable Long alarmId,
-                                                         @RequestParam(required = true) Long userId) {
+    public ResponseEntity<AlarmResponse> getAlarm(@RequestHeader(name = "Authorization") String authorization,
+                                                  @RequestHeader(name = "userId") Long userId,
+                                                  @PathVariable Long alarmId) {
         AlarmResponse alarmResponse3 = AlarmResponse.builder()
                 .alarmId(3L)
                 .userId(1L)
@@ -87,11 +98,15 @@ public class AlarmController {
             @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PutMapping("{alarmId}")
-    public ResponseEntity<AlarmResponse> putAlarm(@PathVariable Long alarmId,
-                                                         @RequestParam(required = true) Long userId,
-                                                         @RequestBody AlarmDTO alarmDTO) {
+    public ResponseEntity<AlarmResponse> putAlarm(@RequestHeader(name = "Authorization") String authorization,
+                                                  @RequestHeader(name = "userId") Long userId,
+                                                  @PathVariable Long alarmId,
+                                                  @RequestBody AlarmDTO alarmDTO) {
         return ResponseEntity.ok(
                 AlarmResponse.builder()
                 .alarmId(alarmId)
@@ -111,10 +126,14 @@ public class AlarmController {
             @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @DeleteMapping("{alarmId}")
-    public ResponseEntity<Object> deleteAlarm(@PathVariable Long alarmId,
-                                                         @RequestParam(required = true) Long userId) {
+    public ResponseEntity<Object> deleteAlarm(@RequestHeader(name = "Authorization") String authorization,
+                                              @RequestHeader(name = "userId") Long userId,
+                                              @PathVariable Long alarmId) {
         return ResponseEntity.noContent().build();
     }
 }
