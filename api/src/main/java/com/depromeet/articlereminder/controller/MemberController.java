@@ -2,6 +2,7 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.BadgeCategory;
+import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.Member;
 import com.depromeet.articlereminder.dto.BadgeResponse;
 import com.depromeet.articlereminder.dto.UserMyPageResponse;
@@ -50,7 +51,7 @@ public class MemberController {
     @ApiOperation("사용자의 정보를(마이페이지를) 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("mypage/info")
-    public ResponseEntity<UserMyPageResponse> userPageInfo(@RequestParam(required = false)String email) {
+    public BaseResponse<UserMyPageResponse> userPageInfo(@RequestParam(required = false)String email) {
         BadgeResponse badge = BadgeResponse.builder()
                 .badgeId(1L)
                 .badgeName("0~5000 포인트 뱃지")
@@ -71,14 +72,15 @@ public class MemberController {
                 .badge(badge)
                 .build();
 
-        return ResponseEntity.ok(myPageResponse);
+//        return ResponseEntity.ok(myPageResponse);
+        return BaseResponse.of("202", "사용자 정보 조회에 성공했습니다.", myPageResponse);
     }
 
     @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 뱃지 히스토리를 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("mypage/badges")
-    public ResponseEntity<Page<BadgeResponse>> userBadges(@RequestParam(required = false) String email,
+    public BaseResponse<Page<BadgeResponse>> userBadges(@RequestParam(required = false) String email,
                                                           @RequestParam(required = false, defaultValue = "0") int pageNumber,
                                                           @RequestParam(required = false, defaultValue = "12") int pageSize) {
         BadgeResponse badge1 = BadgeResponse.builder()
@@ -117,7 +119,7 @@ public class MemberController {
         List<BadgeResponse> badges = Stream.of(badge1, badge2, badge3).collect(Collectors.toList());
         Page<BadgeResponse> page = new PageImpl<>(badges);
 
-        return ResponseEntity.ok(page);
+        return BaseResponse.of("202", "사용자 뱃지 리스트 조회에 성공했습니다.", page);
     }
 
 }
