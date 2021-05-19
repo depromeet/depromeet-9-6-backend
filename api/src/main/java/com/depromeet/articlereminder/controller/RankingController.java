@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 @RequestMapping(value = "/v1/ranking", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RankingController {
 
-    @ApiOperation("현재 사용자의 랭킹 TOP 10을 조회합니다. 인증이 필요한 요청입니다. 순위별 오름차순으로 정렬")
+    @ApiOperation("현재 사용자의 랭킹 및 전체 랭킹 TOP 10을 조회합니다. 인증이 필요한 요청입니다. TOP 10은 순위별 오름차순으로 정렬")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
