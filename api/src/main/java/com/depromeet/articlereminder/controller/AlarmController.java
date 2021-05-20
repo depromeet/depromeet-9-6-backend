@@ -81,9 +81,9 @@ public class AlarmController {
 
     @ApiOperation("특정한 어플 알람의 세부 내용을 조회합니다. - 어플 알람 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{id}")
-    public ResponseEntity<AlarmResponse> getAlarm(@PathVariable Long id,
-                                                  @RequestParam(required = true) Long userId) {
+    @GetMapping("{alarmId}")
+    public ResponseEntity<AlarmResponse> getAlarm(@PathVariable Long alarmId,
+                                                         @RequestParam(required = true) Long userId) {
         AlarmResponse alarmResponse3 = AlarmResponse.builder()
                 .alarmId(3L)
                 .userId(1L)
@@ -104,19 +104,19 @@ public class AlarmController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PutMapping("{id}")
-    public ResponseEntity<AlarmResponse> putAlarm(@PathVariable Long id,
-                                                  @RequestParam(required = true) Long userId,
-                                                  @RequestBody AlarmDTO alarmDTO) {
+    @PutMapping("{alarmId}")
+    public ResponseEntity<AlarmResponse> putAlarm(@PathVariable Long alarmId,
+                                                         @RequestParam(required = true) Long userId,
+                                                         @RequestBody AlarmDTO alarmDTO) {
         return ResponseEntity.ok(
                 AlarmResponse.builder()
-                        .alarmId(id)
-                        .userId(userId)
-                        .notifyTime(alarmDTO.getNotifyTime())
-                        .repeatedDate(RepeatedDate.valueOf(alarmDTO.getRepeatedDate()))
-                        .isEnabled(alarmDTO.isEnabled())
-                        .createdAt(LocalDateTime.now())
-                        .build()
+                .alarmId(alarmId)
+                .userId(userId)
+                .notifyTime(alarmDTO.getNotifyTime())
+                .repeatedDate(RepeatedDate.valueOf(alarmDTO.getRepeatedDate()))
+                .isEnabled(alarmDTO.isEnabled())
+                .createdAt(LocalDateTime.now())
+                .build()
         );
     }
 
@@ -128,9 +128,9 @@ public class AlarmController {
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @DeleteMapping("{id}")
-    public ResponseEntity<Object> deleteAlarm(@PathVariable Long id,
-                                              @RequestParam(required = true) Long userId) {
+    @DeleteMapping("{alarmId}")
+    public ResponseEntity<Object> deleteAlarm(@PathVariable Long alarmId,
+                                                         @RequestParam(required = true) Long userId) {
         return ResponseEntity.noContent().build();
     }
 }
