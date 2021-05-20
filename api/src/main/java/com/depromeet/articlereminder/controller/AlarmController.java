@@ -1,15 +1,21 @@
 package com.depromeet.articlereminder.controller;
 
+import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.RepeatedDate;
+import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.dto.AlarmDTO;
 import com.depromeet.articlereminder.dto.AlarmResponse;
+import com.depromeet.articlereminder.service.AlarmService;
+import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -17,49 +23,59 @@ import java.util.stream.Stream;
 @Api(tags = {"alarms"})
 @RestController
 @RequestMapping(value = "/v1/alarms", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class AlarmController {
+
+    private final AlarmService alarmService;
 
     @ApiOperation("어플 알람 리스트를 가져옵니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("")
     public ResponseEntity<List<AlarmResponse>> getAlarms(@RequestParam(required = true) Long userId) {
         AlarmResponse alarmResponse1 = AlarmResponse.builder()
-                                                    .alarmId(1L)
-                                                    .userId(1L)
-                                                    .notifyTime("08:30")
-                                                    .repeatedDate(RepeatedDate.EVERYDAY)
-                                                    .isEnabled(true)
-                                                    .createdAt(LocalDateTime.now().minusDays(5L))
-                                                    .build();
+                .alarmId(1L)
+                .userId(1L)
+                .notifyTime("08:30")
+                .repeatedDate(RepeatedDate.EVERYDAY)
+                .isEnabled(true)
+                .createdAt(LocalDateTime.now().minusDays(5L))
+                .build();
 
         AlarmResponse alarmResponse2 = AlarmResponse.builder()
-                                                    .alarmId(2L)
-                                                    .userId(1L)
-                                                    .notifyTime("09:00")
-                                                    .repeatedDate(RepeatedDate.EVERYDAY)
-                                                    .isEnabled(false)
-                                                    .createdAt(LocalDateTime.now().minusDays(3L))
-                                                    .build();
+                .alarmId(2L)
+                .userId(1L)
+                .notifyTime("09:00")
+                .repeatedDate(RepeatedDate.EVERYDAY)
+                .isEnabled(false)
+                .createdAt(LocalDateTime.now().minusDays(3L))
+                .build();
 
         AlarmResponse alarmResponse3 = AlarmResponse.builder()
-                                                    .alarmId(3L)
-                                                    .userId(1L)
-                                                    .notifyTime("09:30")
-                                                    .repeatedDate(RepeatedDate.EVERYDAY_EXCEPT_HOLIDAYS)
-                                                    .isEnabled(true)
-                                                    .createdAt(LocalDateTime.now().minusDays(2L))
-                                                    .build();
+                .alarmId(3L)
+                .userId(1L)
+                .notifyTime("09:30")
+                .repeatedDate(RepeatedDate.EVERYDAY_EXCEPT_HOLIDAYS)
+                .isEnabled(true)
+                .createdAt(LocalDateTime.now().minusDays(2L))
+                .build();
 
         List<AlarmResponse> alarmList = Stream.of(alarmResponse3, alarmResponse2, alarmResponse1).collect(Collectors.toList());
 
         return ResponseEntity.ok(alarmList);
     }
 
+    @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("어플 알람을 추가합니다. 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @PostMapping("")
-    public ResponseEntity<String> postAlarm(@RequestParam(required = true) Long userId,
-                                          @RequestBody AlarmDTO alarmDTO) {
+    public ResponseEntity<String> postAlarm(@RequestParam(required = false) String email,
+                                            @RequestParam(required = true) Long userId,
+                                            @RequestBody AlarmDTO alarmDTO) {
+        Alarm alarm = new Alarm();
+        alarm.setUserEmail(email);
+        alarm.setCreateTime(new Date());
+        alarm.setNotifyTime(null);
+        alarmService.saveAlarm(alarm);
         return new ResponseEntity<>("알람 등록에 성공했습니다.", HttpStatus.OK);
     }
 
