@@ -13,7 +13,7 @@ import java.util.Date;
 @Setter
 public class Alarm {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private Long id;
     private String userEmail;
