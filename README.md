@@ -53,3 +53,5 @@ ERD
 - 개별 링크 알 서버에서 관리하지 않는 것으로 결정되어 LinkAlarm 테이블 삭제 & User 테이블 내 사용자의 푸시 알람람 활성화 여부 컬럼 추가 : 20210515
 - 시즌 뱃지와 포인트 뱃지 테이블 하나로 합침 (시즌 뱃지인지 포인트 뱃지인지 구분하도록 status를 둠) : 20210501
 
+## Wiki
+https://github.com/depromeet/depromeet-9-6-backend/wiki

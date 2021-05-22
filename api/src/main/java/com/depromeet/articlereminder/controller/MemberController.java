@@ -33,13 +33,13 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @GetMapping("kakaoLogin")
+    @PostMapping("kakaoLogin")
     public String kakaoMemberCreate() {
         return "redirect:/oauth2/authorization/kakao";
     }
 
     @LoginCheck(type = LoginCheck.UserType.USER)
-    @GetMapping("members/info")
+    @GetMapping("info")
     public ResponseEntity<Member> memberInfo(@RequestParam(required = false) String email) {
         Member memberInfo = memberService.findOneByEmail(email);
         return new ResponseEntity<Member>(memberInfo, HttpStatus.OK);

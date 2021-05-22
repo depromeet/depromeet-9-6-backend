@@ -45,15 +45,16 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         // default ExpriedTIME: 현재시간 + 6시간
         member.setTokenExpiredTime(Date.from(userRequest.getAccessToken().getExpiresAt()));
         member.setTokenStartTime(Date.from(userRequest.getAccessToken().getIssuedAt()));
+
+        SessionUtil.setLoginMemberId(httpSession,member.getEmail());
+        SessionUtil.setTokenExpiredTime(httpSession,member.getTokenExpiredTime());
+        SessionUtil.setToken(httpSession,member.getToken());
+
         memberService.validateDuplicateMember(member);
         memberRepository.save(member);
 
         log.debug("accesstoekn :: " + userRequest.getAccessToken().getTokenValue());
         log.debug("attributes :: " + attributes);
-
-        SessionUtil.setLoginMemberId(httpSession,member.getEmail());
-        SessionUtil.setTokenExpiredTime(httpSession,member.getTokenExpiredTime());
-        SessionUtil.setToken(httpSession,member.getToken());
 
         return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")), attributes, "id");
     }
