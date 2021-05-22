@@ -31,7 +31,47 @@ public class SwaggerConfig {
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder()
                 .title("Article Web API Documentation")
-                .description("링줍 서버 API에 대한 연동 문서입니다")
+                .description("링줍 서버 API에 대한 연동 문서입니다\n" +
+                        "============================================================\n" +
+                        "<table>\n" +
+                        "  <tr>\n" +
+                        "    <th>status</th>\n" +
+                        "    <th>comment</th>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>201</td>\n" +
+                        "    <td>등록 성공</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>202</td>\n" +
+                        "    <td>조회 성공</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>203</td>\n" +
+                        "    <td>수정 성공</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>204</td>\n" +
+                        "    <td>삭제 성공</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>401</td>\n" +
+                        "    <td>등록 실패</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>402</td>\n" +
+                        "    <td>조회 실패</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>403</td>\n" +
+                        "    <td>수정 실패</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>404</td>\n" +
+                        "    <td>삭제 실패</td>\n" +
+                        "  </tr>\n" +
+                        "</table>" +
+                        "")
                 .version("1.0")
                 .build();
     }

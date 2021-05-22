@@ -39,12 +39,6 @@ public class LinkResponse {
             position = 3)
     private boolean isCompleted; // 읽음 상태
 
-    @ApiModelProperty(notes = "개별 알람 설정 여부",
-            example = "false",
-            required = true,
-            position = 4)
-    private boolean hasReminder; // 개별 알람 설정 여부
-
     private List<HashtagDTO> hashtags; // 해시 태그 id
 
     @ApiModelProperty(notes = "등록 시각",

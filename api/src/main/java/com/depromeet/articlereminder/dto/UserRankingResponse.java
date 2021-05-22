@@ -1,16 +1,14 @@
 package com.depromeet.articlereminder.dto;
 
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
-import java.util.*;
 
-@ApiModel(description = "랭킹 조회 시 ResponseBody")
+@ApiModel(description = "TOP 10 랭킹")
 @Builder
 @Getter
-public class RankingResponse {
+public class UserRankingResponse {
 
     @ApiModelProperty(notes = "순위",
             example = "1",
@@ -42,18 +40,5 @@ public class RankingResponse {
             position = 4)
     private Long seasonCount; // 이번 시즌 읽은 개수
 
-    @ApiModelProperty(notes = "지난 시즌 대비 순위 변동",
-            example = "+ / - / 0",
-            required = true,
-            position = 5)
-    private String fluctuation; // 지난 시즌 대비 변동 여부 ( +,-,0)
-
     private BadgeResponse badge; // 사용자의 포인트 뱃지
-
-    @ApiModelProperty(notes = "이번 시즌 TOP10",
-            example = "TOP 10 리스트",
-            required = true,
-            position = 5)
-    private List<UserRankingResponse> top10;
-
 }

@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.controller;
 
+import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.Hashtag;
 import com.depromeet.articlereminder.domain.Link;
 import com.depromeet.articlereminder.dto.*;
@@ -26,9 +27,13 @@ import java.util.stream.Stream;
 public class LinkController {
 
     @ApiOperation("사용자가 저장한 링크 리스트를 가져옵니다. - 다 읽은 링크만을 조회하고 싶다면 completed 파라미터를 T로 주시면 됩니다. 인증이 필요한 요청입니다. 생성일 역순으로 정렬")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("")
-    public ResponseEntity<Page<LinkResponse>> getLinks(@RequestParam(required = true) Long userId,
+    public BaseResponse<Page<LinkResponse>> getLinks(@RequestHeader(name = "Authorization") String authorization,
+                                                       @RequestHeader(name = "userId") Long userId,
 
                                                        @ApiParam(name = "completed",
                                                                type = "string",
@@ -79,7 +84,6 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@delight412/351")
                 .isCompleted(false)
-                .hasReminder(true)
                 .hashtags(hashtags)
                 .createdAt(LocalDateTime.now().minusDays(3L))
                 .completedAt(null)
@@ -90,7 +94,6 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(false)
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(null)
@@ -98,37 +101,47 @@ public class LinkController {
 
         List<LinkResponse> links = Stream.of(linkDTO2, linkDTO1).collect(Collectors.toList());
         Page<LinkResponse> page = new PageImpl<>(links);
-        return ResponseEntity.ok(page);
+
+        return BaseResponse.of("202", "사용자가 저장한 링크 리스트 조회에 성공했습니다.", page);
     }
 
     @ApiOperation("새로운 링크를 등록(추가)합니다. 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PostMapping("")
-    public ResponseEntity<LinkResponse> postLink(@RequestParam(required = true) Long userId,
-                                         @RequestBody LinkDTO linkDTO) {
+    public BaseResponse<LinkResponse> postLink(@RequestHeader(name = "Authorization") String authorization,
+                                               @RequestHeader(name = "userId") Long userId,
+                                               @RequestBody LinkDTO linkDTO) {
         List<HashtagDTO> hashtags = linkDTO.getHashtags()
                 .stream()
                 .map(item -> HashtagDTO.builder().hashtagId(1L).hashtagName(item.toString()).createdAt(LocalDateTime.now()).build())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(
+        return BaseResponse.of(
+                "201",
+                "새로운 링크 등록에 성공했습니다.",
                 LinkResponse.builder()
-                            .linkId(10L)
-                            .userId(userId)
-                            .linkURL(linkDTO.getLinkURL())
-                            .hasReminder(false)
-                            .isCompleted(false)
-                            .completedAt(null)
-                            .createdAt(LocalDateTime.now())
-                            .build()
+                        .linkId(10L)
+                        .userId(userId)
+                        .linkURL(linkDTO.getLinkURL())
+                        .isCompleted(false)
+                        .completedAt(null)
+                        .createdAt(LocalDateTime.now())
+                        .build()
         );
     }
 
     @ApiOperation("특정 링크에 대해 상세 조회를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @GetMapping("{linkId}")
-    public ResponseEntity<LinkResponse> getLink(@PathVariable Long linkId,
-                                                @RequestParam(required = true) Long userId) {
+    public BaseResponse<LinkResponse> getLink(@RequestHeader(name = "Authorization") String authorization,
+                                                @RequestHeader(name = "userId") Long userId,
+                                                @PathVariable Long linkId) {
         HashtagDTO hashtagDTO1 = HashtagDTO.builder()
                 .hashtagId(1L)
                 .hashtagName("디자인")
@@ -154,71 +167,80 @@ public class LinkController {
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(false)
                 .isCompleted(false)
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(null)
                 .build();
 
-        return ResponseEntity.ok(linkDTO2);
+        return BaseResponse.of("202", "링크 상세 조회에 성공했습니다.", linkDTO2);
     }
 
     @ApiOperation("특정 링크에 대해 수정합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
+//            @ApiResponse(code = 401, message = "Access token is not valid"),
+//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PutMapping("{linkId}")
-    public ResponseEntity<LinkResponse> putLink(@PathVariable Long linkId,
-                                        @RequestParam(required = true) Long userId,
+    public BaseResponse<LinkResponse> putLink(@RequestHeader(name = "Authorization") String authorization,
+                                                @RequestHeader(name = "userId") Long userId,
+                                                @PathVariable Long linkId,
                                         @RequestBody LinkDTO linkDTO) {
         List<HashtagDTO> hashtags = linkDTO.getHashtags()
                 .stream()
                 .map(item -> HashtagDTO.builder().hashtagId(1L).hashtagName(item.toString()).createdAt(LocalDateTime.now()).build())
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(
+        return BaseResponse.of("203", "링크 수정에 성공했습니다.",
                 LinkResponse.builder()
-                .linkId(linkId)
-                .userId(userId)
-                .linkURL(linkDTO.getLinkURL())
-                .hashtags(hashtags)
-                .isCompleted(false)
-                .hasReminder(false)
-                .completedAt(null)
-                .createdAt(LocalDateTime.now())
-                .build()
-        );
+                        .linkId(linkId)
+                        .userId(userId)
+                        .linkURL(linkDTO.getLinkURL())
+                        .hashtags(hashtags)
+                        .isCompleted(false)
+                        .completedAt(null)
+                        .createdAt(LocalDateTime.now())
+                        .build());
     }
 
     @ApiOperation("특정 링크에 대해 삭제합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
+//            @ApiResponse(code = 401, message = "Access token is not valid"),
+//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @DeleteMapping("{linkId}")
-    public ResponseEntity<Object> deleteLink(@PathVariable Long linkId,
-                                        @RequestParam(required = true) Long userId) {
-        return ResponseEntity.noContent().build();
+    public BaseResponse<Object> deleteLink(@RequestHeader(name = "Authorization") String authorization,
+                                             @RequestHeader(name = "userId") Long userId,
+                                             @PathVariable Long linkId) {
+        return BaseResponse.of("204",linkId + " 링크 삭제에 성공했습니다.", null);
     }
 
     @ApiOperation("특정 링크에 대해 읽음 완료 표시를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
+//            @ApiResponse(code = 401, message = "Access token is not valid"),
+//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
     @PatchMapping("{linkId}")
-    public ResponseEntity<LinkResponse> patchLink(@PathVariable Long linkId,
-                                          @RequestParam(required = true) Long userId,
+    public BaseResponse<LinkResponse> patchLink(@RequestHeader(name = "Authorization") String authorization,
+                                                  @RequestHeader(name = "userId") Long userId,
+                                                  @PathVariable Long linkId,
 
                                           @ApiParam(name = "completed",
                                                    type = "string",
@@ -250,81 +272,12 @@ public class LinkController {
                 .userId(1L)
                 .linkURL("https://brunch.co.kr/@dalgudot/94")
                 .isCompleted(completed.equals("T"))
-                .hasReminder(false)
                 .hashtags(hashtags2)
                 .createdAt(LocalDateTime.now().minusDays(1L))
                 .completedAt(LocalDateTime.now())
                 .build();
 
-        return ResponseEntity.ok(linkDTO2);
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 조회합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @GetMapping("{linkId}/alarm")
-    public ResponseEntity<LinkAlarmResponse> getLinkAlarm(@PathVariable Long linkId,
-                                                           @RequestParam(required = true) Long userId) {
-
-        LinkAlarmResponse linkAlarm = LinkAlarmResponse.builder()
-                                        .linkId(1L)
-                                        .alarmId(1L)
-                                        .notifyTime(LocalDateTime.now().plusDays(2L))
-                                        .isEnabled(true)
-                                        .createdAt(LocalDateTime.now().minusDays(3L))
-                                        .build();
-        return ResponseEntity.ok(linkAlarm);
-    }
-
-    @ApiOperation("특정 링크에 개별 알람을 등록(추가)합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PostMapping("{linkId}/alarm")
-    public ResponseEntity<String> postLinkAlarm(@PathVariable Long linkId,
-                                              @RequestParam(required = true) Long userId,
-                                              @RequestBody LinkAlarmDTO linkAlarmDTO) {
-        return new ResponseEntity<>("개별 링크 알람 등록에 성공했습니다.", HttpStatus.OK);
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 수정합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @PutMapping("{linkId}/alarm")
-    public ResponseEntity<LinkAlarmResponse> putLinkAlarm(@PathVariable Long linkId,
-                                             @RequestParam(required = true) Long userId,
-                                             @RequestBody LinkAlarmDTO linkAlarmDTO) {
-        return ResponseEntity.ok(
-                LinkAlarmResponse.builder()
-                .linkId(linkId)
-                .alarmId(1L)
-                .notifyTime(linkAlarmDTO.getNotifiyTime())
-                .isEnabled(true)
-                .createdAt(LocalDateTime.now())
-                .build()
-        );
-    }
-
-    @ApiOperation("특정 링크에 존재하는 개별 알람을 삭제합니다 - 링크 id 필요, 인증이 필요한 요청입니다.")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 401, message = "Access token is not valid"),
-            @ApiResponse(code = 403, message = "Requested user is not author of link"),
-            @ApiResponse(code = 500, message = "Server error")
-    })
-    @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
-    @DeleteMapping("{linkId}/alarm")
-    public ResponseEntity<Object> deleteLinkAlarm(@PathVariable Long linkId,
-                                                @RequestParam(required = true) Long userId) {
-        return ResponseEntity.noContent().build();
+        return BaseResponse.of("201", linkId + " 링크 읽음 완료 표시에 성공하였습니다.", linkDTO2);
     }
 
 
