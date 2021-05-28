@@ -1,41 +1,31 @@
 package com.depromeet.articlereminder.domain.alarm;
 
-import com.depromeet.articlereminder.domain.member.Member;
-import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Setter;
 
 import javax.persistence.*;
-
-import java.time.LocalDateTime;
-
-import static javax.persistence.FetchType.*;
-
+import java.util.Date;
 
 @Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) // joined 정규화스타일, single 통짜 테이블, per 테이블 나누기
+@DiscriminatorColumn(name = "dtype") // 구분값.
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
 public class Alarm {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "alarm_id")
-    private Long id; // 알람 id
+    @Column(name = "item_id")
+    private Long id;
+    private String userEmail;
+    private Date notifyTime;
+    private Date createTime;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member; // 사용자
-
-    private String notifyTime; // 알림 시각 (08:30)
-
-    @Enumerated(value = EnumType.STRING)
-    private AlarmStatus alarmStatus; // 알람 활성화 여부
-
-    @Enumerated(value = EnumType.STRING)
-    private RepeatedDate repeatedDate; // 반복 일자
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
-
+    /**
+     * 푸쉬 알림 시간 수정
+     *
+     * @param RepeatedDate
+     */
+    public void updateNotifyTime(Date notifyTime) {
+        this.notifyTime = notifyTime;
+    }
 }
