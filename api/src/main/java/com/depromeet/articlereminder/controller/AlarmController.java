@@ -76,7 +76,7 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PostMapping("")
-    public BaseResponse<AlarmResponse> postAlarm(@RequestParam(required = true) Long userId,
+    public BaseResponse<AlarmResponse> postAlarm(@RequestHeader(required = true) Long userId,
                                           @RequestBody AlarmDTO alarmDTO) {
         return BaseResponse.of("201", "어플 알람 등록에 성공했습니다.",
                 AlarmResponse.builder()
