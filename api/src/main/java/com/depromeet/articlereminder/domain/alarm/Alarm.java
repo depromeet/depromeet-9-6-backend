@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.domain.alarm;
 
+import com.depromeet.articlereminder.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
