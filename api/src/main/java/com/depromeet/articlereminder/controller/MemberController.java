@@ -1,16 +1,13 @@
 package com.depromeet.articlereminder.controller;
 
-import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.*;
 import com.depromeet.articlereminder.exception.InvalidAccessTokenException;
-import com.depromeet.articlereminder.jwt.JwtService;
 import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
-import com.google.gson.internal.bind.CollectionTypeAdapterFactory;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,7 +20,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,7 +31,6 @@ import java.util.stream.Stream;
 public class MemberController {
 
     private final MemberService memberService;
-    private final JwtService jwtService;
     private final UserAssembler userAssembler;
 
     @ApiOperation("회원 가입")

@@ -13,9 +13,10 @@ public class AlarmRepository {
 
     private final EntityManager em;
 
-    public void save(Alarm item) {
+    public Alarm save(Alarm item) {
         if (item.getId() == null) { // 새로 생성된 객체
             em.persist(item);
+            return item;
         } else { // 이미 db에 있고 update 의미, 변경 감지를 자동화.
             // 준영속 엔티티 병합 동작 방식
             // 1. merge() 실행.
@@ -28,6 +29,7 @@ public class AlarmRepository {
 
             Alarm merge = em.merge(item); // 왼쪽이 jpa가 관리, 오른쪽은 준영속객체.
         }
+        return item;
     }
 
     public Alarm findOne(Long id) {
