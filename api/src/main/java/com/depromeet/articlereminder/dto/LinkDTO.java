@@ -1,15 +1,9 @@
 package com.depromeet.articlereminder.dto;
 
-import com.depromeet.articlereminder.domain.Hashtag;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.annotations.ApiParam;
-import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @ApiModel(description = "링크 추가(줍줍) 시 RequestBody")

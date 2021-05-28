@@ -2,8 +2,8 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.aop.LoginCheck;
-import com.depromeet.articlereminder.domain.RepeatedDate;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
+import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
 import com.depromeet.articlereminder.dto.AlarmDTO;
 import com.depromeet.articlereminder.dto.AlarmResponse;
 import com.depromeet.articlereminder.service.AlarmService;
