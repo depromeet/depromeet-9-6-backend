@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.domain.member;
 
 import com.depromeet.articlereminder.domain.BaseEntity;
+import com.depromeet.articlereminder.domain.MemberBadge;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.Badge;
@@ -43,7 +44,7 @@ public class Member extends BaseEntity {
 
     private LocalDateTime lastAccessedAt; // 최근 접속 일시
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private AlarmStatus status; // 어플 알림 활성화 여부
 
 
@@ -55,8 +56,20 @@ public class Member extends BaseEntity {
 //    @OneToMany(mappedBy = "member")
 //    private List<Alarm> alarms = new ArrayList<>(); // 멤버 <--> 알람 양방향 연관관계
 
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "member")
-//    private List<Badge> badges = new ArrayList<>(); // 멤버 <--> 뱃지 양방향 연관관계
+    @JsonIgnore
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<MemberBadge> memberBadges = new ArrayList<>(); // 멤버 <--> 뱃지 양방향 연관관계
+
+    /**
+     * 어플 알림 설정 메서드
+     */
+    public void changeAlarmStatus(AlarmStatus status) {
+        this.status = status;
+    }
+
+    public void addMemberBadge(MemberBadge memberBadge) {
+        memberBadges.add(memberBadge);
+        memberBadge.setMember(this);
+    }
 
 }

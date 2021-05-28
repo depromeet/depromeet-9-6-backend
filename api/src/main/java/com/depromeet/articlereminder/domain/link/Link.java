@@ -41,6 +41,22 @@ public class Link extends BaseEntity {
 
     private LocalDateTime completedAt; // 읽음 완료 일시
 
+
+    public static Link createLink(Member member, LinkHashtag... linkHashtags) {
+        Link link = new Link();
+        link.setMember(member);
+
+        for (LinkHashtag hashtag : linkHashtags) {
+            link.addLinkHashtag(hashtag);
+        }
+
+        return link;
+    }
+
+    /***
+     * 링크 - 해시태그 추가
+     * @param hashtag
+     */
     public void addLinkHashtag(LinkHashtag hashtag) {
         linkHashtags.add(hashtag);
         hashtag.setLink(this);
@@ -56,23 +72,6 @@ public class Link extends BaseEntity {
         this.status = LinkStatus.READ;
         this.completedAt = LocalDateTime.now();
     }
-
-    public static Link createLink(Member member, LinkHashtag... linkHashtags) {
-        Link link = new Link();
-        link.setMember(member);
-
-        for (LinkHashtag hashtag : linkHashtags) {
-            link.addLinkHashtag(hashtag);
-        }
-
-        return link;
-    }
-
-//    public Link update(Member member, String linkURL, LinkHashtag... linkHashtags ) {
-//        this.isValidUser(member);
-//
-//
-//    }
 
     public void delete(Member member) {
         this.isValidUser(member);

@@ -24,7 +24,7 @@ public class Badge extends BaseEntity {
 
     private String imageUrl; // 뱃지 이미지 url
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private BadgeCategory badgeCategory; // 시즌 뱃지인지 포인트 뱃지인지 구분
 
     private String conditions; // 획득 조건
