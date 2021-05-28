@@ -17,7 +17,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LinkHashtag { // contains 테이블
+public class LinkHashtag extends BaseEntity { // contains 테이블
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,9 +32,6 @@ public class LinkHashtag { // contains 테이블
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag; // 해시태그
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
 
     public void setLink(Link link) {
         this.link = link;
