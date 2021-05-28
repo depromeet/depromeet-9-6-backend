@@ -1,16 +1,17 @@
 package com.depromeet.articlereminder.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-
-@Getter
-@Setter
+@Data
 public class MemberDTO {
 
-    @NotEmpty(message = "회원 이름은 필수 입니다.")
+    private long userId;
+
     private String name;
 
     private String email;
+
+    // private SocialType socialType;
+
+    private String token;
 }

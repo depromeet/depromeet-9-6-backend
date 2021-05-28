@@ -1,5 +1,8 @@
 server:
   port: 8080
+jwt:
+  issuer: issuerJwt
+  secret: secretJwt
 spring:
   h2:
     console:

@@ -29,7 +29,7 @@ public class MemberService {
     }
 
     public void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByName(member.getName()); // 멀티스레드 환경이라 unique 제약조건 설정.
+        List<Member> findMembers = memberRepository.findByEmail(member.getEmail()); // 멀티스레드 환경이라 unique 제약조건 설정.
         if (!findMembers.isEmpty()) {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
@@ -65,8 +65,8 @@ public class MemberService {
      * @param name
      */
     @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
-    public void update(Long id, String name) {
+    public void update(Long id, String token) {
         Member member = memberRepository.findById(id).get();
-        member.setName(name);
+        member.setToken(token);
     }
 }
