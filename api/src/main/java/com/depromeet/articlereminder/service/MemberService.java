@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -53,20 +54,14 @@ public class MemberService {
         return memberRepository.findById(memberId).get();
     }
 
-    public Member findOneByEmail(String email) {
-        return (Member) memberRepository.findByEmail(email);
-    }
+//    public Member findOneByEmail(String email) {
+//        return (Member) memberRepository2.findOneByEmail(email);
+//    }
 
-
-    /**
-     * 회원 변경
-     *
-     * @param id
-     * @param name
-     */
     @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
     public void update(Long id, String token) {
         Member member = memberRepository.findById(id).get();
         member.setToken(token);
+        member.setTokenExpiredTime(LocalDateTime.now().plusDays(100L));
     }
 }

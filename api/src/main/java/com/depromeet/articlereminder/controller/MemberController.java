@@ -5,10 +5,7 @@ import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.domain.member.Member;
-import com.depromeet.articlereminder.dto.BadgeResponse;
-import com.depromeet.articlereminder.dto.LoginResponse;
-import com.depromeet.articlereminder.dto.MemberDTO;
-import com.depromeet.articlereminder.dto.UserMyPageResponse;
+import com.depromeet.articlereminder.dto.*;
 import com.depromeet.articlereminder.exception.InvalidAccessTokenException;
 import com.depromeet.articlereminder.jwt.JwtService;
 import com.depromeet.articlereminder.jwt.UserAssembler;
@@ -41,37 +38,51 @@ public class MemberController {
     private final JwtService jwtService;
     private final UserAssembler userAssembler;
 
-    @ApiOperation("로그인을 하여 토큰을 발급받습니다.")
-    //@LoginCheck(type = LoginCheck.UserType.USER)
-    @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody MemberDTO userDto) {
-
-        boolean isValid = true;
-        String token = userDto.getToken();
-
-        if (token != null) {
-            // isValid = memberService.checkLoginToken(socialType, token);
-        }
-        if (!isValid) {
-            throw new InvalidAccessTokenException();
-        }
-
+    @ApiOperation("회원 가입")
+    @PostMapping("register")
+    public BaseResponse<MemberInfoResponse> register(@RequestBody MemberRegisterDTO userDto) {
         Member user = new Member();
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setCreatedAt(LocalDateTime.now());
         user.setStatus(AlarmStatus.ENABLED);
-        // user.setTokenExpiredTime(new Date() + 100);
+        user.setTokenExpiredTime(LocalDateTime.now().plusDays(100L));
         long userId = memberService.join(user);
         memberService.update(userId, userAssembler.toLoginResponse(user).getToken());
 
-        return ResponseEntity.ok(userAssembler.toLoginResponse(user));
+        return BaseResponse.of("201", "회원가입에 성공하셨습니다.", userAssembler.toUserResponse(user));
+    }
+
+    @ApiOperation("로그인을 하여 토큰을 발급받습니다.")
+    @PostMapping("login")
+    public BaseResponse<LoginResponse> login(@RequestBody MemberDTO userDto) {
+
+        boolean isValid = true;
+        String token = userDto.getToken();
+
+        Member member = memberService.findOne(userDto.getUserId());
+
+        if (token != null) {
+            // TODO 카카오 로그인 유효성 검사
+            // https://kapi.kakao.com/v1/user/access_token_info
+            // isValid = memberService.checkLoginToken(socialType, token);
+
+            // 저장된 토큰값이 맞는지, 기간이 유효한지 확인
+//            if(userDto.getToken() != member.getToken())
+//                throw new InvalidAccessTokenException();
+            if (member.getTokenExpiredTime().isBefore(LocalDateTime.now()))
+                throw new InvalidAccessTokenException();
+        }
+        if (!isValid) {
+            throw new InvalidAccessTokenException();
+        }
+        return BaseResponse.of("202", "로그인에 성공하셨습니다.", userAssembler.toLoginResponse(member));
     }
 
     //@LoginCheck(type = LoginCheck.UserType.USER)
     @GetMapping("info")
-    public ResponseEntity<Member> memberInfo(@RequestParam(required = false) String email) {
-        Member memberInfo = memberService.findOneByEmail(email);
+    public ResponseEntity<Member> memberInfo(@RequestParam(required = false) long userId) {
+        Member memberInfo = memberService.findOne(userId);
         return new ResponseEntity<Member>(memberInfo, HttpStatus.OK);
     }
 

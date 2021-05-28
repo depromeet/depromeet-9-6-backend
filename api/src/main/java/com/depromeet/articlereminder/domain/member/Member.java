@@ -32,9 +32,9 @@ public class Member {
 
     private String token; // 토큰값
 
-    private Date tokenStartTime; // 토큰 시작 시각??
+    private LocalDateTime tokenStartTime; // 토큰 시작 시각??
 
-    private Date tokenExpiredTime; // 토큰 만료 시각
+    private LocalDateTime tokenExpiredTime; // 토큰 만료 시각
 
     private int totalReadCount; // 총 읽은 아티클 수
 
