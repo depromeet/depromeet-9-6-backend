@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.domain.badge;
 
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Badge {
+public class Badge extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,8 +30,5 @@ public class Badge {
     private String conditions; // 획득 조건
 
     private String seasonInfo; // 시즌 정보 (2021년 5월 / 2021년 6월 .... )
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
 
 }

@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.domain.link;
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.exception.LinkModifiedByInvalidUserException;
@@ -19,7 +20,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Link {
+public class Link extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +40,6 @@ public class Link {
     private LinkStatus status; // 링크 읽음 상태
 
     private LocalDateTime completedAt; // 읽음 완료 일시
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
-
 
     public void addLinkHashtag(LinkHashtag hashtag) {
         linkHashtags.add(hashtag);

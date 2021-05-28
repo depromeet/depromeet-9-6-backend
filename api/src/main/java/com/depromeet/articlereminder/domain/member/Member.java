@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.domain.member;
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.Badge;
@@ -19,7 +20,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Member {
+public class Member extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +45,6 @@ public class Member {
 
     @Enumerated(value = EnumType.STRING)
     private AlarmStatus status; // 어플 알림 활성화 여부
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
 
 
 //    @JsonIgnore

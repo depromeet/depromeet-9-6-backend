@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.domain.alarm;
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +17,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Alarm {
+public class Alarm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,8 +35,5 @@ public class Alarm {
 
     @Enumerated(value = EnumType.STRING)
     private RepeatedDate repeatedDate; // 반복 일자
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
 
 }
