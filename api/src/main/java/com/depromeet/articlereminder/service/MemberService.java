@@ -1,6 +1,5 @@
 package com.depromeet.articlereminder.service;
 
-import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

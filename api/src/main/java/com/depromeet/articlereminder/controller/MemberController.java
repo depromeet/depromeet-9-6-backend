@@ -3,7 +3,6 @@ package com.depromeet.articlereminder.controller;
 import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
-import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.BadgeResponse;
 import com.depromeet.articlereminder.dto.UserMyPageResponse;
 import com.depromeet.articlereminder.service.MemberService;

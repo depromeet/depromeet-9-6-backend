@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.domain;
+package com.depromeet.articlereminder.domain.alarm;
 
 import io.swagger.annotations.ApiModel;
 
