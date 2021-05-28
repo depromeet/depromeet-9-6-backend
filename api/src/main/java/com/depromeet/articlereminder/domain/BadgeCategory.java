@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.domain.badge;
+package com.depromeet.articlereminder.domain;
 
 import io.swagger.annotations.ApiModel;
 
