@@ -1,6 +1,6 @@
 package com.depromeet.articlereminder.service;
 
-import com.depromeet.articlereminder.domain.Member;
+import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import com.depromeet.articlereminder.util.SessionUtil;
 import lombok.RequiredArgsConstructor;

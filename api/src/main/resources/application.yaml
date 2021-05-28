@@ -5,7 +5,7 @@ spring:
     console:
       enabled: true
   datasource:
-    url: jdbc:h2:~/article
+    url: jdbc:h2:tcp://localhost/~/article
     username: sa
     password:
     driver-class-name: org.h2.Driver

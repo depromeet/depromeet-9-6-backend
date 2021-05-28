@@ -1,9 +1,9 @@
 package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.aop.LoginCheck;
-import com.depromeet.articlereminder.domain.BadgeCategory;
 import com.depromeet.articlereminder.domain.BaseResponse;
-import com.depromeet.articlereminder.domain.Member;
+import com.depromeet.articlereminder.domain.badge.BadgeCategory;
+import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.BadgeResponse;
 import com.depromeet.articlereminder.dto.UserMyPageResponse;
 import com.depromeet.articlereminder.service.MemberService;
@@ -13,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
-import javax.servlet.http.HttpSession;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

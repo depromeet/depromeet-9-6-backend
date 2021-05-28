@@ -1,7 +1,7 @@
 package com.depromeet.articlereminder.controller;
 
-import com.depromeet.articlereminder.domain.BadgeCategory;
 import com.depromeet.articlereminder.domain.BaseResponse;
+import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.dto.BadgeResponse;
 import com.depromeet.articlereminder.dto.RankingResponse;
 import com.depromeet.articlereminder.dto.UserRankingResponse;

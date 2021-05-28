@@ -2,8 +2,8 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.aop.LoginCheck;
-import com.depromeet.articlereminder.domain.RepeatedDate;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
+import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
 import com.depromeet.articlereminder.dto.AlarmDTO;
 import com.depromeet.articlereminder.dto.AlarmResponse;
 import com.depromeet.articlereminder.service.AlarmService;
@@ -76,7 +76,7 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PostMapping("")
-    public BaseResponse<AlarmResponse> postAlarm(@RequestParam(required = true) Long userId,
+    public BaseResponse<AlarmResponse> postAlarm(@RequestHeader(required = true) Long userId,
                                           @RequestBody AlarmDTO alarmDTO) {
         return BaseResponse.of("201", "어플 알람 등록에 성공했습니다.",
                 AlarmResponse.builder()

@@ -1,22 +1,14 @@
 package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
-import com.depromeet.articlereminder.domain.Hashtag;
-import com.depromeet.articlereminder.domain.Link;
 import com.depromeet.articlereminder.dto.*;
 import io.swagger.annotations.*;
-import io.swagger.models.Response;
-import org.apache.tomcat.jni.Local;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 
-import java.io.PushbackReader;
 import java.time.LocalDateTime;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
