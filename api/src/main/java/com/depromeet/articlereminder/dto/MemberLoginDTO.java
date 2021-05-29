@@ -8,5 +8,4 @@ public class MemberLoginDTO {
     private long userId;
 
     private String token;
-
 }
