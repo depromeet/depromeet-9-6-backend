@@ -1,7 +1,6 @@
 package com.depromeet.articlereminder.service;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
-import com.depromeet.articlereminder.dto.AlarmResponse;
 import com.depromeet.articlereminder.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

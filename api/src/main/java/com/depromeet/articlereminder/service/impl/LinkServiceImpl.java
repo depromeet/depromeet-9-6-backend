@@ -6,11 +6,9 @@ import com.depromeet.articlereminder.domain.link.Link;
 import com.depromeet.articlereminder.domain.link.LinkStatus;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.link.LinkRequest;
-import com.depromeet.articlereminder.dto.link.LinkResponse;
 import com.depromeet.articlereminder.exception.HashtagNumberShouldNotBeMoreThanThree;
 import com.depromeet.articlereminder.exception.LinkNotFoundException;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
-import com.depromeet.articlereminder.repository.HashtagRepository;
 import com.depromeet.articlereminder.repository.LinkRepository;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import com.depromeet.articlereminder.service.LinkService;
@@ -25,7 +23,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,7 +33,6 @@ public class LinkServiceImpl implements LinkService {
 
     private final MemberRepository memberRepository;
     private final LinkRepository linkRepository;
-    private final HashtagRepository hashtagRepository;
 
     /**
      * 모두 조회
@@ -50,10 +46,6 @@ public class LinkServiceImpl implements LinkService {
         return linkRepository.findByMemberAndStatus(member, LinkStatus.valueOf(status), pageable);
     }
 
-    /**
-     * 링크 등록
-     * @return
-     */
     @Override
     @Transactional
     public Link saveLink(Long userId, LinkRequest linkRequest) {
@@ -72,9 +64,8 @@ public class LinkServiceImpl implements LinkService {
 
         Link saved = linkRepository.save(link);
 
-        Link savedLink = linkRepository.findById(saved.getId()).get(); // FIXME 코드 고치기
+        return linkRepository.findById(saved.getId()).get(); // FIXME 코드 고치기
 
-        return savedLink;
     }
 
     @Override
@@ -82,13 +73,6 @@ public class LinkServiceImpl implements LinkService {
         return linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
     }
 
-    /**
-     * 링크 수정
-     * @param userId
-     * @param linkId
-     * @param linkRequest
-     * @return
-     */
     @Override
     @Transactional
     public Link updateLink(Long userId, Long linkId, LinkRequest linkRequest) {

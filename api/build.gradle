@@ -38,8 +38,8 @@ dependencies {
 	compile "io.jsonwebtoken:jjwt-api:${jjwt_version}"
 	runtime "io.jsonwebtoken:jjwt-impl:${jjwt_version}",
 			"io.jsonwebtoken:jjwt-jackson:${jjwt_version}"
-
-	implementation 'com.github.gavlyukovskiv:p6spy-spring-boot-starter:1.5.7'
+//
+//	implementation 'com.github.gavlyukovskiv:p6spy-spring-boot-starter:1.5.7'
 
 	compileOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'

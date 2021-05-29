@@ -25,21 +25,7 @@ import java.util.stream.Stream;
 public class MyPageController {
 
     private final MemberService memberService;
-    private final UserAssembler userAssembler;
 
-    @ApiOperation("회원 가입")
-    @PostMapping("register")
-    public ResponseEntity<MemberInfoResponse> register(@RequestBody MemberRegisterDTO userDto) {
-        Member user = new Member();
-        user.setName(userDto.getName());
-        user.setEmail(userDto.getEmail());
-        user.setCreatedAt(LocalDateTime.now());
-        user.setStatus(AlarmStatus.ENABLED);
-        user.setTokenExpiredTime(LocalDateTime.now().plusDays(100L));
-        long userId = memberService.join(user);
-        memberService.update(userId, userAssembler.toLoginResponse(user).getToken());
-
-        return ResponseEntity.ok(userAssembler.toUserResponse(user));
     private final BadgeRepository badgeRepository;
 
     //    @LoginCheck(type = LoginCheck.UserType.USER)

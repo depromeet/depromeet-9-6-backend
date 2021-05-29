@@ -18,7 +18,8 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString(of = {"id", "notifyTime", "alarmStatus", "repeatedDate"})
 public class Alarm extends BaseEntity {
 
