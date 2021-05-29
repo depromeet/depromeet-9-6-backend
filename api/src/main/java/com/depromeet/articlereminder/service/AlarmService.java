@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.service;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
+import com.depromeet.articlereminder.dto.AlarmResponse;
 import com.depromeet.articlereminder.repository.AlarmRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,8 @@ public class AlarmService {
     private final AlarmRepository alarmRepository;
 
     @Transactional
-    public void saveAlarm(Alarm item) {
-        alarmRepository.save(item);
+    public Alarm saveAlarm(Alarm item) {
+       return alarmRepository.save(item);
     }
 
     @Transactional // 준영속 엔티티 변경감지(더티체크) 방식으로 수정, em.merge()와 동작방식 동일
