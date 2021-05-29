@@ -7,11 +7,11 @@ public class MemberDTO {
 
     private long userId;
 
+    private String token;
+
     private String name;
 
     private String email;
 
-    // private SocialType socialType;
 
-    private String token;
 }
