@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -17,10 +18,11 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class LinkHashtag { // contains 테이블
+@ToString(of = {"id"})
+public class LinkHashtag extends BaseEntity { // contains 테이블
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "link_hashtag_id")
     private Long id; // 링크-해시태그 id
 
@@ -33,10 +35,25 @@ public class LinkHashtag { // contains 테이블
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag; // 해시태그
 
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
+    public static LinkHashtag createLinkHashTag(Hashtag hashtag) {
+        LinkHashtag linkHashtag = new LinkHashtag();
+        linkHashtag.attachHashtag(hashtag);
+
+        return linkHashtag;
+    }
 
     public void setLink(Link link) {
         this.link = link;
+    }
+
+    private void attachHashtag(Hashtag hashtag) {
+        this.hashtag = hashtag;
+    }
+
+    /**
+     * 해시태그 - 링크 연관 관계 삭제
+     */
+    public void remove() {
+
     }
 }

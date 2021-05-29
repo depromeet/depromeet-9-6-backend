@@ -1,6 +1,7 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.ranking;
 
 
+import com.depromeet.articlereminder.dto.badge.BadgeResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;

@@ -1,20 +1,23 @@
-package com.depromeet.articlereminder.controller;
+package com.depromeet.articlereminder.controller.alarm;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
+import com.depromeet.articlereminder.dto.alarm.AlarmDTO;
+import com.depromeet.articlereminder.dto.alarm.AlarmResponse;
 import com.depromeet.articlereminder.domain.member.Member;
-import com.depromeet.articlereminder.dto.AlarmDTO;
-import com.depromeet.articlereminder.dto.AlarmResponse;
 import com.depromeet.articlereminder.service.AlarmService;
 import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;

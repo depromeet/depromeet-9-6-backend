@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.domain.ranking;
 
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,10 +17,10 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Ranking {
+public class Ranking extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "rank_id")
     private Long id;
 
@@ -32,7 +33,4 @@ public class Ranking {
     private LocalDate baseDt; // 기준 일자
 
     private Integer count; // 아티클 읽은 개수
-
-    @CreatedDate
-    private LocalDateTime loadDtm; // 생성 일시
 }

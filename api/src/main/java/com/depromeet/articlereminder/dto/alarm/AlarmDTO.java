@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.alarm;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

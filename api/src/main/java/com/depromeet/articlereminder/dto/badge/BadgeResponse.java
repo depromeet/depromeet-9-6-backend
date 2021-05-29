@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.badge;
 
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;

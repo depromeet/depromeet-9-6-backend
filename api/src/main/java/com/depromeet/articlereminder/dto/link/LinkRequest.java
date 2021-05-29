@@ -1,14 +1,15 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.link;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.*;
 
 @ApiModel(description = "링크 추가(줍줍) 시 RequestBody")
 @Data
-public class LinkDTO {
+public class LinkRequest {
     @ApiModelProperty(notes = "줍줍할 링크 URL",
             example = "https://brunch.co.kr/@delight412/351",
             required = true,

@@ -1,9 +1,11 @@
 package com.depromeet.articlereminder.domain.alarm;
 
+import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -17,8 +19,9 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Setter
-// @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Alarm {
+//@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "notifyTime", "alarmStatus", "repeatedDate"})
+public class Alarm extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,13 +34,10 @@ public class Alarm {
 
     private String notifyTime; // 알림 시각 (08:30)
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private AlarmStatus alarmStatus; // 알람 활성화 여부
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private RepeatedDate repeatedDate; // 반복 일자
-
-    @CreatedDate
-    private LocalDateTime createdAt; // 생성 일시
 
 }
