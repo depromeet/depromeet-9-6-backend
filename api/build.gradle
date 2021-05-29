@@ -35,9 +35,11 @@ dependencies {
 	implementation 'com.google.code.gson:gson'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation "com.auth0:java-jwt:${java_jwt_version}"
-	compile "io.jsonwebtoken:jjwt-api:${jjwt_version}"
-	runtime "io.jsonwebtoken:jjwt-impl:${jjwt_version}",
-			"io.jsonwebtoken:jjwt-jackson:${jjwt_version}"
+
+//	compile "io.jsonwebtoken:jjwt-api:${jjwt_version}"
+//	runtime "io.jsonwebtoken:jjwt-impl:${jjwt_version}",
+//			"io.jsonwebtoken:jjwt-jackson:${jjwt_version}"
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 //
 //	implementation 'com.github.gavlyukovskiv:p6spy-spring-boot-starter:1.5.7'
 

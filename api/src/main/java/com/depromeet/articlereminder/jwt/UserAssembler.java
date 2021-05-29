@@ -26,10 +26,11 @@ public class UserAssembler {
         return userResponse;
     }
 
-    public LoginResponse toLoginResponse(Member user) {
+    public LoginResponse toLoginResponse(Member user, String comment) {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUserId(user.getId());
         loginResponse.setToken(jwtService.create(user.getId()));
+        loginResponse.setComment(comment);
         return loginResponse;
     }
 }
