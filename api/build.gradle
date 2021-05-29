@@ -30,8 +30,8 @@ dependencies {
 	implementation "io.springfox:springfox-swagger2:${swagger_version}"
 	implementation "io.springfox:springfox-swagger-ui:${swagger_version}"
 
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	//implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'com.google.code.gson:gson'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
 	implementation "com.auth0:java-jwt:${java_jwt_version}"
