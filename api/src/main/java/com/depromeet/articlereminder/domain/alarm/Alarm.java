@@ -4,6 +4,7 @@ import com.depromeet.articlereminder.domain.member.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -15,7 +16,8 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+// @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Alarm {
 
     @Id
