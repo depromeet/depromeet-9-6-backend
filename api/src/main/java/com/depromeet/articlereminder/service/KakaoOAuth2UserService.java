@@ -43,11 +43,11 @@ public class KakaoOAuth2UserService extends DefaultOAuth2UserService {
         member.setToken(userRequest.getAccessToken().getTokenValue());
 
         // default ExpriedTIME: 현재시간 + 6시간
-        member.setTokenExpiredTime(Date.from(userRequest.getAccessToken().getExpiresAt()));
-        member.setTokenStartTime(Date.from(userRequest.getAccessToken().getIssuedAt()));
+        //member.setTokenExpiredTime(Date.from(userRequest.getAccessToken().getExpiresAt()));
+        //member.setTokenStartTime(Date.from(userRequest.getAccessToken().getIssuedAt()));
 
         SessionUtil.setLoginMemberId(httpSession,member.getEmail());
-        SessionUtil.setTokenExpiredTime(httpSession,member.getTokenExpiredTime());
+        //SessionUtil.setTokenExpiredTime(httpSession,member.getTokenExpiredTime());
         SessionUtil.setToken(httpSession,member.getToken());
 
         memberService.validateDuplicateMember(member);

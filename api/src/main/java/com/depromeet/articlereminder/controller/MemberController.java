@@ -2,11 +2,15 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.aop.LoginCheck;
 import com.depromeet.articlereminder.domain.BaseResponse;
+import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.domain.member.Member;
-import com.depromeet.articlereminder.dto.BadgeResponse;
-import com.depromeet.articlereminder.dto.UserMyPageResponse;
+import com.depromeet.articlereminder.dto.*;
+import com.depromeet.articlereminder.exception.InvalidAccessTokenException;
+import com.depromeet.articlereminder.jwt.JwtService;
+import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
+import com.google.gson.internal.bind.CollectionTypeAdapterFactory;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -30,24 +35,62 @@ import java.util.stream.Stream;
 public class MemberController {
 
     private final MemberService memberService;
+    private final JwtService jwtService;
+    private final UserAssembler userAssembler;
 
-    @PostMapping("kakaoLogin")
-    public String kakaoMemberCreate() {
-        return "redirect:/oauth2/authorization/kakao";
+    @ApiOperation("회원 가입")
+    @PostMapping("register")
+    public BaseResponse<MemberInfoResponse> register(@RequestBody MemberRegisterDTO userDto) {
+        Member user = new Member();
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setStatus(AlarmStatus.ENABLED);
+        user.setTokenExpiredTime(LocalDateTime.now().plusDays(100L));
+        long userId = memberService.join(user);
+        memberService.update(userId, userAssembler.toLoginResponse(user).getToken());
+
+        return BaseResponse.of("201", "회원가입에 성공하셨습니다.", userAssembler.toUserResponse(user));
     }
 
-    @LoginCheck(type = LoginCheck.UserType.USER)
+    @ApiOperation("로그인을 하여 토큰을 발급받습니다.")
+    @PostMapping("login")
+    public BaseResponse<LoginResponse> login(@RequestBody MemberDTO userDto) {
+
+        boolean isValid = true;
+        String token = userDto.getToken();
+
+        Member member = memberService.findOne(userDto.getUserId());
+
+        if (token != null) {
+            // TODO 카카오 로그인 유효성 검사
+            // https://kapi.kakao.com/v1/user/access_token_info
+            // isValid = memberService.checkLoginToken(socialType, token);
+
+            // 저장된 토큰값이 맞는지, 기간이 유효한지 확인
+//            if(userDto.getToken() != member.getToken())
+//                throw new InvalidAccessTokenException();
+            if (member.getTokenExpiredTime().isBefore(LocalDateTime.now()))
+                throw new InvalidAccessTokenException();
+        }
+        if (!isValid) {
+            throw new InvalidAccessTokenException();
+        }
+        return BaseResponse.of("202", "로그인에 성공하셨습니다.", userAssembler.toLoginResponse(member));
+    }
+
+    //@LoginCheck(type = LoginCheck.UserType.USER)
     @GetMapping("info")
-    public ResponseEntity<Member> memberInfo(@RequestParam(required = false) String email) {
-        Member memberInfo = memberService.findOneByEmail(email);
+    public ResponseEntity<Member> memberInfo(@RequestParam(required = false) long userId) {
+        Member memberInfo = memberService.findOne(userId);
         return new ResponseEntity<Member>(memberInfo, HttpStatus.OK);
     }
 
-    @LoginCheck(type = LoginCheck.UserType.USER)
+    //@LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 정보를(마이페이지를) 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("mypage/info")
-    public BaseResponse<UserMyPageResponse> userPageInfo(@RequestParam(required = false)String email) {
+    public BaseResponse<UserMyPageResponse> userPageInfo(@RequestParam(required = false) String email) {
         BadgeResponse badge = BadgeResponse.builder()
                 .badgeId(1L)
                 .badgeName("0~5000 포인트 뱃지")
@@ -71,13 +114,13 @@ public class MemberController {
         return BaseResponse.of("202", "사용자 정보 조회에 성공했습니다.", myPageResponse);
     }
 
-    @LoginCheck(type = LoginCheck.UserType.USER)
+    //@LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 뱃지 히스토리를 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header")
     @GetMapping("mypage/badges")
     public BaseResponse<Page<BadgeResponse>> userBadges(@RequestParam(required = false) String email,
-                                                          @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                                          @RequestParam(required = false, defaultValue = "12") int pageSize) {
+                                                        @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                        @RequestParam(required = false, defaultValue = "12") int pageSize) {
         BadgeResponse badge1 = BadgeResponse.builder()
                 .badgeId(1L)
                 .userId(1L)
