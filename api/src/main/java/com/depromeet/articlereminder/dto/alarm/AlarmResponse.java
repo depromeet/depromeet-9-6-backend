@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.alarm;
 
 import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
 import com.fasterxml.jackson.annotation.JsonFormat;

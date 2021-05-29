@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.dto;
+package com.depromeet.articlereminder.dto.member;
 
 import lombok.Getter;
 import lombok.Setter;

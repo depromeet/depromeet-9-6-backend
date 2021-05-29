@@ -3,11 +3,12 @@ package com.depromeet.articlereminder.domain.link;
 import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.depromeet.articlereminder.exception.LinkModifiedByInvalidUserException;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -20,10 +21,11 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "linkURL", "status", "completedAt"})
 public class Link extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "link_id")
     private Long id; // 링크 id
 
@@ -36,19 +38,47 @@ public class Link extends BaseEntity {
 
     private String linkURL; // 링크 url
 
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private LinkStatus status; // 링크 읽음 상태
 
     private LocalDateTime completedAt; // 읽음 완료 일시
 
-
-    public static Link createLink(Member member, LinkHashtag... linkHashtags) {
+    /**
+     * 링크 생성 메서드
+     * @param member
+     * @param linkURL
+     * @param linkHashtags
+     * @return
+     */
+    public static Link createLink(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         Link link = new Link();
+        link.setLinkURL(linkURL);
         link.setMember(member);
 
         for (LinkHashtag hashtag : linkHashtags) {
             link.addLinkHashtag(hashtag);
         }
+        link.setInitialStatus();
+
+        return link;
+    }
+
+    /**
+     * 링크 생성 메서드
+     * @param member
+     * @param linkURL
+     * @param linkHashtags
+     * @return
+     */
+    public Link createLink(Member member, String linkURL) {
+        Link link = new Link();
+        link.setLinkURL(linkURL);
+        link.setMember(member);
+
+        for (LinkHashtag hashtag : linkHashtags) {
+            link.addLinkHashtag(hashtag);
+        }
+        link.setInitialStatus();
 
         return link;
     }
@@ -65,25 +95,64 @@ public class Link extends BaseEntity {
     /**
      * 읽음 완료 메서드
      */
-    public void markRead() {
+    public Link markRead(Long todayCount) {
         if (this.status == LinkStatus.READ) {
             throw new IllegalStateException("link has been already read");
         }
         this.status = LinkStatus.READ;
         this.completedAt = LocalDateTime.now();
+        this.member.changeTotalCount();
+
+        int point = 100;
+
+        // 5의 배수로 읽은 경우
+        if (todayCount > 1 && todayCount % 5 == 1) {
+            point += 20;
+        }
+        this.member.changeTotalPoint(point);
+
+        return this;
     }
 
-    public void delete(Member member) {
+    public Link update(Member member, LinkRequest linkRequest) {
         this.isValidUser(member);
+
+        this.setLinkURL(linkRequest.getLinkURL());
+
+        // TODO 해시태그 수정
+
+        return this;
+    }
+
+    /**
+     * 링크 삭제
+     * @param member
+     */
+    public Link deleteLink(Member member) {
+        this.isValidUser(member);
+
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtag.remove();
+        }
+
+        return this;
     }
 
     private void setMember(Member member) {
         this.member = member;
     }
 
+    private void setLinkURL(String linkURL) {
+        this.linkURL = linkURL;
+    }
+
+    private void setInitialStatus() {
+        this.status = LinkStatus.UNREAD;
+    }
+
     private void isValidUser(Member member) {
         if (this.member != null && !this.member.equals(member)) {
-            throw new LinkModifiedByInvalidUserException();
+            throw new LinkModifiedByInvalidUserException("해당 링크에 접근 권한이 없는 사용자입니다.");
         }
     }
 

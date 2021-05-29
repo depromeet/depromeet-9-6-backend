@@ -6,9 +6,9 @@ import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.badge.Badge;
 import com.depromeet.articlereminder.domain.link.Link;
+import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -21,10 +21,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString(of = {"id", "email", "name", "token", "tokenStartTime", "tokenExpiredTime", "totalReadCount", "totalPoint", "lastAccessedAt", "status"})
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "member_id")
     private Long id; // 사용자 id
 
@@ -60,16 +61,31 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberBadge> memberBadges = new ArrayList<>(); // 멤버 <--> 뱃지 양방향 연관관계
 
+    public Member(){}
+
+    public Member(String name) {
+        this.name = name;
+    }
+
     /**
      * 어플 알림 설정 메서드
      */
-    public void changeAlarmStatus(AlarmStatus status) {
+    public Member changeAlarmStatus(AlarmStatus status) {
         this.status = status;
+        return this;
     }
 
     public void addMemberBadge(MemberBadge memberBadge) {
         memberBadges.add(memberBadge);
         memberBadge.setMember(this);
+    }
+
+    public void changeTotalPoint(int point) {
+        this.totalPoint += point;
+    }
+
+    public void changeTotalCount() {
+        this.totalReadCount += 1;
     }
 
 }

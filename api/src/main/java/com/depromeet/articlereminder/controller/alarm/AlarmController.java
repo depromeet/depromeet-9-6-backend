@@ -1,22 +1,16 @@
-package com.depromeet.articlereminder.controller;
+package com.depromeet.articlereminder.controller.alarm;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
-import com.depromeet.articlereminder.aop.LoginCheck;
-import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
-import com.depromeet.articlereminder.dto.AlarmDTO;
-import com.depromeet.articlereminder.dto.AlarmResponse;
+import com.depromeet.articlereminder.dto.alarm.AlarmDTO;
+import com.depromeet.articlereminder.dto.alarm.AlarmResponse;
 import com.depromeet.articlereminder.service.AlarmService;
-import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -69,14 +63,15 @@ public class AlarmController {
         return BaseResponse.of("202", "어플 알람 리스트 조회에 성공했습니다.", alarmList);
     }
 
-    @LoginCheck(type = LoginCheck.UserType.USER)
+//    @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("어플 알람을 추가합니다. 인증이 필요한 요청입니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PostMapping("")
-    public BaseResponse<AlarmResponse> postAlarm(@RequestHeader(required = true) Long userId,
+    public BaseResponse<AlarmResponse> postAlarm(@RequestHeader(name = "Authorization") String authorization,
+                                                 @RequestHeader(name = "userId") Long userId,
                                           @RequestBody AlarmDTO alarmDTO) {
         return BaseResponse.of("201", "어플 알람 등록에 성공했습니다.",
                 AlarmResponse.builder()

@@ -1,16 +1,15 @@
-package com.depromeet.articlereminder.controller;
+package com.depromeet.articlereminder.controller.ranking;
 
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
-import com.depromeet.articlereminder.dto.BadgeResponse;
-import com.depromeet.articlereminder.dto.RankingResponse;
-import com.depromeet.articlereminder.dto.UserRankingResponse;
+import com.depromeet.articlereminder.dto.badge.BadgeResponse;
+import com.depromeet.articlereminder.dto.ranking.RankingResponse;
+import com.depromeet.articlereminder.dto.ranking.UserRankingResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;

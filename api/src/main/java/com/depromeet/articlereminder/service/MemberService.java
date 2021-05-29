@@ -1,6 +1,11 @@
 package com.depromeet.articlereminder.service;
 
+import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
+import com.depromeet.articlereminder.domain.link.Link;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.dto.member.UserMyPageResponse;
+import com.depromeet.articlereminder.exception.LinkNotFoundException;
+import com.depromeet.articlereminder.exception.UserNotFoundException;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -68,5 +73,38 @@ public class MemberService {
     public void update(Long id, String name) {
         Member member = memberRepository.findById(id).get();
         member.setName(name);
+    }
+
+    /**
+     * userId로 사용자 조회
+     * @param userId
+     * @return
+     */
+    public Member findById(Long userId) {
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("해당 사용자를 찾을 수 없습니다"));
+        return member;
+    }
+
+    /**
+     * 어플 알람 활성화 / 비활성화 메서드
+     * @param userId
+     * @param alarmEnabled
+     * @return
+     */
+    public Member updateAlarmStatus(Long userId, String alarmEnabled) {
+        Member member = memberRepository.findById(userId)
+                .map(m -> m.changeAlarmStatus(getAlarmEnabled(alarmEnabled)))
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        return memberRepository.save(member);
+    }
+
+    private AlarmStatus getAlarmEnabled(String alarmEnabled) {
+        return "T".equals(alarmEnabled) ? AlarmStatus.ENABLED : AlarmStatus.DISABLED;
+    }
+
+    public Member getMyPageUserInfo(Long userId) {
+        return memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException());
     }
 }

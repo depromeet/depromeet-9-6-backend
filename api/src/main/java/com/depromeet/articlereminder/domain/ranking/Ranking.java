@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.*;
 public class Ranking extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "rank_id")
     private Long id;
 
