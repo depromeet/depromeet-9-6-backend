@@ -12,7 +12,6 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @ApiModel(description = "MyPage Response")
-@Builder
 @Data
 public class UserMyPageResponse {
 

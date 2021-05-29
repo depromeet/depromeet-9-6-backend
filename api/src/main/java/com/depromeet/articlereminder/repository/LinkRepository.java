@@ -20,7 +20,7 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     Page<Link> findByMemberAndStatus(Member member, LinkStatus status, Pageable pageable);
 
     @Query("select count(l.linkURL) from Link l where l.member = :member " +
-            "and l.status = :status AND l.completedAt LIKE %:time%")
+            "and l.status = :status AND SUBSTRING(l.completedAt, 0, 10) LIKE %:time%")
     Long findCountOfReadToday(@Param("member") Member member, @Param("status") LinkStatus status, @Param("time") String time);
     // 1. findAll
     // 2. findById

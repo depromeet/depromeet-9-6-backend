@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"members"})
-@Controller
+@RestController
 @RequiredArgsConstructor
 //@RequestMapping(value = "/v1/members")
 public class MemberController {

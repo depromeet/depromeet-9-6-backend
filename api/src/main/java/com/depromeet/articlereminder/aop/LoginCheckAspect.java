@@ -42,53 +42,53 @@ Login Check할때 aop의 Aspect 애노테이션을 이용하여
 @Log4j2
 // 어노테이션으로 로그인 여부를 검사하기 위한 클래스
 public class LoginCheckAspect {
-    @Around("@annotation(com.depromeet.articlereminder.aop.LoginCheck) && @ annotation(loginCheck)")
-    public Object adminLoginCheck(ProceedingJoinPoint proceedingJoinPoint, LoginCheck loginCheck) throws Throwable {
-        HttpSession session = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest().getSession();
-        String email = null;
-        int idIndex = 0;
-
-
-        String userType = loginCheck.type().toString();
-        switch (userType) {
-            case "ADMIN": {
-                email = SessionUtil.getLoginAdminId(session);
-                break;
-            }
-            case "USER": {
-                email = SessionUtil.getLoginMemberId(session);
-                break;
-            }
-        }
-        if (email == null) {
-            log.debug(proceedingJoinPoint.toString() + "accountName :" + email);
-            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 email값을 확인해주세요.") {
-            };
-        }
-
-        String token = SessionUtil.getToken(session);
-        Date expiredTime = SessionUtil.getTokenExpiredTime(session);
-
-        if (token == null) {
-            log.debug(proceedingJoinPoint.toString() + "token :" + token);
-            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 token값을 확인해주세요.") {
-            };
-        }
-
-        if (expiredTime.compareTo(new Date()) < 0) {
-            log.debug(proceedingJoinPoint.toString() + "token :" + token);
-            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 token값이 만료되었습니다.") {
-            };
-            // 재로그인 페이지로 redirect
-        }
-
-
-        Object[] modifiedArgs = proceedingJoinPoint.getArgs();
-
-        if (proceedingJoinPoint.getArgs() != null)
-            modifiedArgs[idIndex] = email;
-
-        return proceedingJoinPoint.proceed(modifiedArgs);
-    }
+//    @Around("@annotation(com.depromeet.articlereminder.aop.LoginCheck) && @ annotation(loginCheck)")
+//    public Object adminLoginCheck(ProceedingJoinPoint proceedingJoinPoint, LoginCheck loginCheck) throws Throwable {
+//        HttpSession session = ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getRequest().getSession();
+//        String email = null;
+//        int idIndex = 0;
+//
+//
+//        String userType = loginCheck.type().toString();
+//        switch (userType) {
+//            case "ADMIN": {
+//                email = SessionUtil.getLoginAdminId(session);
+//                break;
+//            }
+//            case "USER": {
+//                email = SessionUtil.getLoginMemberId(session);
+//                break;
+//            }
+//        }
+//        if (email == null) {
+//            log.debug(proceedingJoinPoint.toString() + "accountName :" + email);
+//            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 email값을 확인해주세요.") {
+//            };
+//        }
+//
+//        String token = SessionUtil.getToken(session);
+//        Date expiredTime = SessionUtil.getTokenExpiredTime(session);
+//
+//        if (token == null) {
+//            log.debug(proceedingJoinPoint.toString() + "token :" + token);
+//            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 token값을 확인해주세요.") {
+//            };
+//        }
+//
+//        if (expiredTime.compareTo(new Date()) < 0) {
+//            log.debug(proceedingJoinPoint.toString() + "token :" + token);
+//            throw new HttpStatusCodeException(HttpStatus.UNAUTHORIZED, "로그인한 token값이 만료되었습니다.") {
+//            };
+//            // 재로그인 페이지로 redirect
+//        }
+//
+//
+//        Object[] modifiedArgs = proceedingJoinPoint.getArgs();
+//
+//        if (proceedingJoinPoint.getArgs() != null)
+//            modifiedArgs[idIndex] = email;
+//
+//        return proceedingJoinPoint.proceed(modifiedArgs);
+//    }
 
 }

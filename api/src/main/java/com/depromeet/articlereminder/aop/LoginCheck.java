@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD) //어디에 어노테이션을 적용할 지 타겟을 정한다.
 public @interface LoginCheck {
-    public static enum UserType {
-        USER, ADMIN
-    }
-
-    UserType type();
+//    public static enum UserType {
+//        USER, ADMIN
+//    }
+//
+//    UserType type();
 }

@@ -118,8 +118,10 @@ public class LinkServiceImpl implements LinkService {
     @Override
     @Transactional
     public Link markAsRead(Long userId, Long linkId) {
-        Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Link link = linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+        Link link = linkRepository.findById(linkId)
+                .orElseThrow(() -> new LinkNotFoundException(linkId));
 
         LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
