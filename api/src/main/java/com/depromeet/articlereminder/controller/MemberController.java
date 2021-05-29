@@ -50,9 +50,8 @@ public class MemberController {
 
     @ApiOperation("로그인을 하여 토큰을 발급받습니다.")
     @PostMapping("login")
-    public ResponseEntity<LoginResponse> login(@RequestBody MemberDTO userDto) {
+    public ResponseEntity<LoginResponse> login(@RequestBody MemberLoginDTO userDto) {
 
-        boolean isValid = true;
         String token = userDto.getToken();
 
         Member member = memberService.findOne(userDto.getUserId());
@@ -68,9 +67,7 @@ public class MemberController {
             if (member.getTokenExpiredTime().isBefore(LocalDateTime.now()))
                 throw new InvalidAccessTokenException();
         }
-        if (!isValid) {
-            throw new InvalidAccessTokenException();
-        }
+
         return ResponseEntity.ok(userAssembler.toLoginResponse(member));
     }
 }
