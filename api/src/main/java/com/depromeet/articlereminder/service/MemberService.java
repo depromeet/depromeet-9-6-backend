@@ -35,12 +35,19 @@ public class MemberService {
     }
 
     public void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByEmail(member.getEmail()); // 멀티스레드 환경이라 unique 제약조건 설정.
+        List<Member> findMembers = memberRepository.findByEmail(member.getEmail());
         if (!findMembers.isEmpty()) {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
     }
 
+    public boolean findMemberCheckByEmail(String email) {
+        List<Member> findMembers = memberRepository.findByEmail(email);
+        if (!findMembers.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
     /**
      * 회원 전체 조회
      *
@@ -64,10 +71,10 @@ public class MemberService {
 //    }
 
     @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
-    public void update(Long id, String token) {
+    public void update(Long id, String token, LocalDateTime time) {
         Member member = memberRepository.findById(id).get();
         member.setToken(token);
-        member.setTokenExpiredTime(LocalDateTime.now().plusDays(100L));
+        member.setTokenExpiredTime(time);
     }
 
     /**
@@ -78,6 +85,13 @@ public class MemberService {
     public Member findById(Long userId) {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("해당 사용자를 찾을 수 없습니다"));
         return member;
+    }
+
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).stream()
+                .filter(member -> email.equals(member.getEmail()))
+                .findAny()
+                .orElse(null);
     }
 
     /**
