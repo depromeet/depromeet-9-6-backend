@@ -5,6 +5,7 @@ import com.depromeet.articlereminder.dto.LoginResponse;
 import com.depromeet.articlereminder.dto.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +31,15 @@ public class UserAssembler {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUserId(user.getId());
         loginResponse.setToken(jwtService.create(user.getId()));
-        loginResponse.setComment(comment);
+//        loginResponse.setComment(comment);
+        return loginResponse;
+    }
+
+    @Transactional
+    public LoginResponse toLoginResponse(Member user) {
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setUserId(user.getId());
+        loginResponse.setToken(jwtService.create(user.getId()));
         return loginResponse;
     }
 }
