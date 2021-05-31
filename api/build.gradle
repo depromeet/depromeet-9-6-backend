@@ -40,7 +40,7 @@ dependencies {
 //	runtime 'io.jsonwebtoken:jjwt-impl:0.10.7'
 //	runtime 'io.jsonwebtoken:jjwt-jackson:0.10.7'
 //
-	implementation 'com.github.gavlyukovskiv:p6spy-spring-boot-starter:1.5.7'
+	// implementation 'com.github.gavlyukovskiv:p6spy-spring-boot-starter:1.5.7'
 
 	compileOnly 'org.springframework.boot:spring-boot-devtools'
 	compileOnly 'org.projectlombok:lombok'
