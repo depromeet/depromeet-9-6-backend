@@ -71,10 +71,10 @@ public class MemberService {
 //    }
 
     @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
-    public void update(Long id, String token, LocalDateTime time) {
-        Member member = memberRepository.findById(id).get();
-        member.setToken(token);
-        member.setTokenExpiredTime(time);
+    public Member update(Member member) {
+        Member memberTemp = findById(member.getId());
+        member.setToken(member.getToken());
+        return memberTemp;
     }
 
     /**
