@@ -48,6 +48,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private AlarmStatus status; // 어플 알림 활성화 여부
 
+    @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
 
 
