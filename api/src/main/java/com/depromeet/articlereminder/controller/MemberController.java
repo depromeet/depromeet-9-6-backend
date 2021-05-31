@@ -41,7 +41,7 @@ public class MemberController {
                 // TODO 카카오 로그인 유효성 검사
                 if (user.getTokenExpiredTime().isBefore(LocalDateTime.now()))
 //                    return ResponseEntity.ok(userAssembler.toLoginResponse(user, "토큰시간이 만료되었습니다. 재로그인 해주세요."));
-                return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요", HttpStatus.UNAUTHORIZED, userAssembler.toLoginResponse(user));
+                return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","401", userAssembler.toLoginResponse(user));
             }
             // 로그인시 만료시간 늘림
             user = memberService.findByEmail(userDto.getEmail());
@@ -49,7 +49,7 @@ public class MemberController {
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             memberService.update(user);
 //            return ResponseEntity.ok(userAssembler.toLoginResponse(user, "정상 로그인되었습니다."));
-            return ResponseHandler.generateResponse("정상 로그인되었습니다", HttpStatus.OK, userAssembler.toLoginResponse(user));
+            return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
         } else { // 존재하지 않으면 회원가입
             user.setName(userDto.getName());
             user.setEmail(userDto.getEmail());
@@ -59,7 +59,7 @@ public class MemberController {
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             memberService.join(user);
 //            return ResponseEntity.ok(userAssembler.toLoginResponse(user, "정상 가입되었습니다."));
-            return ResponseHandler.generateResponse("정상 가입되었습니다.", HttpStatus.CREATED, userAssembler.toLoginResponse(user));
+            return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }
     }
 
@@ -72,6 +72,6 @@ public class MemberController {
         user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
         memberService.update(user);
 //        return ResponseEntity.ok(userAssembler.toLoginResponse(user, "로그아웃 되었습니다."));
-        return ResponseHandler.generateResponse("로그아웃되었습니다.", HttpStatus.OK, userAssembler.toLoginResponse(user));
+        return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
     }
 }

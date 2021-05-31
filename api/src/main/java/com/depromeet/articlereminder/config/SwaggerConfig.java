@@ -39,12 +39,12 @@ public class SwaggerConfig {
                         "    <th>comment</th>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
-                        "    <td>201</td>\n" +
-                        "    <td>등록 성공</td>\n" +
+                        "    <td>200</td>\n" +
+                        "    <td>조회 성공 (로그인 성공, 데이터 조회 성공....)</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
-                        "    <td>202</td>\n" +
-                        "    <td>조회 성공</td>\n" +
+                        "    <td>201</td>\n" +
+                        "    <td>등록 성공 (가입 성공, created에 대한 응답)</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
                         "    <td>203</td>\n" +
@@ -52,11 +52,11 @@ public class SwaggerConfig {
                         "  </tr>\n" +
                         "  <tr>\n" +
                         "    <td>204</td>\n" +
-                        "    <td>삭제 성공</td>\n" +
+                        "    <td>삭제 성공 (no Content에 대한 응답)</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
                         "    <td>401</td>\n" +
-                        "    <td>등록 실패</td>\n" +
+                        "    <td>Access token Expired</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
                         "    <td>402</td>\n" +
