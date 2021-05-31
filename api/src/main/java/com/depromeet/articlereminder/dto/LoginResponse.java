@@ -9,5 +9,5 @@ public class LoginResponse {
 
     private Long userId;
 
-    private String Comment;
+//    private String Comment;
 }
