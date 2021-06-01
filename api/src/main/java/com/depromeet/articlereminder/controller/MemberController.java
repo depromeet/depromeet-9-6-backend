@@ -40,7 +40,6 @@ public class MemberController {
             if (token != null) {
                 // TODO 카카오 로그인 유효성 검사
                 if (user.getTokenExpiredTime().isBefore(LocalDateTime.now()))
-//                    return ResponseEntity.ok(userAssembler.toLoginResponse(user, "토큰시간이 만료되었습니다. 재로그인 해주세요."));
                 return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","401", userAssembler.toLoginResponse(user));
             }
             // 로그인시 만료시간 늘림
@@ -48,7 +47,6 @@ public class MemberController {
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             memberService.update(user);
-//            return ResponseEntity.ok(userAssembler.toLoginResponse(user, "정상 로그인되었습니다."));
             return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
         } else { // 존재하지 않으면 회원가입
             user.setName(userDto.getName());
@@ -58,7 +56,6 @@ public class MemberController {
             user.setMemberStatus(MemberStatus.CREATED);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             memberService.join(user);
-//            return ResponseEntity.ok(userAssembler.toLoginResponse(user, "정상 가입되었습니다."));
             return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }
     }
@@ -71,7 +68,13 @@ public class MemberController {
         user.setMemberStatus(MemberStatus.LOGOUT);
         user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
         memberService.update(user);
-//        return ResponseEntity.ok(userAssembler.toLoginResponse(user, "로그아웃 되었습니다."));
         return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
+    }
+
+    @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 email로 삭제 부탁드려요")
+    @DeleteMapping("withdraw")
+    public ResponseEntity<Object> deleteMember(@RequestHeader("email") String email) {
+        memberService.withdraw(email);
+        return ResponseHandler.generateResponse( email + "에 해당하는 사용자가 삭제되었습니다." , "204", null);
     }
 }

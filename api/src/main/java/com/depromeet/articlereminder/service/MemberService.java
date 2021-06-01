@@ -66,10 +66,6 @@ public class MemberService {
         return memberRepository.findById(memberId).get();
     }
 
-//    public Member findOneByEmail(String email) {
-//        return (Member) memberRepository2.findOneByEmail(email);
-//    }
-
     @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
     public Member update(Member member) {
         Member memberTemp = findById(member.getId());
@@ -92,6 +88,12 @@ public class MemberService {
                 .filter(member -> email.equals(member.getEmail()))
                 .findAny()
                 .orElse(null);
+    }
+
+    @Transactional
+    public void withdraw(String email) {
+        Member member = findByEmail(email);
+        memberRepository.delete(member);
     }
 
     /**
