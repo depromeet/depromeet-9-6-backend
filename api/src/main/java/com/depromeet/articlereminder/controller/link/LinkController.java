@@ -1,8 +1,10 @@
 package com.depromeet.articlereminder.controller.link;
 
+import com.depromeet.articlereminder.common.ResponseHandler;
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.link.Link;
+import com.depromeet.articlereminder.domain.link.LinkStatus;
 import com.depromeet.articlereminder.dto.hashtag.HashtagDTO;
 import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.depromeet.articlereminder.dto.link.LinkResponse;
@@ -11,6 +13,7 @@ import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -50,16 +53,9 @@ public class LinkController {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
 
-        Page<Link> linkPage = linkService.findAllByUserAndStatus(userId, getLinkStatus(completed), pageable);
+        Page<Link> linkPage = linkService.findAllByUserAndStatus(userId, completed, pageable);
         Page<LinkResponse> map = linkPage.map(LinkResponse::new);
         return ResponseHandler.generateResponse("사용자가 저장한 링크 리스트 조회에 성공했습니다.", "200", map);
-    }
-
-    private String getLinkStatus(String completed) {
-        if ("ALL".equals(completed)) {
-            return "ALL";
-        }
-        return "T".equals(completed) ? "READ" : "UNREAD";
     }
 
     @ApiOperation("새로운 링크를 등록(추가)합니다. 인증이 필요한 요청입니다.")

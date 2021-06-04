@@ -43,9 +43,24 @@ public class LinkServiceImpl implements LinkService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        return linkRepository.findByMemberAndStatus(member, LinkStatus.valueOf(status), pageable);
+        // FIXME QueryDSL로 status 동적으로 처리하기
+        String isCompleted = getLinkStatus(status);
+
+        if (isCompleted.equalsIgnoreCase("READ")) {
+            return linkRepository.findByMemberAndRead(member, LinkStatus.valueOf("READ"), pageable);
+        } else if (isCompleted.equalsIgnoreCase("UNREAD")) {
+            return linkRepository.findByMemberAndUnread(member, LinkStatus.valueOf("UNREAD"), pageable);
+        }
+
+        return linkRepository.findByMember(member, pageable);
     }
 
+    /**
+     * 새로운 링크 등록
+     * @param userId
+     * @param linkRequest
+     * @return
+     */
     @Override
     @Transactional
     public Link saveLink(Long userId, LinkRequest linkRequest) {
@@ -117,5 +132,12 @@ public class LinkServiceImpl implements LinkService {
         return linkRepository.save(link);
 
         // TODO 포인트 지급
+    }
+
+    private String getLinkStatus(String completed) {
+        if ("ALL".equals(completed)) {
+            return "ALL";
+        }
+        return "T".equals(completed) ? "READ" : "UNREAD";
     }
 }
