@@ -41,4 +41,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         HttpStatus.OK
         );
     }
+
+    @ExceptionHandler({UserNotFoundException.class})
+    public ResponseEntity<Object> handleUserNotFoundException() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        USER_NOT_FOUND_EXCEPTION.status, USER_NOT_FOUND_EXCEPTION.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
+    @ExceptionHandler({HashtagNumberShouldNotBeMoreThanThree.class})
+    public ResponseEntity<Object> handleHashtagNumberShouldNotBeMoreThanThree() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        HASHTAG_SHOULD_NOT_BE_MORE_THAN_THREE.status, HASHTAG_SHOULD_NOT_BE_MORE_THAN_THREE.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
 }
