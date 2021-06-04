@@ -34,9 +34,9 @@ public class HashtagDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public LocalDateTime createdAt; // 등록 시각 (생성 시각)
 
-    public HashtagDTO(Hashtag linkHashtag) {
+    public HashtagDTO(LinkHashtag linkHashtag) {
         hashtagId = linkHashtag.getId();
-        hashtagName = linkHashtag.getName();
-        createdAt = linkHashtag.getCreatedAt();
+        hashtagName = linkHashtag.getHashtag().getName();
+        createdAt = linkHashtag.getHashtag().getCreatedAt();
     }
 }

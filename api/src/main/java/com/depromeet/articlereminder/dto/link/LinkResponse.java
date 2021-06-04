@@ -3,7 +3,6 @@ package com.depromeet.articlereminder.dto.link;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.depromeet.articlereminder.domain.link.Link;
-import com.depromeet.articlereminder.dto.LinkHashtagDTO;
 import com.depromeet.articlereminder.dto.hashtag.HashtagDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -46,7 +45,7 @@ public class LinkResponse {
             position = 3)
     private boolean isCompleted; // 읽음 상태
 
-    private List<LinkHashtagDTO> hashtags; // 해시 태그 id
+    private List<HashtagDTO> hashtags; // 해시 태그 id
 
     @ApiModelProperty(notes = "등록 시각",
             example = "2021-05-01 11:33:22",
@@ -71,7 +70,7 @@ public class LinkResponse {
         createdAt = link.getCreatedAt();
         completedAt = link.getCompletedAt();
         hashtags = link.getLinkHashtags().stream()
-                            .map(LinkHashtagDTO::new)
+                            .map(HashtagDTO::new)
                             .collect(Collectors.toList());
     }
 }
