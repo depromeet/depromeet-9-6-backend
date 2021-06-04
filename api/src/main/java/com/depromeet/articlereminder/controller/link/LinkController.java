@@ -35,26 +35,30 @@ public class LinkController {
     })
     @GetMapping("")
     @Transactional
-    public BaseResponse<Page<LinkResponse>> getLinks(@RequestHeader(name = "Authorization") String authorization,
-                                                     @RequestHeader(name = "userId") Long userId,
+    public ResponseEntity<Object> getLinks(@RequestHeader(name = "Authorization") String authorization,
+                                                       @RequestHeader(name = "userId") Long userId,
 
-                                                     @ApiParam(name = "completed",
+                                                       @ApiParam(name = "completed",
                                                                type = "string",
                                                                example = "F",
-                                                               value = "다 읽은 링크만 가져올지 flag(다 읽은 링크 : T, 모두 포함 : F)",
-                                                                required = false)
+                                                               value = "다 읽은 링크만 가져올지 flag(다 읽은 링크 : T, 안 읽은 링크 : F, 모두 포함 : ALL)",
+                                                               required = false)
                                                        @RequestParam(required = false, defaultValue = "F") String completed,
 
-                                                     @RequestParam(required = false, defaultValue = "0") int pageNumber,
-                                                     @RequestParam(required = false, defaultValue = "10") int pageSize) {
+                                                       @RequestParam(required = false, defaultValue = "0") int pageNumber,
+                                                       @RequestParam(required = false, defaultValue = "10") int pageSize) {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
+
         Page<Link> linkPage = linkService.findAllByUserAndStatus(userId, getLinkStatus(completed), pageable);
         Page<LinkResponse> map = linkPage.map(LinkResponse::new);
-        return BaseResponse.of("202", "사용자가 저장한 링크 리스트 조회에 성공했습니다.", map);
+        return ResponseHandler.generateResponse("사용자가 저장한 링크 리스트 조회에 성공했습니다.", "200", map);
     }
 
     private String getLinkStatus(String completed) {
+        if ("ALL".equals(completed)) {
+            return "ALL";
+        }
         return "T".equals(completed) ? "READ" : "UNREAD";
     }
 

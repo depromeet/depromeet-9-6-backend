@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.dto.hashtag;
 
 import com.depromeet.articlereminder.domain.LinkHashtag;
+import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -33,9 +34,9 @@ public class HashtagDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     public LocalDateTime createdAt; // 등록 시각 (생성 시각)
 
-    public HashtagDTO(LinkHashtag linkHashtag) {
+    public HashtagDTO(Hashtag linkHashtag) {
         hashtagId = linkHashtag.getId();
-        hashtagName = linkHashtag.getHashtag().getName();
+        hashtagName = linkHashtag.getName();
         createdAt = linkHashtag.getCreatedAt();
     }
 }

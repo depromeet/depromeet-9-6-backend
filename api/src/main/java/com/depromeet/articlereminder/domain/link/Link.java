@@ -33,7 +33,7 @@ public class Link extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "link", cascade = CascadeType.ALL)
     private List<LinkHashtag> linkHashtags = new ArrayList<>();
 
     private String linkURL; // 링크 url
