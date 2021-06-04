@@ -27,7 +27,7 @@ public class Hashtag extends BaseEntity {
         this.name = name;
     }
 
-    public static Hashtag from(String hashtagValue) {
+    public static Hashtag createHashtag(String hashtagValue) {
         Hashtag hashtag = new Hashtag();
         hashtag.name = hashtagValue;
         return hashtag;

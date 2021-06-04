@@ -34,7 +34,7 @@ public class MemberBadge extends BaseEntity { // 뱃지 획득 테이블 Acqusti
     @JoinColumn(name = "badge_id")
     private Badge badge; // 뱃지
 
-    public void setMember(Member member) {
+    public void changeMember(Member member) {
         this.member = member;
     }
 }

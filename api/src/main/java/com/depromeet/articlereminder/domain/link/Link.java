@@ -52,13 +52,13 @@ public class Link extends BaseEntity {
      */
     public static Link createLink(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         Link link = new Link();
-        link.setLinkURL(linkURL);
-        link.setMember(member);
+        link.changeLinkURL(linkURL);
+        link.changeMember(member);
 
         for (LinkHashtag hashtag : linkHashtags) {
             link.addLinkHashtag(hashtag);
         }
-        link.setInitialStatus();
+        link.changeInitialLinkStatus();
 
         return link;
     }
@@ -72,13 +72,13 @@ public class Link extends BaseEntity {
      */
     public Link createLink(Member member, String linkURL) {
         Link link = new Link();
-        link.setLinkURL(linkURL);
-        link.setMember(member);
+        link.changeLinkURL(linkURL);
+        link.changeMember(member);
 
         for (LinkHashtag hashtag : linkHashtags) {
             link.addLinkHashtag(hashtag);
         }
-        link.setInitialStatus();
+        link.changeInitialLinkStatus();
 
         return link;
     }
@@ -89,7 +89,7 @@ public class Link extends BaseEntity {
      */
     public void addLinkHashtag(LinkHashtag hashtag) {
         linkHashtags.add(hashtag);
-        hashtag.setLink(this);
+        hashtag.changeLink(this);
     }
 
     /**

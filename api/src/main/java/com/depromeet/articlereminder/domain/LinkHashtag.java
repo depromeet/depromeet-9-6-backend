@@ -42,7 +42,7 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
         return linkHashtag;
     }
 
-    public void setLink(Link link) {
+    public void changeLink(Link link) {
         this.link = link;
     }
 

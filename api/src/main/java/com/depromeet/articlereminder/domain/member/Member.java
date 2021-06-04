@@ -80,7 +80,7 @@ public class Member extends BaseEntity {
 
     public void addMemberBadge(MemberBadge memberBadge) {
         memberBadges.add(memberBadge);
-        memberBadge.setMember(this);
+        memberBadge.changeMember(this);
     }
 
     public void changeTotalPoint(int point) {
