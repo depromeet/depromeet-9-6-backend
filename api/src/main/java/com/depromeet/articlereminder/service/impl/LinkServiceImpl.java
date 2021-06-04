@@ -9,6 +9,7 @@ import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.depromeet.articlereminder.exception.HashtagNumberShouldNotBeMoreThanThree;
 import com.depromeet.articlereminder.exception.LinkNotFoundException;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
+import com.depromeet.articlereminder.repository.HashtagRepository;
 import com.depromeet.articlereminder.repository.LinkRepository;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import com.depromeet.articlereminder.service.LinkService;
@@ -22,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,6 +36,7 @@ public class LinkServiceImpl implements LinkService {
 
     private final MemberRepository memberRepository;
     private final LinkRepository linkRepository;
+    private final HashtagRepository hashtagRepository;
 
     /**
      * 모두 조회
@@ -64,16 +68,16 @@ public class LinkServiceImpl implements LinkService {
     @Override
     @Transactional
     public Link saveLink(Long userId, LinkRequest linkRequest) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         if (linkRequest.getHashtags().size() > 3) {
             throw new HashtagNumberShouldNotBeMoreThanThree("해시태그는 3개까지만 설정 가능합니다.");
         }
 
-        List<LinkHashtag> linkHashtagList = linkRequest.getHashtags().stream()
-                .map(hashtag -> LinkHashtag.createLinkHashTag(Hashtag.from(hashtag)))
-                .collect(Collectors.toList());
+        List<LinkHashtag> linkHashtagList = linkRequest.getHashtags()
+                                    .stream()
+                                    .map(hashtag -> LinkHashtag.createLinkHashTag(saveHashtag(hashtag)))
+                                    .collect(Collectors.toList());
 
         Link link = Link.createLink(member, linkRequest.getLinkURL(), linkHashtagList);
 
@@ -83,9 +87,23 @@ public class LinkServiceImpl implements LinkService {
 
     }
 
+    @Transactional
+    public Hashtag saveHashtag(String current) {
+        Optional<Hashtag> hashtag = hashtagRepository.findByName(current);
+
+        if (hashtag.isPresent()) {
+            return hashtag.get();
+        } else {
+            Hashtag created = Hashtag.createHashtag(current);
+            hashtagRepository.save(created);
+            return hashtagRepository.findByName(current).get();
+        }
+    }
+
     @Override
     public Link getLink(Long linkId) {
-        return linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
+        return linkRepository.findById(linkId)
+                            .orElseThrow(() -> new LinkNotFoundException(linkId));
     }
 
     @Override

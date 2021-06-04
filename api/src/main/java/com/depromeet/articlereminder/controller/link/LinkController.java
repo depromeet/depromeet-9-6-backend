@@ -65,15 +65,14 @@ public class LinkController {
     })
     @PostMapping("")
     @Transactional
-    public BaseResponse<LinkResponse> postLink(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> postLink(@RequestHeader(name = "Authorization") String authorization,
                                                @RequestHeader(name = "userId") Long userId,
                                                @RequestBody LinkRequest linkRequest) {
         Link savedLink =  linkService.saveLink(userId, linkRequest);
         LinkResponse linkResponse = new LinkResponse(savedLink);
-
-        return BaseResponse.of(
-                "201",
+        return ResponseHandler.generateResponse(
                 "새로운 링크 등록에 성공했습니다.",
+                "201",
                 linkResponse
         );
     }
@@ -85,13 +84,12 @@ public class LinkController {
     })
     @GetMapping("{linkId}")
     @Transactional
-    public BaseResponse<LinkResponse> getLink(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> getLink(@RequestHeader(name = "Authorization") String authorization,
                                                 @RequestHeader(name = "userId") Long userId,
                                                 @PathVariable Long linkId) {
         Link link = linkService.getLink(linkId);
-
         LinkResponse linkResponse = new LinkResponse(link);
-        return BaseResponse.of("202", "링크 상세 조회에 성공했습니다.", linkResponse);
+        return ResponseHandler.generateResponse("링크 상세 조회에 성공했습니다.", "202", linkResponse);
     }
 
     @ApiOperation("특정 링크에 대해 수정합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
