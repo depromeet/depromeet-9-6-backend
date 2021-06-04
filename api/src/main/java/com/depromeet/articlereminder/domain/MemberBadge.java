@@ -22,7 +22,7 @@ import static javax.persistence.FetchType.*;
 public class MemberBadge extends BaseEntity { // 뱃지 획득 테이블 Acqustition
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_badge_id")
     private Long id;
 

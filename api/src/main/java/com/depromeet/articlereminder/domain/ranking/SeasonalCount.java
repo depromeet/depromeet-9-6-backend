@@ -20,7 +20,7 @@ import static javax.persistence.FetchType.LAZY;
 public class SeasonalCount extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JoinColumn(name = "seasonal_id")
     private Long id;
 

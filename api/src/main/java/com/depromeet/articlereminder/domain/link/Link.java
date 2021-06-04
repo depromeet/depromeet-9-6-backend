@@ -25,7 +25,7 @@ import static javax.persistence.FetchType.*;
 public class Link extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_id")
     private Long id; // 링크 id
 
@@ -117,7 +117,7 @@ public class Link extends BaseEntity {
     public Link update(Member member, LinkRequest linkRequest) {
         this.isValidUser(member);
 
-        this.setLinkURL(linkRequest.getLinkURL());
+        this.changeLinkURL(linkRequest.getLinkURL());
 
         // TODO 해시태그 수정
 
@@ -138,15 +138,15 @@ public class Link extends BaseEntity {
         return this;
     }
 
-    private void setMember(Member member) {
+    private void changeMember(Member member) {
         this.member = member;
     }
 
-    private void setLinkURL(String linkURL) {
+    private void changeLinkURL(String linkURL) {
         this.linkURL = linkURL;
     }
 
-    private void setInitialStatus() {
+    private void changeInitialLinkStatus() {
         this.status = LinkStatus.UNREAD;
     }
 

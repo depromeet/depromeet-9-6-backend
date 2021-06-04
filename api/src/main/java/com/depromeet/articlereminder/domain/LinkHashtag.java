@@ -22,16 +22,16 @@ import static javax.persistence.FetchType.*;
 public class LinkHashtag extends BaseEntity { // contains 테이블
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_hashtag_id")
     private Long id; // 링크-해시태그 id
 
     @JsonIgnore
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "link_id")
     private Link link; // 링크
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag; // 해시태그
 

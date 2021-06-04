@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Badge extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "badge_id")
     private Long id; // 뱃지 id
 

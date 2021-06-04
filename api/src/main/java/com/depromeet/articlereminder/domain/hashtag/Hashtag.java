@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Hashtag extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id")
     private Long id; // 해시태그 id
 
