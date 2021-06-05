@@ -54,31 +54,15 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PostMapping("")
-    public BaseResponse<Alarm> postAlarm(@RequestHeader(required = true) Long userId,
+    public ResponseEntity<Object> postAlarm(@RequestHeader(required = true) Long userId,
                                                  @RequestBody AlarmRequest alarmRequest) {
         Alarm savedAlarm = alarmService.saveAlarm(userId, alarmRequest);
-
-//        Member member = memberService.findOne(userId);
-//        Alarm alarm = new Alarm();
-//        alarm.setNotifyTime(alarmRequest.getNotifyTime());
-//        alarm.setMember(member);
-//        alarm.setCreatedAt(LocalDateTime.now());
-//        alarm.setRepeatedDate(alarm.getRepeatedDate());
-        //alarm.setAlarmStatus(alarmDTO.get);
-
-
-//        return BaseResponse.of("201", "어플 알람 등록에 성공했습니다.",
-//                AlarmResponse.builder()
-//                        .alarmId(1L)
-//                        .userId(userId)
-//                        .notifyTime(alarmDTO.getNotifyTime())
-//                        .repeatedDate(RepeatedDate.valueOf(alarmDTO.getRepeatedDate()))
-//                        .isEnabled(alarmDTO.isEnabled())
-//                        .createdAt(LocalDateTime.now())
-//                        .build()
-//        );
-
-        return BaseResponse.of("201", "어플 알람 등록에 성공했습니다.", null);
+        AlarmResponse alarmResponse = new AlarmResponse(savedAlarm);
+        return ResponseHandler.generateResponse(
+                "어플 알람 등록에 성공했습니다.",
+                "201",
+                alarmResponse
+        );
     }
 
     @ApiOperation("특정한 어플 알람의 세부 내용을 조회합니다. - 어플 알람 id 필요, 인증이 필요한 요청입니다.")
