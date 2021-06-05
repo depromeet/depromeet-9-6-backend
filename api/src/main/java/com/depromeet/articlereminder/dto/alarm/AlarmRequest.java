@@ -9,7 +9,7 @@ import java.util.List;
 
 @ApiModel(description = "어플 알람 추가 시 RequestBody")
 @Data
-public class AlarmDTO {
+public class AlarmRequest {
     @ApiModelProperty(
             dataType = "string",
             notes = "알람 시각 (hh:mm 의 포맷)",
