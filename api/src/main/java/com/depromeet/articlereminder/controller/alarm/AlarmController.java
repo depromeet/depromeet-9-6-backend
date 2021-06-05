@@ -45,37 +45,6 @@ public class AlarmController {
                 .collect(Collectors.toList());
 
         return ResponseHandler.generateResponse("사용자의 알람 리스트 조회에 성공했습니다.", "200", alarmResponse);
-
-//        AlarmResponse alarmResponse1 = AlarmResponse.builder()
-//                .alarmId(1L)
-//                .userId(1L)
-//                .notifyTime("08:30")
-//                .repeatedDate(RepeatedDate.EVERYDAY)
-//                .isEnabled(true)
-//                .createdAt(LocalDateTime.now().minusDays(5L))
-//                .build();
-//
-//        AlarmResponse alarmResponse2 = AlarmResponse.builder()
-//                .alarmId(2L)
-//                .userId(1L)
-//                .notifyTime("09:00")
-//                .repeatedDate(RepeatedDate.EVERYDAY)
-//                .isEnabled(false)
-//                .createdAt(LocalDateTime.now().minusDays(3L))
-//                .build();
-//
-//        AlarmResponse alarmResponse3 = AlarmResponse.builder()
-//                .alarmId(3L)
-//                .userId(1L)
-//                .notifyTime("09:30")
-//                .repeatedDate(RepeatedDate.EVERYDAY_EXCEPT_HOLIDAYS)
-//                .isEnabled(true)
-//                .createdAt(LocalDateTime.now().minusDays(2L))
-//                .build();
-//
-//        List<AlarmResponse> alarmList = Stream.of(alarmResponse3, alarmResponse2, alarmResponse1).collect(Collectors.toList());
-
-//        return BaseResponse.of("202", "어플 알람 리스트 조회에 성공했습니다.", alarmList);
     }
 
     //@LoginCheck(type = LoginCheck.UserType.USER)
@@ -87,6 +56,7 @@ public class AlarmController {
     @PostMapping("")
     public BaseResponse<Alarm> postAlarm(@RequestHeader(required = true) Long userId,
                                                  @RequestBody AlarmRequest alarmRequest) {
+        Alarm savedAlarm = alarmService.saveAlarm(userId, alarmRequest);
 
 //        Member member = memberService.findOne(userId);
 //        Alarm alarm = new Alarm();

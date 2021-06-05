@@ -2,6 +2,7 @@ package com.depromeet.articlereminder.service.impl;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.dto.alarm.AlarmRequest;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
 import com.depromeet.articlereminder.repository.AlarmRepository;
 import com.depromeet.articlereminder.repository.MemberRepository;
@@ -28,5 +29,16 @@ public class AlarmServiceImpl implements AlarmService {
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         return alarmRepository.findAllByMember(member);
+    }
+
+    @Override
+    public Alarm saveAlarm(Long userId, AlarmRequest alarmRequest) {
+        Member member = memberRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException());
+
+        Alarm alarm = Alarm.createAlarm(member, alarmRequest.getNotifyTime(), alarmRequest.getRepeatedDate());
+        Alarm savedAlarm = alarmRepository.save(alarm);
+
+        return alarmRepository.findById(savedAlarm.getId()).get(); // FIXME Optional .get() 고치기
     }
 }
