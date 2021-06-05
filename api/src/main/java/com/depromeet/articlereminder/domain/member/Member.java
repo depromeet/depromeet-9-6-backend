@@ -2,20 +2,15 @@ package com.depromeet.articlereminder.domain.member;
 
 import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.MemberBadge;
-import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
-import com.depromeet.articlereminder.domain.badge.Badge;
-import com.depromeet.articlereminder.domain.link.Link;
-import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,7 +20,7 @@ import java.util.List;
 public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private Long id; // 사용자 id
 
@@ -80,7 +75,7 @@ public class Member extends BaseEntity {
 
     public void addMemberBadge(MemberBadge memberBadge) {
         memberBadges.add(memberBadge);
-        memberBadge.setMember(this);
+        memberBadge.changeMember(this);
     }
 
     public void changeTotalPoint(int point) {
@@ -90,5 +85,10 @@ public class Member extends BaseEntity {
     public void changeTotalCount() {
         this.totalReadCount += 1;
     }
+
+    public void changeInitialAlarmStatus() {
+        this.status = AlarmStatus.ENABLED;
+    }
+
 
 }

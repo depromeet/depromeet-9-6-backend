@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 public class Hashtag extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id")
     private Long id; // 해시태그 id
 
@@ -27,7 +27,7 @@ public class Hashtag extends BaseEntity {
         this.name = name;
     }
 
-    public static Hashtag from(String hashtagValue) {
+    public static Hashtag createHashtag(String hashtagValue) {
         Hashtag hashtag = new Hashtag();
         hashtag.name = hashtagValue;
         return hashtag;

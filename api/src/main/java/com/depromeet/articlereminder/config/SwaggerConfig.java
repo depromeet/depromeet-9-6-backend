@@ -55,7 +55,7 @@ public class SwaggerConfig {
                         "    <td>삭제 성공 (no Content에 대한 응답)</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
-                        "    <td>401</td>\n" +
+                        "    <td>403</td>\n" +
                         "    <td>Access token Expired</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +

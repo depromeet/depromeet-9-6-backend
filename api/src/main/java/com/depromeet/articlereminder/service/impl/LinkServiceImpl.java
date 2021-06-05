@@ -9,6 +9,8 @@ import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.depromeet.articlereminder.exception.HashtagNumberShouldNotBeMoreThanThree;
 import com.depromeet.articlereminder.exception.LinkNotFoundException;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
+import com.depromeet.articlereminder.repository.HashtagRepository;
+import com.depromeet.articlereminder.repository.LinkHashtagRepository;
 import com.depromeet.articlereminder.repository.LinkRepository;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import com.depromeet.articlereminder.service.LinkService;
@@ -22,7 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -33,6 +37,8 @@ public class LinkServiceImpl implements LinkService {
 
     private final MemberRepository memberRepository;
     private final LinkRepository linkRepository;
+    private final HashtagRepository hashtagRepository;
+    private final LinkHashtagRepository linkHashtagRepository;
 
     /**
      * 모두 조회
@@ -43,22 +49,35 @@ public class LinkServiceImpl implements LinkService {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
-        return linkRepository.findByMemberAndStatus(member, LinkStatus.valueOf(status), pageable);
+        // FIXME QueryDSL로 status 동적으로 처리하기
+        String isCompleted = getLinkStatus(status);
+
+        if (isCompleted.equalsIgnoreCase("READ")) {
+            return linkRepository.findByMemberAndRead(member, LinkStatus.valueOf("READ"), pageable);
+        } else if (isCompleted.equalsIgnoreCase("UNREAD")) {
+            return linkRepository.findByMemberAndUnread(member, LinkStatus.valueOf("UNREAD"), pageable);
+        }
+
+        return linkRepository.findByMember(member, pageable);
     }
 
+    /**
+     * 새로운 링크 등록
+     * @param userId
+     * @param linkRequest
+     * @return
+     */
     @Override
     @Transactional
     public Link saveLink(Long userId, LinkRequest linkRequest) {
-        Member member = memberRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
-        if (linkRequest.getHashtags().size() > 3) {
-            throw new HashtagNumberShouldNotBeMoreThanThree("해시태그는 3개까지만 설정 가능합니다.");
-        }
+        checkHashtagsSize(linkRequest);
 
-        List<LinkHashtag> linkHashtagList = linkRequest.getHashtags().stream()
-                .map(hashtag -> LinkHashtag.createLinkHashTag(Hashtag.from(hashtag)))
-                .collect(Collectors.toList());
+        List<LinkHashtag> linkHashtagList = linkRequest.getHashtags()
+                                    .stream()
+                                    .map(hashtag -> saveLinkHashTag(saveHashtag(hashtag)))
+                                    .collect(Collectors.toList());
 
         Link link = Link.createLink(member, linkRequest.getLinkURL(), linkHashtagList);
 
@@ -68,19 +87,70 @@ public class LinkServiceImpl implements LinkService {
 
     }
 
-    @Override
-    public Link getLink(Long linkId) {
-        return linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
+    private LinkHashtag saveLinkHashTag(Hashtag hashtag) {
+        LinkHashtag created = LinkHashtag.createLinkHashTag(hashtag);
+        linkHashtagRepository.save(created);
+        return linkHashtagRepository.findById(created.getId()).get();
     }
 
+    @Transactional
+    public Hashtag saveHashtag(String current) {
+        Optional<Hashtag> hashtag = hashtagRepository.findByName(current);
+
+        if (hashtag.isPresent()) {
+            return hashtag.get();
+        } else {
+            Hashtag created = Hashtag.createHashtag(current);
+            hashtagRepository.save(created);
+            return hashtagRepository.findByName(current).get();
+        }
+    }
+
+    @Override
+    public Link getLink(Long linkId) {
+        return linkRepository.findById(linkId)
+                            .orElseThrow(() -> new LinkNotFoundException(linkId));
+    }
+
+    /**
+     * 링크 수정
+     * @param userId
+     * @param linkId
+     * @param linkRequest
+     * @return
+     */
     @Override
     @Transactional
     public Link updateLink(Long userId, Long linkId, LinkRequest linkRequest) {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Link link = linkRepository.findById(linkId)
-                .map(l -> l.update(member, linkRequest))
-                .orElseThrow(() -> new LinkNotFoundException(linkId));
-        return linkRepository.save(link);
+
+        checkHashtagsSize(linkRequest);
+
+        Link link = linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
+
+        List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
+
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtagRepository.delete(linkHashtag);
+        }
+        link.deleteLink(member);
+
+        List<LinkHashtag> linkHashtagList = linkRequest.getHashtags()
+                .stream()
+                .map(hashtag -> saveLinkHashTag(saveHashtag(hashtag)))
+                .collect(Collectors.toList());
+
+        link.update(member, linkRequest.getLinkURL(),linkHashtagList);
+
+        Link saved = linkRepository.saveAndFlush(link);
+
+        return linkRepository.findById(saved.getId()).get();
+    }
+
+    private void checkHashtagsSize(LinkRequest linkRequest) {
+        if (linkRequest.getHashtags().size() > 3) {
+            throw new HashtagNumberShouldNotBeMoreThanThree();
+        }
     }
 
     /**
@@ -95,6 +165,12 @@ public class LinkServiceImpl implements LinkService {
 
         Link link = linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
 
+        List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
+
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtagRepository.delete(linkHashtag);
+        }
+
         link.deleteLink(member);
         linkRepository.deleteById(link.getId());
     }
@@ -104,6 +180,7 @@ public class LinkServiceImpl implements LinkService {
     public Link markAsRead(Long userId, Long linkId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+
         Link link = linkRepository.findById(linkId)
                 .orElseThrow(() -> new LinkNotFoundException(linkId));
 
@@ -115,7 +192,12 @@ public class LinkServiceImpl implements LinkService {
 
         link.markRead(currentCountOfDay);
         return linkRepository.save(link);
+    }
 
-        // TODO 포인트 지급
+    private String getLinkStatus(String completed) {
+        if ("ALL".equals(completed)) {
+            return "ALL";
+        }
+        return "T".equals(completed) ? "READ" : "UNREAD";
     }
 }

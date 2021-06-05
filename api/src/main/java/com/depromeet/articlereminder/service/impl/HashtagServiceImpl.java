@@ -33,7 +33,7 @@ public class HashtagServiceImpl implements HashtagService {
             return hashtagRepository.findByName(hashtagName).get();
         }
 
-        Hashtag newHashtag = Hashtag.from(hashtagName);
+        Hashtag newHashtag = Hashtag.createHashtag(hashtagName);
         return hashtagRepository.save(newHashtag);
     }
 

@@ -45,7 +45,7 @@ public class LinkResponse {
             position = 3)
     private boolean isCompleted; // 읽음 상태
 
-    private List<LinkHashTagDTO> hashtags; // 해시 태그 id
+    private List<HashtagDTO> hashtags; // 해시 태그 id
 
     @ApiModelProperty(notes = "등록 시각",
             example = "2021-05-01 11:33:22",
@@ -70,20 +70,7 @@ public class LinkResponse {
         createdAt = link.getCreatedAt();
         completedAt = link.getCompletedAt();
         hashtags = link.getLinkHashtags().stream()
-                            .map(linkHashtag -> new LinkHashTagDTO(linkHashtag))
+                            .map(HashtagDTO::new)
                             .collect(Collectors.toList());
-    }
-
-    @Data
-    static class LinkHashTagDTO {
-        private Long id;
-        private Hashtag hashtag;
-        private String name;
-
-        public LinkHashTagDTO(LinkHashtag linkHashtag) {
-            id = linkHashtag.getId();
-            hashtag = linkHashtag.getHashtag();
-            name = linkHashtag.getHashtag().getName();
-        }
     }
 }

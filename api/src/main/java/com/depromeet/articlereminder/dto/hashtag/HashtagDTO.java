@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.dto.hashtag;
 
 import com.depromeet.articlereminder.domain.LinkHashtag;
+import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,6 +37,6 @@ public class HashtagDTO {
     public HashtagDTO(LinkHashtag linkHashtag) {
         hashtagId = linkHashtag.getId();
         hashtagName = linkHashtag.getHashtag().getName();
-        createdAt = linkHashtag.getCreatedAt();
+        createdAt = linkHashtag.getHashtag().getCreatedAt();
     }
 }

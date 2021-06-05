@@ -4,6 +4,7 @@ import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.link.LinkRequest;
+import com.depromeet.articlereminder.exception.LinkHasBeenAlreadyReadException;
 import com.depromeet.articlereminder.exception.LinkModifiedByInvalidUserException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,7 +26,7 @@ import static javax.persistence.FetchType.*;
 public class Link extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_id")
     private Long id; // 링크 id
 
@@ -33,7 +34,7 @@ public class Link extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
-    @OneToMany(mappedBy = "hashtag", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "link", cascade = CascadeType.ALL)
     private List<LinkHashtag> linkHashtags = new ArrayList<>();
 
     private String linkURL; // 링크 url
@@ -52,13 +53,13 @@ public class Link extends BaseEntity {
      */
     public static Link createLink(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         Link link = new Link();
-        link.setLinkURL(linkURL);
-        link.setMember(member);
+        link.changeLinkURL(linkURL);
+        link.changeMember(member);
 
         for (LinkHashtag hashtag : linkHashtags) {
             link.addLinkHashtag(hashtag);
         }
-        link.setInitialStatus();
+        link.changeInitialLinkStatus();
 
         return link;
     }
@@ -72,13 +73,13 @@ public class Link extends BaseEntity {
      */
     public Link createLink(Member member, String linkURL) {
         Link link = new Link();
-        link.setLinkURL(linkURL);
-        link.setMember(member);
+        link.changeLinkURL(linkURL);
+        link.changeMember(member);
 
         for (LinkHashtag hashtag : linkHashtags) {
             link.addLinkHashtag(hashtag);
         }
-        link.setInitialStatus();
+        link.changeInitialLinkStatus();
 
         return link;
     }
@@ -89,7 +90,7 @@ public class Link extends BaseEntity {
      */
     public void addLinkHashtag(LinkHashtag hashtag) {
         linkHashtags.add(hashtag);
-        hashtag.setLink(this);
+        hashtag.changeLink(this);
     }
 
     /**
@@ -97,7 +98,7 @@ public class Link extends BaseEntity {
      */
     public Link markRead(Long todayCount) {
         if (this.status == LinkStatus.READ) {
-            throw new IllegalStateException("link has been already read");
+            throw new LinkHasBeenAlreadyReadException();
         }
         this.status = LinkStatus.READ;
         this.completedAt = LocalDateTime.now();
@@ -109,17 +110,26 @@ public class Link extends BaseEntity {
         if (todayCount > 1 && todayCount % 5 == 1) {
             point += 20;
         }
+
+        // TODO 7일 연속으로 읽은 경우
+        if (todayCount == 0) {
+
+        }
+
         this.member.changeTotalPoint(point);
 
         return this;
     }
 
-    public Link update(Member member, LinkRequest linkRequest) {
+    public Link update(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         this.isValidUser(member);
 
-        this.setLinkURL(linkRequest.getLinkURL());
+        this.changeLinkURL(linkURL);
 
-        // TODO 해시태그 수정
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtag.deleteLinkHashTag();
+            this.addLinkHashtag(linkHashtag);
+        }
 
         return this;
     }
@@ -132,21 +142,23 @@ public class Link extends BaseEntity {
         this.isValidUser(member);
 
         for (LinkHashtag linkHashtag : linkHashtags) {
-            linkHashtag.remove();
+            linkHashtag.deleteLinkHashTag();
         }
+
+        linkHashtags.clear();
 
         return this;
     }
 
-    private void setMember(Member member) {
+    private void changeMember(Member member) {
         this.member = member;
     }
 
-    private void setLinkURL(String linkURL) {
+    private void changeLinkURL(String linkURL) {
         this.linkURL = linkURL;
     }
 
-    private void setInitialStatus() {
+    private void changeInitialLinkStatus() {
         this.status = LinkStatus.UNREAD;
     }
 

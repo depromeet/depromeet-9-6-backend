@@ -22,7 +22,7 @@ import static javax.persistence.FetchType.*;
 public class LinkHashtag extends BaseEntity { // contains 테이블
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "link_hashtag_id")
     private Long id; // 링크-해시태그 id
 
@@ -42,7 +42,7 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
         return linkHashtag;
     }
 
-    public void setLink(Link link) {
+    public void changeLink(Link link) {
         this.link = link;
     }
 
@@ -53,7 +53,7 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
     /**
      * 해시태그 - 링크 연관 관계 삭제
      */
-    public void remove() {
-
+    public LinkHashtag deleteLinkHashTag() {
+        return this;
     }
 }

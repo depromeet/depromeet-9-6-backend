@@ -40,7 +40,7 @@ public class MemberController {
             if (token != null) {
                 // TODO 카카오 로그인 유효성 검사
                 if (user.getTokenExpiredTime().isBefore(LocalDateTime.now()))
-                return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","401", userAssembler.toLoginResponse(user));
+                return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(user));
             }
             // 로그인시 만료시간 늘림
             user = memberService.findByEmail(userDto.getEmail());
