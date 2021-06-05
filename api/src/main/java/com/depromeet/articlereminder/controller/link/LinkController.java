@@ -103,7 +103,7 @@ public class LinkController {
     })
     @PutMapping("{linkId}")
     @Transactional
-    public BaseResponse<LinkResponse> putLink(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> putLink(@RequestHeader(name = "Authorization") String authorization,
                                                 @RequestHeader(name = "userId") Long userId,
                                                 @PathVariable Long linkId,
                                         @RequestBody LinkRequest linkRequest) {
@@ -111,8 +111,7 @@ public class LinkController {
         Link updateLink = linkService.updateLink(userId, linkId, linkRequest);
         LinkResponse linkResponse = new LinkResponse(updateLink);
 
-        return BaseResponse.of("203", "링크 수정에 성공했습니다.", linkResponse);
-
+        return ResponseHandler.generateResponse("링크 수정에 성공했습니다.", "203", linkResponse);
     }
 
     /**
@@ -143,8 +142,6 @@ public class LinkController {
     @ApiOperation("특정 링크에 대해 읽음 완료 표시를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-//            @ApiResponse(code = 401, message = "Access token is not valid"),
-//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParams({
@@ -153,7 +150,7 @@ public class LinkController {
     })
     @PatchMapping("{linkId}")
     @Transactional
-    public BaseResponse<LinkResponse> patchLink(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> patchLink(@RequestHeader(name = "Authorization") String authorization,
                                                   @RequestHeader(name = "userId") Long userId,
                                                   @PathVariable Long linkId,
 
@@ -164,11 +161,10 @@ public class LinkController {
                                                    required = true)
                                           @RequestBody String completed) {
 
-        // TODO 포인트 지급
+        // TODO 7일 연속 접속 없을 때 포인트 지급
         Link completedLink = linkService.markAsRead(userId, linkId);
         LinkResponse linkResponse = new LinkResponse(completedLink);
-
-        return BaseResponse.of("201", linkId + " 링크 읽음 완료 표시에 성공하였습니다.", linkResponse);
+        return ResponseHandler.generateResponse( linkId + " 링크 읽음 완료 표시에 성공하였습니다.","203", linkResponse);
     }
 
 }

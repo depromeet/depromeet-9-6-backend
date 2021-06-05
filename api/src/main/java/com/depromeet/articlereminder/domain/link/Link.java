@@ -4,6 +4,7 @@ import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.LinkHashtag;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.link.LinkRequest;
+import com.depromeet.articlereminder.exception.LinkHasBeenAlreadyReadException;
 import com.depromeet.articlereminder.exception.LinkModifiedByInvalidUserException;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -109,17 +110,26 @@ public class Link extends BaseEntity {
         if (todayCount > 1 && todayCount % 5 == 1) {
             point += 20;
         }
+
+        // TODO 7일 연속으로 읽은 경우
+        if (todayCount == 0) {
+
+        }
+
         this.member.changeTotalPoint(point);
 
         return this;
     }
 
-    public Link update(Member member, LinkRequest linkRequest) {
+    public Link update(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         this.isValidUser(member);
 
-        this.changeLinkURL(linkRequest.getLinkURL());
+        this.changeLinkURL(linkURL);
 
-        // TODO 해시태그 수정
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtag.deleteLinkHashTag();
+            this.addLinkHashtag(linkHashtag);
+        }
 
         return this;
     }
@@ -132,8 +142,10 @@ public class Link extends BaseEntity {
         this.isValidUser(member);
 
         for (LinkHashtag linkHashtag : linkHashtags) {
-            linkHashtag.remove();
+            linkHashtag.deleteLinkHashTag();
         }
+
+        linkHashtags.clear();
 
         return this;
     }

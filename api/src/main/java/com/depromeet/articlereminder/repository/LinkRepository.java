@@ -8,9 +8,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import javax.swing.text.html.Option;
 import java.util.List;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public interface LinkRepository extends JpaRepository<Link, Long> {
     // FIXME QueryDSL로 status 동적으로 처리하기
