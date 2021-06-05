@@ -71,19 +71,13 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @GetMapping("{alarmId}")
-    public BaseResponse<AlarmResponse> getAlarm(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> getAlarm(@RequestHeader(name = "Authorization") String authorization,
                                                 @RequestHeader(name = "userId") Long userId,
                                                 @PathVariable Long alarmId) {
-//        AlarmResponse alarmResponse3 = AlarmResponse.builder()
-//                .alarmId(3L)
-//                .userId(1L)
-//                .notifyTime("09:30")
-//                .repeatedDate(RepeatedDate.EVERYDAY_EXCEPT_HOLIDAYS)
-//                .isEnabled(true)
-//                .createdAt(LocalDateTime.now().minusDays(2L))
-//                .build();
+        Alarm alarm = alarmService.getAlarm(userId, alarmId);
+        AlarmResponse alarmResponse = new AlarmResponse(alarm);
 
-        return BaseResponse.of("202", alarmId + " 알람 세부 조회에 성공했습니다.", null);
+        return ResponseHandler.generateResponse( alarmId + " 알람 세부 조회에 성공했습니다.", "200", alarmResponse);
     }
 
     @ApiOperation("특정한 어플 알람을 수정합니다. - 어플 알람 id 필요, 인증이 필요한 요청입니다.")

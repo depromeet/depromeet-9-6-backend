@@ -9,4 +9,6 @@ public interface AlarmService {
     List<Alarm> findAlarmsByUserId(Long userId);
 
     Alarm saveAlarm(Long userId, AlarmRequest alarmRequest);
+
+    Alarm getAlarm(Long userId, Long alarmId);
 }
