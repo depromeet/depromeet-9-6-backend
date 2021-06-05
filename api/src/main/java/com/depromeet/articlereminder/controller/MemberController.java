@@ -46,6 +46,8 @@ public class MemberController {
             user = memberService.findByEmail(userDto.getEmail());
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
+            user.setPushToken(userDto.getPushToken());
+            user.setToken(userAssembler.toLoginResponse(user).getToken());
             memberService.update(user);
             return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
         } else { // 존재하지 않으면 회원가입
@@ -55,6 +57,7 @@ public class MemberController {
             user.setStatus(AlarmStatus.ENABLED);
             user.setMemberStatus(MemberStatus.CREATED);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
+            user.setPushToken(userDto.getPushToken());
             memberService.join(user);
             return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }

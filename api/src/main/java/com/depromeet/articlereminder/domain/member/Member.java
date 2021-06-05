@@ -34,6 +34,8 @@ public class Member extends BaseEntity {
 
     private LocalDateTime tokenExpiredTime; // 토큰 만료 시각
 
+    private String pushToken;
+
     private int totalReadCount; // 총 읽은 아티클 수
 
     private int totalPoint; // 총 획득한 포인트

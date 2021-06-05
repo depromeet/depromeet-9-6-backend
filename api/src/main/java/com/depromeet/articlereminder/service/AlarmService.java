@@ -15,4 +15,7 @@ public interface AlarmService {
     Alarm updateAlarm(Long userId, Long alarmId, AlarmRequest alarmRequest);
 
     void deleteAlarm(Long userId, Long alarmId);
+
+    List<Alarm> findAllAlarams();
+
 }

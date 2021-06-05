@@ -19,7 +19,6 @@ import java.util.Collections;
 public class FirebaseCloudMessageService {
     private final String API_URL = "https://fcm.googleapis.com/fcm/send";
 
-    @Scheduled
     public ResponseEntity<String> sendMessageTo(String FCMToken, String UserToken, String title, String body) throws Exception {
 
         // create headers

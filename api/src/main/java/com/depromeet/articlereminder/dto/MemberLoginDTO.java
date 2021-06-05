@@ -7,6 +7,7 @@ public class MemberLoginDTO {
 
     private long userId;
     private String token;
+    private String pushToken;
     private String name;
     private String email;
 }

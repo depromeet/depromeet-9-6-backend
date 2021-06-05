@@ -7,6 +7,8 @@ spring:
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
   datasource:
     url: jdbc:h2:~/article
     username: sa
@@ -14,10 +16,10 @@ spring:
     driver-class-name: org.h2.Driver
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     properties:
       hibernate:
-#        show_sql: true
+        #        show_sql: true
         format_sql: true
         default_batch_fetch_size: 100  #컬렉션 데이터 쿼리 where 절에 in query 100번 실행 한다. (1:N:M -> 1:1:1)
     open-in-view: false
@@ -43,3 +45,5 @@ logging:
 #            authorization-uri: https://kauth.kakao.com/oauth/authorize
 #            token-uri: https://kauth.kakao.com/oauth/token
 #            user-info-uri: https://kapi.kakao.com/v2/user/me
+
+

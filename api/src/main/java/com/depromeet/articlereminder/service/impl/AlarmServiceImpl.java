@@ -85,6 +85,13 @@ public class AlarmServiceImpl implements AlarmService {
         alarmRepository.delete(alarm);
     }
 
+    @Override
+    public List<Alarm> findAllAlarams() {
+        List<Alarm> alarmList = alarmRepository.findAll();
+
+        return alarmList;
+    }
+
     private String getAlarmStatus(boolean isEnabled) {
         return isEnabled ? "ENABLED"  : "DISABLED";
     }

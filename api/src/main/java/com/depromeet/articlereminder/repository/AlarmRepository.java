@@ -13,4 +13,9 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
             value = "select a From Alarm a where a.member= :member"
     )
     List<Alarm> findAllByMember(@Param("member") Member member);
+
+    @Query(
+            value = "select a From Alarm a join fetch a.member m"
+    )
+    List<Alarm> findAll();
 }
