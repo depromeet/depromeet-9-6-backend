@@ -1,17 +1,18 @@
 package com.depromeet.articlereminder.dto.alarm;
 
+import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @ApiModel(description = "어플 알람 조회 시 ResponseBody")
-@Builder
-@Getter
+@Data
 public class AlarmResponse {
 
     @ApiModelProperty(notes = "알람 id",
@@ -51,4 +52,13 @@ public class AlarmResponse {
             position = 5)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime createdAt; // 알람이 생성된 시각
+
+    public AlarmResponse(Alarm alarm) {
+        alarmId = alarm.getId();
+        userId = alarm.getMember().getId();
+        notifyTime = alarm.getNotifyTime();
+        repeatedDate = alarm.getRepeatedDate();
+        isEnabled = alarm.getAlarmStatus().toString().equals("ENABLED");
+        createdAt = alarm.getCreatedAt();
+    }
 }

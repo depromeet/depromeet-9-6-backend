@@ -29,7 +29,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             log.error(stackTraceElement.toString());
         }
 
-        return new ResponseEntity<>("error", new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(BaseResponse.of("500", ex.getMessage(), ex.getStackTrace()), new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({LinkNotFoundException.class})
@@ -47,6 +47,16 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(
                 BaseResponse.of(
                         USER_NOT_FOUND_EXCEPTION.status, USER_NOT_FOUND_EXCEPTION.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
+    @ExceptionHandler({AlarmNotFoundException.class})
+    public ResponseEntity<Object> handleAlarmNotFoundException() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        ALARM_NOT_FOUND_EXCEPTION.status, ALARM_NOT_FOUND_EXCEPTION.comment, null),
                 new HttpHeaders(),
                 HttpStatus.OK
         );
@@ -71,4 +81,25 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.OK
         );
     }
+
+    @ExceptionHandler({LinkModifiedByInvalidUserException.class})
+    public ResponseEntity<Object> handleLinkModifiedByInvalidUserException() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        LINK_MODIFIED_BY_INVALID_USER_EXCEPTION.status, LINK_MODIFIED_BY_INVALID_USER_EXCEPTION.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
+    @ExceptionHandler({AlarmModifiedByInvalidUserException.class})
+    public ResponseEntity<Object> handleAlarmModifiedBy() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        ALARM_MODIFIED_BY_INVALID_USER_EXCEPTION.status, ALARM_MODIFIED_BY_INVALID_USER_EXCEPTION.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
 }

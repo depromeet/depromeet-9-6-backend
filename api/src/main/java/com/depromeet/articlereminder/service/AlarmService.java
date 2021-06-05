@@ -1,36 +1,18 @@
 package com.depromeet.articlereminder.service;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
-import com.depromeet.articlereminder.repository.AlarmRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import com.depromeet.articlereminder.dto.alarm.AlarmRequest;
 
 import java.util.List;
 
-@Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
-public class AlarmService {
-    private final AlarmRepository alarmRepository;
+public interface AlarmService {
+    List<Alarm> findAlarmsByUserId(Long userId);
 
-    @Transactional
-    public Alarm saveAlarm(Alarm item) {
-       return alarmRepository.save(item);
-    }
+    Alarm saveAlarm(Long userId, AlarmRequest alarmRequest);
 
-    @Transactional // 준영속 엔티티 변경감지(더티체크) 방식으로 수정, em.merge()와 동작방식 동일
-    public Alarm updateAlarm(Long itemId){
-        Alarm findItem = alarmRepository.findOne(itemId); // 바뀐걸 jpa가 아는 시점
-        return findItem;
-    }
+    Alarm getAlarm(Long userId, Long alarmId);
 
-    public List<Alarm> findAlarms() {
-        return alarmRepository.findAll();
-    }
+    Alarm updateAlarm(Long userId, Long alarmId, AlarmRequest alarmRequest);
 
-    public Alarm findOne(Long itemId) {
-        return alarmRepository.findOne(itemId);
-    }
-
+    void deleteAlarm(Long userId, Long alarmId);
 }
