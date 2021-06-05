@@ -59,7 +59,7 @@ public class Alarm extends BaseEntity {
         return alarm;
     }
 
-    public Alarm update(Member member, String alarmStatus ,String notifyTime, String repeatedDate) {
+    public Alarm update(Member member, String alarmStatus , String notifyTime, String repeatedDate) {
         this.isValidUser(member);
 
         this.changeAlarmStatus(AlarmStatus.valueOf(alarmStatus));

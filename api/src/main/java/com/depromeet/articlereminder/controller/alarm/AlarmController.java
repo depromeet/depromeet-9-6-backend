@@ -14,6 +14,7 @@ import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -54,6 +55,7 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PostMapping("")
+    @Transactional
     public ResponseEntity<Object> postAlarm(@RequestHeader(required = true) Long userId,
                                                  @RequestBody AlarmRequest alarmRequest) {
         Alarm savedAlarm = alarmService.saveAlarm(userId, alarmRequest);
@@ -90,26 +92,19 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PutMapping("{alarmId}")
-    public BaseResponse<AlarmResponse> putAlarm(@RequestHeader(name = "Authorization") String authorization,
+    @Transactional
+    public ResponseEntity<Object> putAlarm(@RequestHeader(name = "Authorization") String authorization,
                                                 @RequestHeader(name = "userId") Long userId,
                                                 @PathVariable Long alarmId,
                                                 @RequestBody AlarmRequest alarmRequest) {
-//        return BaseResponse.of(
-//                "203",
-//                alarmId + " 알람 수정에 성공했습니다.",
-//                AlarmResponse.builder()
-//                        .alarmId(alarmId)
-//                        .userId(userId)
-//                        .notifyTime(alarmRequest.getNotifyTime())
-//                        .repeatedDate(RepeatedDate.valueOf(alarmRequest.getRepeatedDate()))
-//                        .isEnabled(alarmRequest.isEnabled())
-//                        .createdAt(LocalDateTime.now())
-//                        .build()
-//        );
-        return BaseResponse.of(
-                "203",
+
+        Alarm alarm = alarmService.updateAlarm(userId, alarmId, alarmRequest);
+        AlarmResponse alarmResponse = new AlarmResponse(alarm);
+
+        return ResponseHandler.generateResponse(
                 alarmId + " 알람 수정에 성공했습니다.",
-                null
+                "203",
+                alarmResponse
         );
     }
 

@@ -11,4 +11,6 @@ public interface AlarmService {
     Alarm saveAlarm(Long userId, AlarmRequest alarmRequest);
 
     Alarm getAlarm(Long userId, Long alarmId);
+
+    Alarm updateAlarm(Long userId, Long alarmId, AlarmRequest alarmRequest);
 }

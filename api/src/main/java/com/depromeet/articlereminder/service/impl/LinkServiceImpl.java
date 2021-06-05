@@ -128,6 +128,7 @@ public class LinkServiceImpl implements LinkService {
 
         Link link = linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
 
+        // FIXME 삭제 -> 추가 로직 고치기
         List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
 
         for (LinkHashtag linkHashtag : linkHashtags) {
@@ -142,7 +143,7 @@ public class LinkServiceImpl implements LinkService {
 
         link.update(member, linkRequest.getLinkURL(),linkHashtagList);
 
-        Link saved = linkRepository.saveAndFlush(link);
+        Link saved = linkRepository.save(link);
 
         return linkRepository.findById(saved.getId()).get();
     }

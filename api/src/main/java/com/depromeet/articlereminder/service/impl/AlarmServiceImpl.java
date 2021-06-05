@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.service.impl;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
+import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.alarm.AlarmRequest;
 import com.depromeet.articlereminder.exception.AlarmNotFoundException;
@@ -33,6 +34,7 @@ public class AlarmServiceImpl implements AlarmService {
     }
 
     @Override
+    @Transactional
     public Alarm saveAlarm(Long userId, AlarmRequest alarmRequest) {
         Member member = memberRepository.findById(userId)
                             .orElseThrow(() -> new UserNotFoundException());
@@ -52,5 +54,25 @@ public class AlarmServiceImpl implements AlarmService {
                 .orElseThrow(() -> new AlarmNotFoundException());
 
         return alarm;
+    }
+
+    @Override
+    @Transactional
+    public Alarm updateAlarm(Long userId, Long alarmId, AlarmRequest alarmRequest) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException());
+
+        Alarm alarm = alarmRepository.findById(alarmId)
+                .orElseThrow(() -> new AlarmNotFoundException());
+
+        alarm.update(member, getAlarmStatus(alarmRequest.isEnabled()), alarmRequest.getNotifyTime(), alarmRequest.getRepeatedDate());
+
+        Alarm savedAlarm = alarmRepository.save(alarm);
+
+        return alarmRepository.findById(savedAlarm.getId()).get();
+    }
+
+    private String getAlarmStatus(boolean isEnabled) {
+        return isEnabled ? "ENABLED"  : "DISABLED";
     }
 }
