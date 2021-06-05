@@ -95,8 +95,6 @@ public class LinkController {
     @ApiOperation("특정 링크에 대해 수정합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-//            @ApiResponse(code = 401, message = "Access token is not valid"),
-//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParams({
@@ -117,11 +115,16 @@ public class LinkController {
 
     }
 
+    /**
+     * 링크 삭제
+     * @param authorization
+     * @param userId
+     * @param linkId
+     * @return
+     */
     @ApiOperation("특정 링크에 대해 삭제합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-//            @ApiResponse(code = 401, message = "Access token is not valid"),
-//            @ApiResponse(code = 403, message = "Requested user is not author of link"),
             @ApiResponse(code = 500, message = "Server error")
     })
     @ApiImplicitParams({
@@ -130,12 +133,11 @@ public class LinkController {
     })
     @DeleteMapping("{linkId}")
     @Transactional
-    public BaseResponse<Object> deleteLink(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<Object> deleteLink(@RequestHeader(name = "Authorization") String authorization,
                                              @RequestHeader(name = "userId") Long userId,
                                              @PathVariable Long linkId) {
         linkService.deleteLink(userId, linkId);
-
-        return BaseResponse.of("204",linkId + " 링크 삭제에 성공했습니다.", null);
+        return ResponseHandler.generateResponse(linkId + " 링크 삭제에 성공했습니다.", "204", null);
     }
 
     @ApiOperation("특정 링크에 대해 읽음 완료 표시를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")

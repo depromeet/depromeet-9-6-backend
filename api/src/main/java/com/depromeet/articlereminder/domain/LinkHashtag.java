@@ -27,11 +27,11 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
     private Long id; // 링크-해시태그 id
 
     @JsonIgnore
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "link_id")
     private Link link; // 링크
 
-    @ManyToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "hashtag_id")
     private Hashtag hashtag; // 해시태그
 
@@ -53,7 +53,7 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
     /**
      * 해시태그 - 링크 연관 관계 삭제
      */
-    public void remove() {
-
+    public LinkHashtag deleteLinkHashTag() {
+        return this;
     }
 }

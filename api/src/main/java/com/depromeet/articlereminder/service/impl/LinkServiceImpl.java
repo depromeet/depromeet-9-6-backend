@@ -37,6 +37,7 @@ public class LinkServiceImpl implements LinkService {
     private final MemberRepository memberRepository;
     private final LinkRepository linkRepository;
     private final HashtagRepository hashtagRepository;
+    private final LinkHashtagRepository linkHashtagRepository;
 
     /**
      * 모두 조회
@@ -127,6 +128,12 @@ public class LinkServiceImpl implements LinkService {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
 
         Link link = linkRepository.findById(linkId).orElseThrow(() -> new LinkNotFoundException(linkId));
+
+        List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
+
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtagRepository.delete(linkHashtag);
+        }
 
         link.deleteLink(member);
         linkRepository.deleteById(link.getId());
