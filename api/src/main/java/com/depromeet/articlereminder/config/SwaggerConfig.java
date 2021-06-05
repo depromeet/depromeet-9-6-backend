@@ -59,11 +59,15 @@ public class SwaggerConfig {
                         "    <td>Access token Expired</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
-                        "    <td>402</td>\n" +
+                        "    <td>400</td>\n" +
                         "    <td>조회 실패</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
-                        "    <td>403</td>\n" +
+                        "    <td>401</td>\n" +
+                        "    <td>등록 실패 (post 실패)</td>\n" +
+                        "  </tr>\n" +
+                        "  <tr>\n" +
+                        "    <td>402</td>\n" +
                         "    <td>수정 실패</td>\n" +
                         "  </tr>\n" +
                         "  <tr>\n" +
