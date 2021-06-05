@@ -118,9 +118,11 @@ public class AlarmController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @DeleteMapping("{alarmId}")
-    public BaseResponse<Object> deleteAlarm(@RequestHeader(name = "Authorization") String authorization,
+    @Transactional
+    public ResponseEntity<Object> deleteAlarm(@RequestHeader(name = "Authorization") String authorization,
                                             @RequestHeader(name = "userId") Long userId,
                                             @PathVariable Long alarmId) {
-        return BaseResponse.of("204", alarmId + " 알람 삭제에 성공했습니다.", null);
+        alarmService.deleteAlarm(userId, alarmId);
+        return ResponseHandler.generateResponse(alarmId + " 알람 삭제에 성공했습니다.", "204", null);
     }
 }

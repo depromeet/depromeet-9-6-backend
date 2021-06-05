@@ -13,4 +13,6 @@ public interface AlarmService {
     Alarm getAlarm(Long userId, Long alarmId);
 
     Alarm updateAlarm(Long userId, Long alarmId, AlarmRequest alarmRequest);
+
+    void deleteAlarm(Long userId, Long alarmId);
 }

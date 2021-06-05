@@ -72,6 +72,19 @@ public class AlarmServiceImpl implements AlarmService {
         return alarmRepository.findById(savedAlarm.getId()).get();
     }
 
+    @Override
+    @Transactional
+    public void deleteAlarm(Long userId, Long alarmId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException());
+
+        Alarm alarm = alarmRepository.findById(alarmId)
+                .orElseThrow(() -> new AlarmNotFoundException());
+
+        alarm.delete(member);
+        alarmRepository.delete(alarm);
+    }
+
     private String getAlarmStatus(boolean isEnabled) {
         return isEnabled ? "ENABLED"  : "DISABLED";
     }
