@@ -13,6 +13,9 @@
 - jpa
 - Gradle Project
 - H2 Database
+- QueryDSL
+- Oauth2.0
+- FCM
 
 요구 사항
 ---
