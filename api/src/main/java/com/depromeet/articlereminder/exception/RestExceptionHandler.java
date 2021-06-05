@@ -53,10 +53,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({HashtagNumberShouldNotBeMoreThanThree.class})
-    public ResponseEntity<Object> handleHashtagNumberShouldNotBeMoreThanThree() {
+    public ResponseEntity<Object> handleHashtagNumberShouldNotBeMoreThanThreeException() {
         return new ResponseEntity<>(
                 BaseResponse.of(
                         HASHTAG_SHOULD_NOT_BE_MORE_THAN_THREE.status, HASHTAG_SHOULD_NOT_BE_MORE_THAN_THREE.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
+    @ExceptionHandler({LinkHasBeenAlreadyReadException.class})
+    public ResponseEntity<Object> handleLinkHasBeenAlreadyReadException() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        LINK_HAS_BEEN_READ_EXCEPTION.status, LINK_HAS_BEEN_READ_EXCEPTION.comment, null),
                 new HttpHeaders(),
                 HttpStatus.OK
         );

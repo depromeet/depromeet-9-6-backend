@@ -97,7 +97,7 @@ public class Link extends BaseEntity {
      */
     public Link markRead(Long todayCount) {
         if (this.status == LinkStatus.READ) {
-            throw new IllegalStateException("link has been already read");
+            throw new LinkHasBeenAlreadyReadException();
         }
         this.status = LinkStatus.READ;
         this.completedAt = LocalDateTime.now();
