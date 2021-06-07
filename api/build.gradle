@@ -52,11 +52,13 @@ dependencies {
 //	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
 	// FCM push
-	implementation 'com.google.firebase:firebase-admin:6.8.1'
+	// https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '6.10.0'
+	//compile group: 'com.google.firebase', name: 'firebase-admin', version: '6.10.0'
 
 	//okhttp3
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.2.2'
-	compile group: 'com.google.firebase', name: 'firebase-admin', version: '6.10.0'
+	//compile group: 'com.google.firebase', name: 'firebase-admin', version: '6.10.0'
 
 	//json
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'

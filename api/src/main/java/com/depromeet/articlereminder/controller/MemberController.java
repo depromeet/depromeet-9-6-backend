@@ -33,7 +33,7 @@ public class MemberController {
     public ResponseEntity<Object> login(@RequestBody MemberLoginDTO userDto) {
         Member user = new Member();
         // 존재한다면 로그인
-        if (!memberService.findMemberCheckByEmail(userDto.getEmail())) {
+        if (!memberService.findMemberCheckByEmail(userDto.getLoginId())) {
             String token = userDto.getToken();
             user = memberService.findOne(userDto.getUserId());
 
@@ -43,7 +43,7 @@ public class MemberController {
                 return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(user));
             }
             // 로그인시 만료시간 늘림
-            user = memberService.findByEmail(userDto.getEmail());
+            user = memberService.findByLoginId(userDto.getLoginId());
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.setPushToken(userDto.getPushToken());
@@ -52,7 +52,7 @@ public class MemberController {
             return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
         } else { // 존재하지 않으면 회원가입
             user.setName(userDto.getName());
-            user.setEmail(userDto.getEmail());
+            user.setLoginId(userDto.getLoginId());
             user.setCreatedAt(LocalDateTime.now());
             user.setStatus(AlarmStatus.ENABLED);
             user.setMemberStatus(MemberStatus.CREATED);
@@ -67,17 +67,17 @@ public class MemberController {
     @PutMapping("logout")
     public ResponseEntity<Object> logout(@RequestBody MemberLoginDTO userDto) {
         // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
-        Member user = memberService.findByEmail(userDto.getEmail());
+        Member user = memberService.findByLoginId(userDto.getLoginId());
         user.setMemberStatus(MemberStatus.LOGOUT);
         user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
         memberService.update(user);
         return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
     }
 
-    @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 email로 삭제 부탁드려요")
+    @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 loginId로 삭제 부탁드려요")
     @DeleteMapping("withdraw")
-    public ResponseEntity<Object> deleteMember(@RequestHeader("email") String email) {
-        memberService.withdraw(email);
-        return ResponseHandler.generateResponse( email + "에 해당하는 사용자가 삭제되었습니다." , "204", null);
+    public ResponseEntity<Object> deleteMember(@RequestHeader("loginId") Long loginId) {
+        memberService.withdraw(loginId);
+        return ResponseHandler.generateResponse( loginId + "에 해당하는 사용자가 삭제되었습니다." , "204", null);
     }
 }

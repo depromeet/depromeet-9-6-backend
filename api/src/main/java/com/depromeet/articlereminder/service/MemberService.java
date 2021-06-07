@@ -35,14 +35,14 @@ public class MemberService {
     }
 
     public void validateDuplicateMember(Member member) {
-        List<Member> findMembers = memberRepository.findByEmail(member.getEmail());
+        List<Member> findMembers = memberRepository.findByLoginId(member.getLoginId());
         if (!findMembers.isEmpty()) {
             throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         }
     }
 
-    public boolean findMemberCheckByEmail(String email) {
-        List<Member> findMembers = memberRepository.findByEmail(email);
+    public boolean findMemberCheckByEmail(long loginId) {
+        List<Member> findMembers = memberRepository.findByLoginId(loginId);
         if (!findMembers.isEmpty()) {
             return false;
         }
@@ -83,16 +83,16 @@ public class MemberService {
         return member;
     }
 
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).stream()
-                .filter(member -> email.equals(member.getEmail()))
+    public Member findByLoginId(Long loginId) {
+        return memberRepository.findByLoginId(loginId).stream()
+                .filter(member -> loginId.equals(member.getLoginId()))
                 .findAny()
                 .orElse(null);
     }
 
     @Transactional
-    public void withdraw(String email) {
-        Member member = findByEmail(email);
+    public void withdraw(Long loginId) {
+        Member member = findByLoginId(loginId);
         memberRepository.delete(member);
     }
 

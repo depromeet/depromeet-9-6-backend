@@ -22,7 +22,9 @@ public class FcmController {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
     private final AlarmService alarmService;
 
-    @Scheduled(fixedRateString = "5", initialDelay = 10000)
+    // 5분마다 확인
+    @Scheduled(cron = "0 */5 * * * *")
+    //@Scheduled(fixedRateString = "5", initialDelay = 10000)
     public ResponseEntity<String> pushFcmMessage() throws Exception {
 
         List<Alarm> alarmList = alarmService.findAllAlarams();

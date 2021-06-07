@@ -7,16 +7,6 @@ import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    // select m form Member m where m.name = ?
     List<Member> findByName(String name);
-    List<Member> findByEmail(String name);
-
-    //Member findByEmail(String name);
-
-    //Member findByemail(String email);findByEmail
-
-    // 1. save()
-    // 2. findById()
-    // 3. findMyPageInfo()
-    // 4. findUserBadges()
+    List<Member> findByLoginId(Long loginId);
 }

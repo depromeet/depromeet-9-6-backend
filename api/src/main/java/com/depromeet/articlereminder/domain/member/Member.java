@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString(of = {"id", "email", "name", "token", "tokenStartTime", "tokenExpiredTime", "totalReadCount", "totalPoint", "lastAccessedAt", "status"})
+@ToString(of = {"id", "loginId", "name", "token", "tokenStartTime", "tokenExpiredTime", "totalReadCount", "totalPoint", "lastAccessedAt", "status"})
 public class Member extends BaseEntity {
 
     @Id
@@ -24,7 +24,9 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id; // 사용자 id
 
-    private String email; // 이메일
+    //20210607 topojs8 oauth 인증시 메일 비동의 할수 있어서 email -> long값으로 대체
+    private Long loginId;
+    //private String email; // 이메일
 
     private String name; // 닉네임
 
