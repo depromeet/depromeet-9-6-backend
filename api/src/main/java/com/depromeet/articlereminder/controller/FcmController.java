@@ -33,7 +33,7 @@ public class FcmController {
     private static final Integer WEEKEND_END_SUNDAY_CUT_OFF_HOUR = 23;
     private static List<Integer> weekendDaysList = Arrays.asList(FRIDAY, SATURDAY, SUNDAY);
     // 5분마다 확인
-    @Scheduled(cron = "0 */5 * * * *")
+    //@Scheduled(cron = "0 */5 * * * *")
     //@Scheduled(fixedRateString = "5", initialDelay = 10000)
     public ResponseEntity<String> pushFcmMessage() throws Exception {
 
@@ -48,21 +48,21 @@ public class FcmController {
                         if( alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().minusMinutes(1L)) &&
                                 alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().plusMinutes(1L)))
                         response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                alarmList.get(i).getMember().getToken(), "링줍 알람 입니다", "링크를 봐주세요~");
+                                alarmList.get(i).getMember().getToken(), "링줍 EVERYDAY 알람 입니다", "링크를 봐주세요~");
                         break;
                     case WEEKDAYS:
                         if(!isWeekend(LocalDateTime.now()))
                         if( alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().minusMinutes(1L)) &&
                                 alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().plusMinutes(1L)))
                             response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                    alarmList.get(i).getMember().getToken(), "링줍 알람 입니다", "링크를 봐주세요~");
+                                    alarmList.get(i).getMember().getToken(), "링줍 WEEKDAYS 알람 입니다", "링크를 봐주세요~");
                         break;
                     case WEEKENDS:
                         if(isWeekend(LocalDateTime.now()))
                         if( alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().minusMinutes(1L)) &&
                                 alarmList.get(i).getNotifyTime().isBefore(LocalDateTime.now().plusMinutes(1L)))
                             response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                    alarmList.get(i).getMember().getToken(), "링줍 알람 입니다", "링크를 봐주세요~");
+                                    alarmList.get(i).getMember().getToken(), "링줍 WEEKENDS 알람 입니다", "링크를 봐주세요~");
                         break;
                     case EVERYDAY_EXCEPT_HOLIDAYS:
                         break;
