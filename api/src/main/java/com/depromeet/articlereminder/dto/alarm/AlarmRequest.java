@@ -1,10 +1,12 @@
 package com.depromeet.articlereminder.dto.alarm;
 
+import com.google.api.client.util.DateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @ApiModel(description = "어플 알람 추가 시 RequestBody")
@@ -15,7 +17,7 @@ public class AlarmRequest {
             notes = "알람 시각 (hh:mm 의 포맷)",
             example = "08:30" ,
             required = true)
-    private String notifyTime; // 알람 시각
+    private LocalDateTime notifyTime; // 알람 시각
 
     @ApiModelProperty(
             dataType = "string",

@@ -3,6 +3,7 @@ package com.depromeet.articlereminder.dto.alarm;
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.RepeatedDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.api.client.util.DateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
@@ -31,7 +32,7 @@ public class AlarmResponse {
             example = "08:30",
             required = true,
             position = 2)
-    private String notifyTime; // 알람 시각
+    private LocalDateTime notifyTime; // 알람 시각
 
     @ApiModelProperty(notes = "반복 요일",
             example = "WEEKDAYS",

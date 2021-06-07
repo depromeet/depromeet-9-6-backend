@@ -4,6 +4,7 @@ import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.exception.AlarmModifiedByInvalidUserException;
 import com.depromeet.articlereminder.exception.LinkModifiedByInvalidUserException;
+import com.google.api.client.util.DateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,7 +34,7 @@ public class Alarm extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
-    private String notifyTime; // 알림 시각 (08:30)
+    private LocalDateTime notifyTime; // 알림 시각 (08:30)
 
     @Enumerated(EnumType.STRING)
     private AlarmStatus alarmStatus; // 알람 활성화 여부
@@ -49,7 +50,7 @@ public class Alarm extends BaseEntity {
      * @param repeatedDate
      * @return
      */
-    public static Alarm createAlarm(Member member, String notifyTime, String repeatedDate) {
+    public static Alarm createAlarm(Member member, LocalDateTime notifyTime, String repeatedDate) {
         Alarm alarm = new Alarm();
         alarm.changeAlarmStatus(AlarmStatus.ENABLED);
         alarm.changeNotifyTime(notifyTime);
@@ -59,7 +60,7 @@ public class Alarm extends BaseEntity {
         return alarm;
     }
 
-    public Alarm update(Member member, String alarmStatus , String notifyTime, String repeatedDate) {
+    public Alarm update(Member member, String alarmStatus , LocalDateTime notifyTime, String repeatedDate) {
         this.isValidUser(member);
 
         this.changeAlarmStatus(AlarmStatus.valueOf(alarmStatus));
@@ -84,7 +85,7 @@ public class Alarm extends BaseEntity {
         this.repeatedDate = repeatedDate;
     }
 
-    private void changeNotifyTime(String notifyTime) {
+    private void changeNotifyTime(LocalDateTime notifyTime) {
         this.notifyTime = notifyTime;
     }
 
