@@ -225,6 +225,18 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Override
+    public Long getReadCountOfToday(Long userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String formattedString = today.format(formatter);
+
+        return linkRepository.findReadCountOfToday(member, LinkStatus.READ, formattedString);
+    }
+
+    @Override
     public Long getReadCountOfSeason(Long userId) {
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));

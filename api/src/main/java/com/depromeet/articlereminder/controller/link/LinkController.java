@@ -169,4 +169,21 @@ public class LinkController {
         return ResponseHandler.generateResponse( linkId + " 링크 읽음 완료 표시에 성공하였습니다.","203", readLinkResponse);
     }
 
+
+    @ApiOperation("사용자가 오늘 읽은 링크 갯수를 조회합니다. - 인증이 필요한 요청입니다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 500, message = "Server error")
+    })
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
+    })
+    @GetMapping("count")
+    public ResponseEntity<Object> getReadCount(@RequestHeader(name = "Authorization") String authorization,
+                                               @RequestHeader(name = "userId") Long userId) {
+        Long count = linkService.getReadCountOfToday(userId);
+        return ResponseHandler.generateResponse("사용자가 오늘 읽은 아티클 개수 조회에 성공했습니다.", "200", count);
+    }
+
 }
