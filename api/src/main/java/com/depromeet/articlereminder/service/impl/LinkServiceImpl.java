@@ -201,4 +201,25 @@ public class LinkServiceImpl implements LinkService {
         }
         return "T".equals(completed) ? "READ" : "UNREAD";
     }
+
+    @Transactional
+    public void deleteUserLinks(Member member) {
+        List<Link> userLinks = linkRepository.findByMemberId(member);
+
+        userLinks
+                .forEach(link -> {
+                    deleteLinkHashtagsAndLink(link, member);
+                });
+    }
+
+    private void deleteLinkHashtagsAndLink(Link link, Member member) {
+        List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
+
+        for (LinkHashtag linkHashtag : linkHashtags) {
+            linkHashtagRepository.delete(linkHashtag);
+        }
+
+        link.deleteLink(member);
+        linkRepository.deleteById(link.getId());
+    }
 }

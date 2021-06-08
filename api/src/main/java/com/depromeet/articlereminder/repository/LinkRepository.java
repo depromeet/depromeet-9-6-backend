@@ -39,10 +39,7 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     @Query("select count(l.linkURL) from Link l where l.member = :member " +
             "and l.status = :status AND SUBSTRING(l.completedAt, 0, 10) LIKE %:time%")
     Long findCountOfReadToday(@Param("member") Member member, @Param("status") LinkStatus status, @Param("time") String time);
-    // 1. findAll
-    // 2. findById
-    // 3. save
-    // 4. update
-    // 5. delete
-    // 6. makeRead
+
+    @Query(value = "select l from Link l where l.member = :member")
+    List<Link> findByMemberId(@Param("member") Member member);
 }
