@@ -17,7 +17,7 @@ public class AlarmRequest {
             notes = "알람 시각 (hh:mm 의 포맷)",
             example = "08:30" ,
             required = true)
-    private LocalDateTime notifyTime; // 알람 시각
+    private String notifyTime; // 알람 시각
 
     @ApiModelProperty(
             dataType = "string",

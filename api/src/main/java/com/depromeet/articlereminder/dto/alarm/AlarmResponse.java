@@ -32,7 +32,7 @@ public class AlarmResponse {
             example = "08:30",
             required = true,
             position = 2)
-    private LocalDateTime notifyTime; // 알람 시각
+    private String notifyTime; // 알람 시각
 
     @ApiModelProperty(notes = "반복 요일",
             example = "WEEKDAYS",
