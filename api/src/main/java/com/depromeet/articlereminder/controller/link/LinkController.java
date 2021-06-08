@@ -8,6 +8,7 @@ import com.depromeet.articlereminder.domain.link.LinkStatus;
 import com.depromeet.articlereminder.dto.hashtag.HashtagDTO;
 import com.depromeet.articlereminder.dto.link.LinkRequest;
 import com.depromeet.articlereminder.dto.link.LinkResponse;
+import com.depromeet.articlereminder.dto.link.ReadLinkResponse;
 import com.depromeet.articlereminder.service.LinkService;
 import io.swagger.annotations.*;
 import lombok.Data;
@@ -149,7 +150,6 @@ public class LinkController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @PatchMapping("{linkId}")
-    @Transactional
     public ResponseEntity<Object> patchLink(@RequestHeader(name = "Authorization") String authorization,
                                                   @RequestHeader(name = "userId") Long userId,
                                                   @PathVariable Long linkId,
@@ -163,8 +163,10 @@ public class LinkController {
 
         // TODO 7일 연속 접속 없을 때 포인트 지급
         Link completedLink = linkService.markAsRead(userId, linkId);
-        LinkResponse linkResponse = new LinkResponse(completedLink);
-        return ResponseHandler.generateResponse( linkId + " 링크 읽음 완료 표시에 성공하였습니다.","203", linkResponse);
+        Long seasonCount = linkService.getReadCountOfSeason(userId);
+
+        ReadLinkResponse readLinkResponse = new ReadLinkResponse(completedLink.getStatus().toString().equals("READ"), seasonCount);
+        return ResponseHandler.generateResponse( linkId + " 링크 읽음 완료 표시에 성공하였습니다.","203", readLinkResponse);
     }
 
 }

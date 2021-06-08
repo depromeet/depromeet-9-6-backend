@@ -189,7 +189,7 @@ public class LinkServiceImpl implements LinkService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedString = today.format(formatter);
 
-        Long currentCountOfDay = linkRepository.findCountOfReadToday(member, LinkStatus.READ ,formattedString);
+        Long currentCountOfDay = linkRepository.findReadCountOfToday(member, LinkStatus.READ ,formattedString);
 
         link.markRead(currentCountOfDay);
         return linkRepository.save(link);
@@ -212,6 +212,7 @@ public class LinkServiceImpl implements LinkService {
                 });
     }
 
+    @Transactional
     private void deleteLinkHashtagsAndLink(Link link, Member member) {
         List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
 
@@ -221,5 +222,17 @@ public class LinkServiceImpl implements LinkService {
 
         link.deleteLink(member);
         linkRepository.deleteById(link.getId());
+    }
+
+    @Override
+    public Long getReadCountOfSeason(Long userId) {
+        Member member = memberRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        String formattedString = today.format(formatter);
+
+        return linkRepository.findReadCountOfSeason(member, LinkStatus.READ, formattedString);
     }
 }

@@ -24,4 +24,5 @@ public interface LinkService {
 
     void deleteUserLinks(Member member);
 
+    Long getReadCountOfSeason(Long userId);
 }
