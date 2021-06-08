@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.service;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
+import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.dto.alarm.AlarmRequest;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface AlarmService {
     void deleteAlarm(Long userId, Long alarmId);
 
     List<Alarm> findAllAlarams();
+
+    void deleteUserAlarms(Member member);
 
 }

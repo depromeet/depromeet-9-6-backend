@@ -95,4 +95,10 @@ public class AlarmServiceImpl implements AlarmService {
     private String getAlarmStatus(boolean isEnabled) {
         return isEnabled ? "ENABLED"  : "DISABLED";
     }
+
+    @Override
+    @Transactional
+    public void deleteUserAlarms(Member member) {
+        alarmRepository.deleteByMember(member);
+    }
 }
