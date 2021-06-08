@@ -20,6 +20,8 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final LinkService linkService;
+    private final AlarmService alarmService;
 
     /**
      * 회원 가입
@@ -93,6 +95,10 @@ public class MemberService {
     @Transactional
     public void withdraw(Long loginId) {
         Member member = findByLoginId(loginId);
+
+        linkService.deleteUserLinks(member);
+        alarmService.deleteUserAlarms(member);
+
         memberRepository.delete(member);
     }
 
