@@ -152,14 +152,7 @@ public class LinkController {
     @PatchMapping("{linkId}")
     public ResponseEntity<Object> patchLink(@RequestHeader(name = "Authorization") String authorization,
                                                   @RequestHeader(name = "userId") Long userId,
-                                                  @PathVariable Long linkId,
-
-                                          @ApiParam(name = "completed",
-                                                   type = "string",
-                                                   example = "T",
-                                                   value = "읽음 완료 flag (읽음 완료 : T, 읽지 않음 : F)",
-                                                   required = true)
-                                          @RequestBody String completed) {
+                                                  @PathVariable Long linkId) {
 
         // TODO 7일 연속 접속 없을 때 포인트 지급
         Link completedLink = linkService.markAsRead(userId, linkId);
