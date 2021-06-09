@@ -2,7 +2,9 @@ package com.depromeet.articlereminder.domain;
 
 
 import com.depromeet.articlereminder.domain.badge.Badge;
+import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,7 @@ public class MemberBadge extends BaseEntity { // 뱃지 획득 테이블 Acqusti
     @Column(name = "member_badge_id")
     private Long id;
 
+    @JsonIgnore
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
@@ -36,5 +39,18 @@ public class MemberBadge extends BaseEntity { // 뱃지 획득 테이블 Acqusti
 
     public void changeMember(Member member) {
         this.member = member;
+    }
+
+
+    public static MemberBadge createMemberBadge(Member member, Badge badge) {
+        MemberBadge memberBadge = new MemberBadge();
+        memberBadge.obtainBadge(member, badge);
+
+        return memberBadge;
+    }
+
+    private void obtainBadge(Member member, Badge badge) {
+        this.member = member;
+        this.badge = badge;
     }
 }

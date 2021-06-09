@@ -59,7 +59,6 @@ public class Member extends BaseEntity {
 //    @OneToMany(mappedBy = "member")
 //    private List<Alarm> alarms = new ArrayList<>(); // 멤버 <--> 알람 양방향 연관관계
 
-    @JsonIgnore
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberBadge> memberBadges = new ArrayList<>(); // 멤버 <--> 뱃지 양방향 연관관계
 
