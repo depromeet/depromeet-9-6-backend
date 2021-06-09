@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     @Query(
-            value = "select a From Alarm a where a.member= :member"
+            value = "select a From Alarm a where a.member= :member order by a.createdAt desc"
     )
     List<Alarm> findAllByMember(@Param("member") Member member);
 

@@ -38,7 +38,6 @@ public class AlarmController {
     public ResponseEntity<Object> getAlarms(
                                         @RequestHeader(name = "Authorization") String authorization,
                                         @RequestHeader(name = "userId") Long userId) {
-        System.out.println("??????" + userId);
         List<Alarm> alarms = alarmService.findAlarmsByUserId(userId);
 
         List<AlarmResponse> alarmResponse = alarms.stream()
