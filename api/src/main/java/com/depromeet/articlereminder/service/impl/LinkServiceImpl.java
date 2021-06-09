@@ -53,9 +53,9 @@ public class LinkServiceImpl implements LinkService {
         String isCompleted = getLinkStatus(status);
 
         if (isCompleted.equalsIgnoreCase("READ")) {
-            return linkRepository.findByMemberAndRead(member, LinkStatus.valueOf("READ"), pageable);
+            return linkRepository.findByMemberAndRead(member, pageable);
         } else if (isCompleted.equalsIgnoreCase("UNREAD")) {
-            return linkRepository.findByMemberAndUnread(member, LinkStatus.valueOf("UNREAD"), pageable);
+            return linkRepository.findByMemberAndUnread(member, pageable);
         }
 
         return linkRepository.findByMember(member, pageable);
@@ -213,7 +213,7 @@ public class LinkServiceImpl implements LinkService {
     }
 
     @Transactional
-    private void deleteLinkHashtagsAndLink(Link link, Member member) {
+    public void deleteLinkHashtagsAndLink(Link link, Member member) {
         List<LinkHashtag> linkHashtags = linkHashtagRepository.findAllByLink(link);
 
         for (LinkHashtag linkHashtag : linkHashtags) {
