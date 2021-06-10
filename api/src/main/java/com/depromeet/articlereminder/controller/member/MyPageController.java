@@ -35,14 +35,15 @@ public class MyPageController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @GetMapping("/v1/members/mypage/info")
+    @Transactional
     public BaseResponse<UserMyPageResponse> userPageInfo(@RequestHeader(name = "Authorization") String authorization,
                                                          @RequestHeader(name = "userId") Long userId) {
         Member member = memberService.getMyPageUserInfo(userId);
         UserMyPageResponse myPageResponse = new UserMyPageResponse(member);
-        return BaseResponse.of("202", "사용자 정보 조회에 성공했습니다.", myPageResponse);
+        return BaseResponse.of("200", "사용자 정보 조회에 성공했습니다.", myPageResponse);
     }
 
-    //    @LoginCheck(type = LoginCheck.UserType.USER)
+//        @LoginCheck(type = LoginCheck.UserType.USER)
     @ApiOperation("사용자의 뱃지 히스토리를 조회합니다. - 사용자 id 필요, 인증이 필요한 요청입니다.")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Authorization", value = "Access Token", required = true, paramType = "header"),

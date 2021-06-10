@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @ApiModel(description = "MyPage Response")
 @Data
@@ -62,12 +63,16 @@ public class UserMyPageResponse {
 
     public UserMyPageResponse(Member member) {
         userId = member.getId();
+        createdAt = member.getCreatedAt();
         nickName = member.getName();
         totalPoint = member.getTotalPoint();
         totalReadCount = member.getTotalReadCount();
         seasonCount =  member.getTotalReadCount();
         alarmEnabled = member.getStatus().toString().equals("ENABLED");
-//        badge = member.getMemberBadges().stream()
-//                .map()
+        badge = member.getMemberBadges()
+                        .stream()
+                        .map(BadgeResponse::new)
+                        .collect(Collectors.toList())
+                        .get(0);
     }
 }

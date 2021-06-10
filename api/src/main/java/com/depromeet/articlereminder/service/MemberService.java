@@ -121,7 +121,7 @@ public class MemberService {
     }
 
     public Member getMyPageUserInfo(Long userId) {
-        return memberRepository.findById(userId)
+        return memberRepository.findByIdAndGetBadge(userId)
                 .orElseThrow(() -> new UserNotFoundException());
     }
 }

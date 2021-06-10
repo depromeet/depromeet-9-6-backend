@@ -37,7 +37,6 @@ public class Badge extends BaseEntity {
 
     private String seasonInfo; // 시즌 정보 (2021년 5월 / 2021년 6월 .... )
 
-
     public static Badge createBadge(String name, String imageUrl, BadgeCategory badgeCategory, String conditions, String seasonInfo) {
         Badge badge = new Badge();
 

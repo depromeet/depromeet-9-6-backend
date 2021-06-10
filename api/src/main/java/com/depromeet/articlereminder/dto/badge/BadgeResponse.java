@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.dto.badge;
 
+import com.depromeet.articlereminder.domain.MemberBadge;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,7 +11,6 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 
 @ApiModel(description = "뱃지 Response")
-@Builder
 @Getter
 public class BadgeResponse {
 
@@ -57,4 +57,13 @@ public class BadgeResponse {
             position = 6)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime createdAt; // 뱃지 획득 일자
+
+    public BadgeResponse(MemberBadge memberBadge) {
+        badgeId = memberBadge.getId();
+        badgeName = memberBadge.getBadge().getName();
+        badgeURL = memberBadge.getBadge().getImageUrl();
+        category = memberBadge.getBadge().getBadgeCategory();
+        conditions = memberBadge.getBadge().getConditions();
+        createdAt = memberBadge.getCreatedAt();
+    }
 }
