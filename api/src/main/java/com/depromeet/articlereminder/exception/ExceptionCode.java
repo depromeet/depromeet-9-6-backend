@@ -14,6 +14,7 @@ public enum ExceptionCode {
     LINK_MODIFIED_BY_INVALID_USER_EXCEPTION("402", "링크를 수정할 수 없는 사용자입니다."),
     LINK_HAS_BEEN_READ_EXCEPTION("402", "해당 링크는 이미 읽음 완료 표시된 링크입니다."),
     ALARM_MODIFIED_BY_INVALID_USER_EXCEPTION("402", "알람을 수정할 수 없는 사용자입니다."),
+    BADGE_NOT_FOUND_EXCEPTION("400", "해당 뱃지를 찾을 수 없습니다")
     ;
 
     String status;

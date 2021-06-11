@@ -26,6 +26,8 @@ public class MemberIdentifierServiceImpl implements MemberIdentifierService {
 
         MemberIdentifier created = MemberIdentifier.createMemberLoginId(appleUserIdentifier);
 
-        return memberIdentifierRepository.save(created);
+        MemberIdentifier saved = memberIdentifierRepository.save(created);
+
+        return saved;
     }
 }

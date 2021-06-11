@@ -41,6 +41,9 @@ public class MemberService {
     public Long join(Member member) {
         validateDuplicateMember(member);
         memberRepository.save(member);
+
+        memberBadgeService.obtainInitialBadge(member);
+
         return member.getId();
     }
 

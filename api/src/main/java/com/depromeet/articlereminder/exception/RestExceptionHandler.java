@@ -102,4 +102,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler({BadgeNotFoundException.class})
+    public ResponseEntity<Object> handleBadgeNotFoundException() {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        BADGE_NOT_FOUND_EXCEPTION.status, BADGE_NOT_FOUND_EXCEPTION.comment, null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
 }
