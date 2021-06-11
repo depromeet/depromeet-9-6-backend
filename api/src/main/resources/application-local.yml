@@ -1,18 +1,18 @@
 server:
-  port: 9090
+  port: 10010
 jwt:
   issuer: issuerJwt
   secret: secretJwt
 spring:
-  h2:
-    console:
-      enabled: true
   datasource:
-    url: jdbc:h2:tcp://localhost/~/article
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://link-jub-jub.cvicqtodruxp.ap-northeast-2.rds.amazonaws.com:3306/linkjub_local
+    username: admin
   jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    generate-ddl: true
+    show-sql: true
     hibernate:
       ddl-auto: create
     properties:
@@ -25,28 +25,10 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+#    com.depromeet.articlereminder: debug
 decorator:
   datasource:
     p6spy:
       enable-logging: true
       multiline: true
       logging: slf4j
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          kakao:
-#            authorization-grant-type: authorization_code
-#            client-id: 87dca4c9e15f3cc8166d1c49a7ca875a
-#            client-secret: NlIN72TRlekVrqoTtFd875bvSFceP5W4
-#            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-#            scope:
-#              - profile
-#              - account_email
-#            client-authentication-method: POST
-#            client-name: Kakao
-#        provider:
-#          kakao:
-#            authorization-uri: https://kauth.kakao.com/oauth/authorize
-#            token-uri: https://kauth.kakao.com/oauth/token
-#            user-info-uri: https://kapi.kakao.com/v2/user/me

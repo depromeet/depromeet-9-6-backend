@@ -1,19 +1,19 @@
 server:
-  port: 8080
+  port: 9090
 jwt:
   issuer: issuerJwt
   secret: secretJwt
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://link-jub-jub.cvicqtodruxp.ap-northeast-2.rds.amazonaws.com:3306/linkjub_live
+    url: jdbc:mysql://link-jub-jub.cvicqtodruxp.ap-northeast-2.rds.amazonaws.com:3306/linkjub_dev
     username: admin
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         #        show_sql: true
@@ -25,5 +25,7 @@ logging:
     org.hibernate.SQL: info
     com.depromeet.articlereminder: debug
   file:
-    name: live_log
-    path: /home/ec2-user/live/logs
+    name: dev_log
+    path: /home/ec2-user/dev/logs
+
+
