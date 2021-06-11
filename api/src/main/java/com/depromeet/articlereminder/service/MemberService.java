@@ -1,13 +1,19 @@
 package com.depromeet.articlereminder.service;
 
+import com.depromeet.articlereminder.domain.MemberBadge;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.link.Link;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.domain.member.MemberIdentifier;
+import com.depromeet.articlereminder.dto.member.AppleMemberIdResponse;
 import com.depromeet.articlereminder.dto.member.UserMyPageResponse;
 import com.depromeet.articlereminder.exception.LinkNotFoundException;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
 import com.depromeet.articlereminder.repository.MemberRepository;
+import com.depromeet.articlereminder.service.impl.MemberBadgeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,7 @@ public class MemberService {
     private final LinkService linkService;
     private final AlarmService alarmService;
     private final MemberBadgeService memberBadgeService;
+    private final MemberIdentifierService memberIdentifierService;
 
     /**
      * 회원 가입
@@ -90,7 +97,7 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId).stream()
                 .filter(member -> loginId.equals(member.getLoginId()))
                 .findAny()
-                .orElseThrow(() -> new UserNotFoundException());
+                .orElse(null);
     }
 
     @Transactional
@@ -139,5 +146,17 @@ public class MemberService {
     public Page<MemberBadge> getMemberBadges(Long userId, Pageable pageable) {
         Member member = findById(userId);
         return memberBadgeService.findMemberBadgesByUserId(member, pageable);
+    }
+
+
+    @Transactional
+    public AppleMemberIdResponse getLoginId(String userIdentifier) {
+        MemberIdentifier identifier = memberIdentifierService.getLoginIdByUserIdentifier(userIdentifier);
+
+        Long loginId = identifier.getLoginId();
+
+        Member member = findByLoginId(loginId);
+
+        return new AppleMemberIdResponse(loginId, (member == null) ? null : member.getName());
     }
 }

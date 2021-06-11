@@ -5,6 +5,7 @@ import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.domain.member.MemberStatus;
 import com.depromeet.articlereminder.dto.*;
+import com.depromeet.articlereminder.dto.member.AppleMemberIdResponse;
 import com.depromeet.articlereminder.dto.member.PushTokenRequest;
 import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 
 
 @Api(tags = {"members"})
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/v1/members")
 public class MemberController {
@@ -64,16 +65,33 @@ public class MemberController {
         }
     }
 
+//    @ApiOperation("로그아웃")
+//    @PutMapping("logout")
+//    @Transactional
+//    public ResponseEntity<Object> logout(@RequestBody MemberLoginDTO userDto) {
+//        // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
+//        Member user = memberService.findByLoginId(userDto.getLoginId());
+//        user.setMemberStatus(MemberStatus.LOGOUT);
+//        user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
+//        memberService.update(user);
+//        return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
+//    }
+
     @ApiOperation("로그아웃")
     @PutMapping("logout")
     @Transactional
-    public ResponseEntity<Object> logout(@RequestBody MemberLoginDTO userDto) {
+    public ResponseEntity<Object> logout(@RequestHeader("loginId") Long loginId) {
         // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
-        Member user = memberService.findByLoginId(userDto.getLoginId());
+        Member user = memberService.findByLoginId(loginId);
+
         user.setMemberStatus(MemberStatus.LOGOUT);
+
+        // TODO 로그아웃 시 토큰 만료 시키도록 변경 필요
         user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
+
         memberService.update(user);
-        return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
+
+        return ResponseHandler.generateResponse("로그아웃되었습니다.", "203", null);
     }
 
     @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 loginId로 삭제 부탁드려요")
@@ -93,4 +111,12 @@ public class MemberController {
 
         return ResponseHandler.generateResponse("사용자의 pushToken이 업데이트되었습니다.", "203", userAssembler.toLoginResponse(member));
     }
+
+    @ApiOperation("Sign in with Apple 을 위한 loginId <--> userIdentifier 매핑 API (임시)")
+    @GetMapping(value = "/mapping")
+    public ResponseEntity<Object> getLoginIdForAppleUser(@RequestHeader("userIdentifier") String userIdentifier) {
+        AppleMemberIdResponse loginId = memberService.getLoginId(userIdentifier);
+        return ResponseHandler.generateResponse("userIdentifier " + userIdentifier + "에 해당하는 loginId를 조회하는데 성공했습니다.", "200", loginId);
+    }
+
 }

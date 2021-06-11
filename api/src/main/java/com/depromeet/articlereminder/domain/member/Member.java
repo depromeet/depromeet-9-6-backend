@@ -3,7 +3,6 @@ package com.depromeet.articlereminder.domain.member;
 import com.depromeet.articlereminder.domain.BaseEntity;
 import com.depromeet.articlereminder.domain.MemberBadge;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,7 +25,6 @@ public class Member extends BaseEntity {
 
     //20210607 topojs8 oauth 인증시 메일 비동의 할수 있어서 email -> long값으로 대체
     private Long loginId;
-    //private String email; // 이메일
 
     private String name; // 닉네임
 
@@ -49,15 +47,6 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private MemberStatus memberStatus;
-
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "member")
-//    private List<Link> links = new ArrayList<>(); // 멤버 <--> 링크 양방향 연관관계
-
-//    @JsonIgnore
-//    @OneToMany(mappedBy = "member")
-//    private List<Alarm> alarms = new ArrayList<>(); // 멤버 <--> 알람 양방향 연관관계
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberBadge> memberBadges = new ArrayList<>(); // 멤버 <--> 뱃지 양방향 연관관계
