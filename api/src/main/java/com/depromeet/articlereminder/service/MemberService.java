@@ -90,7 +90,7 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId).stream()
                 .filter(member -> loginId.equals(member.getLoginId()))
                 .findAny()
-                .orElse(null);
+                .orElseThrow(() -> new UserNotFoundException());
     }
 
     @Transactional
