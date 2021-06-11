@@ -1,8 +1,9 @@
 package com.depromeet.articlereminder.controller.ranking;
 
+import com.depromeet.articlereminder.common.ResponseHandler;
 import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
-import com.depromeet.articlereminder.dto.badge.BadgeResponse;
+import com.depromeet.articlereminder.dto.badge.BadgeDTO;
 import com.depromeet.articlereminder.dto.ranking.RankingResponse;
 import com.depromeet.articlereminder.dto.ranking.UserRankingResponse;
 import io.swagger.annotations.Api;
@@ -10,6 +11,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -28,9 +30,9 @@ public class RankingController {
             @ApiImplicitParam(name = "userId", value = "userId", required = true, paramType = "header")
     })
     @GetMapping("")
-    public BaseResponse<RankingResponse> getRanking(@RequestHeader(name = "Authorization") String authorization,
-                                                    @RequestHeader(name = "userId") Long userId) {
-        BadgeResponse pointBadge = BadgeResponse.builder()
+    public ResponseEntity<Object> getRanking(@RequestHeader(name = "Authorization") String authorization,
+                                                      @RequestHeader(name = "userId") Long userId) {
+        BadgeDTO pointBadge = BadgeDTO.builder()
                 .badgeId(1L)
                 .badgeName("0~500 포인트 뱃지")
                 .badgeURL("https://s3-alpha-sig.figma.com/img/14e9/9e13/1932c8a44e20ccbc191fb7d9976b8dc9?Expires=1621209600&Signature=OgaQ2TVqUg8niOuCrSYD8DX7LxzEv2jGvGgeUQNg~CSdE0mq9yz~6b788lC2dO1zFj5R~fXnnfIBsA6FX4x9vzcnIqOrmtVCthwXyJ5AmZBLWedvH9cra5bqF~Up36-Tbym7TVKHvFzATtgCOKX4xzsCD234EGD~y5r9bHiEdS8Z3cINvEt5MW2mZx19-Gi4qXe~l0G-wRNjZdGkUd5ygMSAi8ZwGsad2UuYW8IPAUVAF0aZD19ElsZAWKuarxzLehUiN7MWpKFGTAKoPXl2kybOfw2n3H9MtNqzEcg0GBGT60l6WpZ7LKU7aVpCtip-itDcFkA9ZHc1hysvO~-mdg__&Key-Pair-Id=APKAINTVSUGEWH5XD5UA")
@@ -123,7 +125,7 @@ public class RankingController {
         List<UserRankingResponse> ranks = Stream.of(top1, top2, top3, top4, top5, top6, top7, top8, top9, top10).collect(Collectors.toList());
 
 
-        return BaseResponse.of("202", "랭킹 조회에 성공했습니다.",
+        return ResponseHandler.generateResponse("랭킹 조회에 성공했습니다.","200",
                 RankingResponse.builder()
                         .rank(150)
                         .userId(20L)

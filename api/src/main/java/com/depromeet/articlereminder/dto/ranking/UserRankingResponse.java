@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.dto.ranking;
 
+import com.depromeet.articlereminder.dto.badge.BadgeDTO;
 import com.depromeet.articlereminder.dto.badge.BadgeResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -41,5 +42,5 @@ public class UserRankingResponse {
             position = 4)
     private Long seasonCount; // 이번 시즌 읽은 개수
 
-    private BadgeResponse badge; // 사용자의 포인트 뱃지
+    private BadgeDTO badge; // 사용자의 포인트 뱃지
 }

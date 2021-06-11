@@ -1,16 +1,13 @@
 package com.depromeet.articlereminder.controller.member;
 
 import com.depromeet.articlereminder.common.ResponseHandler;
-import com.depromeet.articlereminder.domain.BaseResponse;
 import com.depromeet.articlereminder.domain.MemberBadge;
-import com.depromeet.articlereminder.domain.badge.BadgeCategory;
+import com.depromeet.articlereminder.domain.badge.BadgeHistoryResponse;
 import com.depromeet.articlereminder.domain.member.Member;
-import com.depromeet.articlereminder.dto.badge.BadgeDTO;
 import com.depromeet.articlereminder.dto.badge.BadgeResponse;
+import com.depromeet.articlereminder.dto.member.PushAlarmStatusResponse;
 import com.depromeet.articlereminder.dto.member.UserMyPageResponse;
-import com.depromeet.articlereminder.repository.BadgeRepository;
 import com.depromeet.articlereminder.service.MemberService;
-import com.depromeet.articlereminder.service.impl.MemberBadgeService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
@@ -18,10 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 @Api(tags = {"members"})
 @RestController
 @RequiredArgsConstructor
@@ -59,7 +52,7 @@ public class MyPageController {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<MemberBadge> badges = memberService.getMemberBadges(userId, pageable);
-        Page<BadgeResponse> badgeMap = badges.map(BadgeResponse::new);
+        Page<BadgeHistoryResponse> badgeMap = badges.map(BadgeHistoryResponse::new);
         return ResponseHandler.generateResponse("사용자 뱃지 리스트 조회에 성공했습니다.","200", badgeMap);
     }
 
@@ -81,8 +74,9 @@ public class MyPageController {
                                                                 @RequestParam(required = true) String alarmEnabled) {
 
         Member updatedMember = memberService.updateAlarmStatus(userId, alarmEnabled);
-        UserMyPageResponse userMyPageResponse = new UserMyPageResponse(updatedMember);
-        return ResponseHandler.generateResponse("푸시 알람 활성화 여부 등록에 성공했습니다.", "201",userMyPageResponse);
+        PushAlarmStatusResponse userMyPageResponse = new PushAlarmStatusResponse(updatedMember);
+        String enabledFlag = alarmEnabled.equalsIgnoreCase("T") ? "활성화" : "비활성화";
+        return ResponseHandler.generateResponse("푸시 알람 " + enabledFlag + " 등록에 성공했습니다.", "201",userMyPageResponse);
     }
 
 
