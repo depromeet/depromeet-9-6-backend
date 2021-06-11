@@ -90,7 +90,7 @@ public class LinkController {
                                                 @PathVariable Long linkId) {
         Link link = linkService.getLink(linkId);
         LinkResponse linkResponse = new LinkResponse(link);
-        return ResponseHandler.generateResponse("링크 상세 조회에 성공했습니다.", "202", linkResponse);
+        return ResponseHandler.generateResponse("링크 상세 조회에 성공했습니다.", "200", linkResponse);
     }
 
     @ApiOperation("특정 링크에 대해 수정합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
@@ -137,7 +137,7 @@ public class LinkController {
                                              @RequestHeader(name = "userId") Long userId,
                                              @PathVariable Long linkId) {
         linkService.deleteLink(userId, linkId);
-        return ResponseHandler.generateResponse(linkId + " 링크 삭제에 성공했습니다.", "204", null);
+        return ResponseHandler.generateResponse("링크 삭제에 성공했습니다.", "204", null);
     }
 
     @ApiOperation("특정 링크에 대해 읽음 완료 표시를 합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
@@ -159,7 +159,7 @@ public class LinkController {
         Long seasonCount = linkService.getReadCountOfSeason(userId);
 
         ReadLinkResponse readLinkResponse = new ReadLinkResponse(completedLink.getStatus().toString().equals("READ"), seasonCount);
-        return ResponseHandler.generateResponse( linkId + " 링크 읽음 완료 표시에 성공하였습니다.","203", readLinkResponse);
+        return ResponseHandler.generateResponse( "링크 읽음 완료 표시에 성공하였습니다.","203", readLinkResponse);
     }
 
 
