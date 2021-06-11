@@ -1,6 +1,7 @@
 package com.depromeet.articlereminder.dto.ranking;
 
 
+import com.depromeet.articlereminder.dto.badge.BadgeDTO;
 import com.depromeet.articlereminder.dto.badge.BadgeResponse;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -49,7 +50,7 @@ public class RankingResponse {
             position = 5)
     private String fluctuation; // 지난 시즌 대비 변동 여부 ( +,-,0)
 
-    private BadgeResponse badge; // 사용자의 포인트 뱃지
+    private BadgeDTO badge; // 사용자의 포인트 뱃지
 
     @ApiModelProperty(notes = "이번 시즌 TOP10",
             example = "TOP 10 리스트",

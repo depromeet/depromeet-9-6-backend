@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class HashtagServiceImpl implements HashtagService {
 
-    private HashtagRepository hashtagRepository;
+    private final HashtagRepository hashtagRepository;
 
 //    @Override
 //    public Hashtag getHashtagByName(String name) {
@@ -34,6 +34,7 @@ public class HashtagServiceImpl implements HashtagService {
         }
 
         Hashtag newHashtag = Hashtag.createHashtag(hashtagName);
+
         return hashtagRepository.save(newHashtag);
     }
 

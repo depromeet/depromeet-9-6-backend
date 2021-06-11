@@ -28,9 +28,9 @@ public class Ranking extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
-    private Integer rank; // 순위
+    private int rank; // 순위
 
     private LocalDate baseDt; // 기준 일자
 
-    private Integer count; // 아티클 읽은 개수
+    private int count; // 아티클 읽은 개수
 }
