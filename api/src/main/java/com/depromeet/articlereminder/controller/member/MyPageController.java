@@ -52,7 +52,7 @@ public class MyPageController {
 
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("createdAt").descending());
         Page<MemberBadge> badges = memberService.getMemberBadges(userId, pageable);
-        Page<BadgeResponse> badgeMap = badges.map(BadgeResponse::new);
+        Page<BadgeHistoryResponse> badgeMap = badges.map(BadgeHistoryResponse::new);
         return ResponseHandler.generateResponse("사용자 뱃지 리스트 조회에 성공했습니다.","200", badgeMap);
     }
 
