@@ -93,5 +93,10 @@ public class Member extends BaseEntity {
         this.status = AlarmStatus.ENABLED;
     }
 
+    public Member changePushToken(String pushToken) {
+        this.pushToken = pushToken;
+        return this;
+    }
+
 
 }

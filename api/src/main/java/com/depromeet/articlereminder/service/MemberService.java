@@ -102,6 +102,15 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
+    @Transactional
+    public Member updatePushToken(Long loginId, String pushToken) {
+        Member member = findByLoginId(loginId);
+
+        member.changePushToken(pushToken);
+
+        return memberRepository.save(member);
+    }
+
     /**
      * 어플 알람 활성화 / 비활성화 메서드
      * @param userId

@@ -5,11 +5,12 @@ import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.domain.member.MemberStatus;
 import com.depromeet.articlereminder.dto.*;
+import com.depromeet.articlereminder.dto.member.PushTokenRequest;
 import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -65,6 +66,7 @@ public class MemberController {
 
     @ApiOperation("로그아웃")
     @PutMapping("logout")
+    @Transactional
     public ResponseEntity<Object> logout(@RequestBody MemberLoginDTO userDto) {
         // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
         Member user = memberService.findByLoginId(userDto.getLoginId());
@@ -76,8 +78,19 @@ public class MemberController {
 
     @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 loginId로 삭제 부탁드려요")
     @DeleteMapping("withdraw")
+    @Transactional
     public ResponseEntity<Object> deleteMember(@RequestHeader("loginId") Long loginId) {
         memberService.withdraw(loginId);
         return ResponseHandler.generateResponse( loginId + "에 해당하는 사용자가 삭제되었습니다." , "204", null);
+    }
+
+    @ApiOperation("사용자 FCM pushToken 만료 시 업데이트")
+    @PutMapping(value = "/renewal/pushToken", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @Transactional
+    public ResponseEntity<Object> updatePushToken(@RequestHeader("loginId") Long loginId,
+                                                  PushTokenRequest pushTokenRequest) {
+        Member member = memberService.updatePushToken(loginId, pushTokenRequest.getPushToken());
+
+        return ResponseHandler.generateResponse("사용자의 pushToken이 업데이트되었습니다.", "203", userAssembler.toLoginResponse(member));
     }
 }
