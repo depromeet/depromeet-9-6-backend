@@ -22,6 +22,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final LinkService linkService;
     private final AlarmService alarmService;
+    private final MemberBadgeService memberBadgeService;
 
     /**
      * 회원 가입
@@ -132,5 +133,11 @@ public class MemberService {
     public Member getMyPageUserInfo(Long userId) {
         return memberRepository.findByIdAndGetBadge(userId)
                 .orElseThrow(() -> new UserNotFoundException());
+    }
+
+    @Transactional
+    public Page<MemberBadge> getMemberBadges(Long userId, Pageable pageable) {
+        Member member = findById(userId);
+        return memberBadgeService.findMemberBadgesByUserId(member, pageable);
     }
 }
