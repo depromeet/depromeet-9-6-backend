@@ -37,14 +37,17 @@ public class MemberController {
         // 존재한다면 로그인
         if (!memberService.findMemberCheckByEmail(userDto.getLoginId())) {
             String token = userDto.getToken();
-            user = memberService.findOne(userDto.getUserId());
+
+            // TODO 클라이언트가 종료되어 token이 날아갔을 때, userDto의 token이 공백으로 들어오는 경우, userId 0인 경우 처리
+            user = memberService.findByLoginId(userDto.getLoginId());
 
             if (token != null) {
                 // TODO 카카오 로그인 유효성 검사
-                if (user.getTokenExpiredTime().isBefore(LocalDateTime.now()))
-                return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(user));
+                if (user.getTokenExpiredTime().isBefore(LocalDateTime.now())) {
+                    return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(user));
+                }
             }
-            // 로그인시 만료시간 늘림
+            // 로그인 시 만료시간 늘림
             user = memberService.findByLoginId(userDto.getLoginId());
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
@@ -61,6 +64,8 @@ public class MemberController {
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.setPushToken(userDto.getPushToken());
             memberService.join(user);
+
+            // TODO 사용자 회원가입 시 accessToken 저장
             return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }
     }
