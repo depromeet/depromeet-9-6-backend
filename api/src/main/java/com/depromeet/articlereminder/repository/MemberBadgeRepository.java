@@ -14,7 +14,7 @@ public interface MemberBadgeRepository extends JpaRepository<MemberBadge, Long> 
             value = "select mb from MemberBadge mb join fetch Badge b " +
                     " on mb.badge.id = b.id" +
                     " where mb.member = :member AND b.badgeCategory = 'SEASON'",
-            countQuery = "select count(mb.id) from MemberBadge mb"
+            countQuery = "select count(mb.id) from MemberBadge mb where mb.member = :member AND b.badgeCategory = 'SEASON'"
     )
     Page<MemberBadge> findAllByMember(@Param("member") Member member, Pageable pageable);
 }
