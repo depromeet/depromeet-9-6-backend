@@ -191,7 +191,11 @@ public class LinkServiceImpl implements LinkService {
 
         Long currentCountOfDay = linkRepository.findReadCountOfToday(member, LinkStatus.READ ,formattedString);
 
+        int origin = member.getTotalPoint();
         link.markRead(currentCountOfDay);
+
+        memberBadgeService.changeMemberPointBadge(member, origin ,link.getMember().getTotalPoint());
+
         return linkRepository.save(link);
     }
 
