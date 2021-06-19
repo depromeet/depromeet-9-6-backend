@@ -89,7 +89,7 @@ public class Alarm extends BaseEntity {
         this.notifyTime = notifyTime;
     }
 
-    private void changeAlarmStatus(AlarmStatus status) {
+    public void changeAlarmStatus(AlarmStatus status) {
         this.alarmStatus = status;
     }
 

@@ -8,6 +8,7 @@ import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.depromeet.articlereminder.domain.link.Link;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.util.DateUtil;
 import com.depromeet.articlereminder.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -40,6 +41,9 @@ public class InitDb {
     public void init() throws ParseException {
 //        initService.dbInit1();
         initService.badgeInit();
+//
+//        System.out.printf( "test");
+//        System.out.printf( DateUtil.getStringTOLocalDateTime("07:23").toString());
     }
 
     @Component
