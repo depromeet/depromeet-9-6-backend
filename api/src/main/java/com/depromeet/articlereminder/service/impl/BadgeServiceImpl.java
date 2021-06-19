@@ -19,6 +19,6 @@ public class BadgeServiceImpl implements BadgeService {
 
     @Override
     public Badge getBadge(Long badgeId) {
-        return badgeRepository.findById(badgeId).orElseThrow(() -> new BadgeNotFoundException());
+        return badgeRepository.findById(badgeId).orElseThrow(BadgeNotFoundException::new);
     }
 }

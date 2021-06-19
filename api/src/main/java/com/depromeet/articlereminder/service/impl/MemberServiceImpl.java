@@ -14,16 +14,4 @@ public class MemberServiceImpl {
 
     private final MemberRepository memberRepository;
 
-    /**
-     * 사용자 정보 조회
-     */
-
-
-    /**
-     * 사용자 어플 알람 enable
-     */
-
-    /**
-     * 사용자 뱃지 히스토리 조회
-     */
 }

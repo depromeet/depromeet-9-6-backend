@@ -53,4 +53,9 @@ public class MemberBadge extends BaseEntity { // 뱃지 획득 테이블 Acqusti
         this.member = member;
         this.badge = badge;
     }
+
+    public MemberBadge changeBadge(Badge badge) {
+        this.badge = badge;
+        return this;
+    }
 }

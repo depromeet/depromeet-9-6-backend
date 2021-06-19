@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.*;
 
-@Entity
+//@Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ranking extends BaseEntity {
