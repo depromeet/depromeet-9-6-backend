@@ -165,6 +165,21 @@ public class InitDb {
             em.persist(season3);
             Badge season4 = Badge.createBadge("SEASON_2021_06", "https://link-reminder.s3.ap-northeast-2.amazonaws.com/donut_10000.png", BadgeCategory.SEASON, "2021년 6월", "2021-06");
             em.persist(season4);
+
+
+            Member member = em.find(Member.class, 1L);
+
+            MemberBadge seasonBadge = MemberBadge.createMemberBadge(member, season1);
+            em.persist(seasonBadge);
+
+            MemberBadge seasonBadge2 = MemberBadge.createMemberBadge(member, season2);
+            em.persist(seasonBadge2);
+
+            MemberBadge seasonBadge3 = MemberBadge.createMemberBadge(member, season3);
+            em.persist(seasonBadge3);
+
+            MemberBadge seasonBadge4 = MemberBadge.createMemberBadge(member, season4);
+            em.persist(seasonBadge4);
         }
 
     }
