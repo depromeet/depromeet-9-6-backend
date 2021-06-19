@@ -57,9 +57,6 @@ public class Member extends BaseEntity {
         this.name = name;
     }
 
-    /**
-     * 어플 알림 설정 메서드
-     */
     public Member changeAlarmStatus(AlarmStatus status) {
         this.status = status;
         return this;

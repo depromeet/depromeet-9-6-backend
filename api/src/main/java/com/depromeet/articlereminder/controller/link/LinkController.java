@@ -115,13 +115,6 @@ public class LinkController {
         return ResponseHandler.generateResponse("링크 수정에 성공했습니다.", "203", linkResponse);
     }
 
-    /**
-     * 링크 삭제
-     * @param authorization
-     * @param userId
-     * @param linkId
-     * @return
-     */
     @ApiOperation("특정 링크에 대해 삭제합니다. - 링크 id 필요, 인증이 필요한 요청입니다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
@@ -154,7 +147,7 @@ public class LinkController {
                                                   @RequestHeader(name = "userId") Long userId,
                                                   @PathVariable Long linkId) {
 
-        // TODO 7일 연속 접속 없을 때 포인트 지급
+        // TODO 7일 연속 접속 했을 때 포인트 지급
         Link completedLink = linkService.markAsRead(userId, linkId);
         Long seasonCount = linkService.getReadCountOfSeason(userId);
 

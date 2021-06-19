@@ -63,6 +63,7 @@ public class MemberController {
             user.setMemberStatus(MemberStatus.CREATED);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.setPushToken(userDto.getPushToken());
+
             memberService.join(user);
 
             // TODO 사용자 회원가입 시 accessToken 저장

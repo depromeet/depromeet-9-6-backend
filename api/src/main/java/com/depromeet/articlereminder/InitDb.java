@@ -39,7 +39,7 @@ public class InitDb {
 
     @PostConstruct
     public void init() throws ParseException {
-//        initService.dbInit1();
+        initService.dbInit1();
         initService.badgeInit();
 //
 //        System.out.printf( "test");
@@ -147,8 +147,8 @@ public class InitDb {
         }
 
         public void badgeInit() throws ParseException {
-            Badge badge1 = Badge.createBadge("POINT_0", "https://link-reminder.s3.ap-northeast-2.amazonaws.com/dount_00.png", BadgeCategory.POINT, "0 포인트 획득", null);
-            em.persist(badge1);
+//            Badge badge1 = Badge.createBadge("POINT_0", "https://link-reminder.s3.ap-northeast-2.amazonaws.com/dount_00.png", BadgeCategory.POINT, "0 포인트 획득", null);
+//            em.persist(badge1);
             Badge badge2 = Badge.createBadge("POINT_100", "https://link-reminder.s3.ap-northeast-2.amazonaws.com/donut_100.png", BadgeCategory.POINT, "100 포인트 획득", null);
             em.persist(badge2);
             Badge badge3 = Badge.createBadge("POINT_2000", "https://link-reminder.s3.ap-northeast-2.amazonaws.com/donut_2000.png", BadgeCategory.POINT, "2000 포인트 획득", null);

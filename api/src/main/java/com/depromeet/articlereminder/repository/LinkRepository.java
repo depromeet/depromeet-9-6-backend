@@ -19,19 +19,19 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     // FIXME QueryDSL로 status 동적으로 처리하기
     @Query(
             value = "select l from Link l join fetch l.member where l.member = :member",
-            countQuery = "select count(l.linkURL) from Link l"
+            countQuery = "select count(l.linkURL) from Link l where l.member = :member"
     )
     Page<Link> findByMember(@Param("member") Member member, Pageable pageable);
 
     @Query(
             value = "select l from Link l join fetch l.member where l.member = :member AND l.status = 'READ'",
-            countQuery = "select count(l.linkURL) from Link l"
+            countQuery = "select count(l.linkURL) from Link l where l.member = :member AND l.status = 'READ'"
     )
     Page<Link> findByMemberAndRead(@Param("member") Member member, Pageable pageable);
 
     @Query(
             value = "select l from Link l join fetch l.member where l.member = :member AND l.status = 'UNREAD'",
-            countQuery = "select count(l.linkURL) from Link l"
+            countQuery = "select count(l.linkURL) from Link l where l.member = :member AND l.status = 'UNREAD'"
     )
     Page<Link> findByMemberAndUnread(@Param("member") Member member, Pageable pageable);
 

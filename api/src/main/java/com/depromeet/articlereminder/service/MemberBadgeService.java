@@ -10,4 +10,6 @@ public interface MemberBadgeService {
     Page<MemberBadge> findMemberBadgesByUserId(Member member, Pageable pageable);
 
     void obtainInitialBadge(Member member);
+
+    MemberBadge changeMemberPointBadge(Member member, int origin, int currentPoint);
 }
