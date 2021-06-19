@@ -44,13 +44,6 @@ public class Link extends BaseEntity {
 
     private LocalDateTime completedAt; // 읽음 완료 일시
 
-    /**
-     * 링크 생성 메서드
-     * @param member
-     * @param linkURL
-     * @param linkHashtags
-     * @return
-     */
     public static Link createLink(Member member, String linkURL, List<LinkHashtag> linkHashtags) {
         Link link = new Link();
         link.changeLinkURL(linkURL);
@@ -64,13 +57,6 @@ public class Link extends BaseEntity {
         return link;
     }
 
-    /**
-     * 링크 생성 메서드
-     * @param member
-     * @param linkURL
-     * @param linkHashtags
-     * @return
-     */
     public Link createLink(Member member, String linkURL) {
         Link link = new Link();
         link.changeLinkURL(linkURL);
@@ -84,18 +70,11 @@ public class Link extends BaseEntity {
         return link;
     }
 
-    /***
-     * 링크 - 해시태그 추가
-     * @param hashtag
-     */
     public void addLinkHashtag(LinkHashtag hashtag) {
         linkHashtags.add(hashtag);
         hashtag.changeLink(this);
     }
 
-    /**
-     * 읽음 완료 메서드
-     */
     public Link markRead(Long todayCount) {
         if (this.status == LinkStatus.READ) {
             throw new LinkHasBeenAlreadyReadException();
@@ -106,7 +85,6 @@ public class Link extends BaseEntity {
 
         int point = 100;
 
-        // 5의 배수로 읽은 경우
         if (todayCount > 1 && todayCount % 5 == 1) {
             point += 20;
         }
@@ -134,10 +112,6 @@ public class Link extends BaseEntity {
         return this;
     }
 
-    /**
-     * 링크 삭제
-     * @param member
-     */
     public Link deleteLink(Member member) {
         this.isValidUser(member);
 

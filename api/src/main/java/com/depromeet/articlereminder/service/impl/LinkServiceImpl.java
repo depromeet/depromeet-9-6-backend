@@ -14,6 +14,7 @@ import com.depromeet.articlereminder.repository.LinkHashtagRepository;
 import com.depromeet.articlereminder.repository.LinkRepository;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import com.depromeet.articlereminder.service.LinkService;
+import com.depromeet.articlereminder.service.MemberBadgeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -39,10 +40,8 @@ public class LinkServiceImpl implements LinkService {
     private final LinkRepository linkRepository;
     private final HashtagRepository hashtagRepository;
     private final LinkHashtagRepository linkHashtagRepository;
+    private final MemberBadgeService memberBadgeService;
 
-    /**
-     * 모두 조회
-     */
     @Override
     @Transactional
     public Page<Link> findAllByUserAndStatus(Long userId, String status, Pageable pageable) {
@@ -61,12 +60,6 @@ public class LinkServiceImpl implements LinkService {
         return linkRepository.findByMember(member, pageable);
     }
 
-    /**
-     * 새로운 링크 등록
-     * @param userId
-     * @param linkRequest
-     * @return
-     */
     @Override
     @Transactional
     public Link saveLink(Long userId, LinkRequest linkRequest) {
@@ -112,13 +105,6 @@ public class LinkServiceImpl implements LinkService {
                             .orElseThrow(() -> new LinkNotFoundException(linkId));
     }
 
-    /**
-     * 링크 수정
-     * @param userId
-     * @param linkId
-     * @param linkRequest
-     * @return
-     */
     @Override
     @Transactional
     public Link updateLink(Long userId, Long linkId, LinkRequest linkRequest) {
@@ -154,11 +140,6 @@ public class LinkServiceImpl implements LinkService {
         }
     }
 
-    /**
-     * 링크 삭제
-     * @param userId
-     * @param linkId
-     */
     @Override
     @Transactional
     public void deleteLink(Long userId, Long linkId) {

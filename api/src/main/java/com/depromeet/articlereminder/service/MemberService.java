@@ -26,13 +26,7 @@ public class MemberService {
     private final MemberBadgeService memberBadgeService;
     private final MemberIdentifierService memberIdentifierService;
 
-    /**
-     * 회원 가입
-     *
-     * @param member
-     * @return
-     */
-    @Transactional // default가 false
+    @Transactional
     public Long join(Member member) {
         validateDuplicateMember(member);
         memberRepository.save(member);
@@ -56,36 +50,18 @@ public class MemberService {
         }
         return true;
     }
-    /**
-     * 회원 전체 조회
-     *
-     * @return
-     */
+
     public List<Member> findMembers() {
         return memberRepository.findAll();
     }
 
-    /**
-     * 회원 조회
-     *
-     * @return
-     */
-//    public Member findOne(Long memberId) {
-//        return memberRepository.findById(memberId).get();
-//    }
-
-    @Transactional // 변경 감지로 jpa 영속성 컨텍스트가 관리
+    @Transactional
     public Member update(Member member) {
         Member memberTemp = findById(member.getId());
         member.setToken(member.getToken());
         return memberTemp;
     }
 
-    /**
-     * userId로 사용자 조회
-     * @param userId
-     * @return
-     */
     public Member findById(Long userId) {
         Member member = memberRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("해당 사용자를 찾을 수 없습니다"));
         return member;
@@ -117,12 +93,6 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    /**
-     * 어플 알람 활성화 / 비활성화 메서드
-     * @param userId
-     * @param alarmEnabled
-     * @return
-     */
     public Member updateAlarmStatus(Long userId, String alarmEnabled) {
         Member member = memberRepository.findById(userId)
                 .map(m -> m.changeAlarmStatus(getAlarmEnabled(alarmEnabled)))

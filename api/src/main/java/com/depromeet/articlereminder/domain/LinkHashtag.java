@@ -50,9 +50,6 @@ public class LinkHashtag extends BaseEntity { // contains 테이블
         this.hashtag = hashtag;
     }
 
-    /**
-     * 해시태그 - 링크 연관 관계 삭제
-     */
     public LinkHashtag deleteLinkHashTag() {
         return this;
     }

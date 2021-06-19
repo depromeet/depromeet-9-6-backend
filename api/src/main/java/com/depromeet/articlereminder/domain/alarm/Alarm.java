@@ -42,14 +42,6 @@ public class Alarm extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private RepeatedDate repeatedDate; // 반복 일자
 
-
-    /**
-     * 알람 생성
-     * @param member
-     * @param notifyTime
-     * @param repeatedDate
-     * @return
-     */
     public static Alarm createAlarm(Member member, String notifyTime, String repeatedDate) {
         Alarm alarm = new Alarm();
         alarm.changeAlarmStatus(AlarmStatus.ENABLED);
