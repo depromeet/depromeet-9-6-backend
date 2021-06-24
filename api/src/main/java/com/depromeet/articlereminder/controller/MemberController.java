@@ -86,7 +86,7 @@ public class MemberController {
     @ApiOperation("로그아웃")
     @PutMapping("logout")
     @Transactional
-    public ResponseEntity<Object> logout(@RequestHeader("loginId") Long loginId) {
+    public ResponseEntity<Object> logout(@RequestHeader("loginId") String loginId) {
         // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
         Member user = memberService.findByLoginId(loginId);
 
@@ -103,7 +103,7 @@ public class MemberController {
     @ApiOperation("사용자 삭제 - db에 들어가있는 사용자 삭제하시라고 만든 임시 API 입니다! 로그인에 이용하신 loginId로 삭제 부탁드려요")
     @DeleteMapping("withdraw")
     @Transactional
-    public ResponseEntity<Object> deleteMember(@RequestHeader("loginId") Long loginId) {
+    public ResponseEntity<Object> deleteMember(@RequestHeader("loginId") String loginId) {
         memberService.withdraw(loginId);
         return ResponseHandler.generateResponse( loginId + "에 해당하는 사용자가 삭제되었습니다." , "204", null);
     }
@@ -111,7 +111,7 @@ public class MemberController {
     @ApiOperation("사용자 FCM pushToken 만료 시 업데이트")
     @PutMapping(value = "/renewal/pushToken", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     @Transactional
-    public ResponseEntity<Object> updatePushToken(@RequestHeader("loginId") Long loginId,
+    public ResponseEntity<Object> updatePushToken(@RequestHeader("loginId") String loginId,
                                                   PushTokenRequest pushTokenRequest) {
         Member member = memberService.updatePushToken(loginId, pushTokenRequest.getPushToken());
 

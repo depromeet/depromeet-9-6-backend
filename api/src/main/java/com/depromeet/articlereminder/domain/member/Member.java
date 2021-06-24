@@ -24,7 +24,7 @@ public class Member extends BaseEntity {
     private Long id; // 사용자 id
 
     //20210607 topojs8 oauth 인증시 메일 비동의 할수 있어서 email -> long값으로 대체
-    private Long loginId;
+    private String loginId;
 
     private String name; // 닉네임
 
