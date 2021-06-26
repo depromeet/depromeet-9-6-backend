@@ -58,11 +58,18 @@ public class MemberController {
         } else { // 존재하지 않으면 회원가입
             user.setName(userDto.getName());
             user.setLoginId(userDto.getLoginId());
+
+
+            user.changeDeviceType(userDto.getDeviceType().toUpperCase());
+            user.changeSocialType(userDto.getSocialType().toUpperCase());
+
+
             user.setCreatedAt(LocalDateTime.now());
             user.setStatus(AlarmStatus.ENABLED);
             user.setMemberStatus(MemberStatus.CREATED);
+
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
-            user.setPushToken(userDto.getPushToken());
+            user.changePushToken(userDto.getPushToken());
 
             memberService.join(user);
 

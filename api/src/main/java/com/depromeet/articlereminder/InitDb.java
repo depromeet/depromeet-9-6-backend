@@ -7,7 +7,9 @@ import com.depromeet.articlereminder.domain.badge.Badge;
 import com.depromeet.articlereminder.domain.badge.BadgeCategory;
 import com.depromeet.articlereminder.domain.hashtag.Hashtag;
 import com.depromeet.articlereminder.domain.link.Link;
+import com.depromeet.articlereminder.domain.member.DeviceType;
 import com.depromeet.articlereminder.domain.member.Member;
+import com.depromeet.articlereminder.domain.member.SocialType;
 import com.depromeet.articlereminder.util.SessionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -75,10 +77,12 @@ public class InitDb {
 //        }
 
 
-        private Member createMember(Long loginId, String name, String Token, LocalDateTime TOKEN_EXPIRED_TIME, LocalDateTime TOKEN_START_TIME) {
+        private Member createMember(String loginId, String name, String Token, DeviceType deviceType, SocialType socialType, LocalDateTime TOKEN_EXPIRED_TIME, LocalDateTime TOKEN_START_TIME) {
             Member member = new Member();
             member.setLoginId(loginId);
             member.setName(name);
+            member.setDeviceType(deviceType);
+            member.setSocialType(socialType);
             member.setToken(Token);
             member.setTokenExpiredTime(TOKEN_EXPIRED_TIME);
             member.setTokenStartTime(TOKEN_START_TIME);
@@ -95,11 +99,13 @@ public class InitDb {
             LocalDateTime expired = LocalDateTime.now().plusMonths(3L);
             LocalDateTime start = LocalDateTime.now();
 
-            Member member1 = createMember(123456L, "링줍줍", "depMPdmg9encwSaphKzmRa7k6jzz-VjSte5S9gopcJ8AAAF5a6mGRg",
+            Member member1 = createMember("123456", "링줍줍", "depMPdmg9encwSaphKzmRa7k6jzz-VjSte5S9gopcJ8AAAF5a6mGRg",
+                    DeviceType.AOS, SocialType.KAKAO,
                     expired, start);
             em.persist(member1);
 
-            Member member2 = createMember(567890L, "디프만", "depMPdmg9encwSaphKzmRa7k6jzz-te5S9gopcJ8AAAF5a6mGRasdq",
+            Member member2 = createMember("567890", "디프만", "depMPdmg9encwSaphKzmRa7k6jzz-te5S9gopcJ8AAAF5a6mGRasdq",
+                    DeviceType.IOS, SocialType.KAKAO,
                     expired, start);
             em.persist(member2);
 
