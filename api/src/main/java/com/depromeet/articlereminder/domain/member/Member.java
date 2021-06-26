@@ -98,4 +98,7 @@ public class Member extends BaseEntity {
         this.pushToken = pushToken;
     }
 
+    public void updateLastAccessedAt(LocalDateTime now) {
+        this.lastAccessedAt = now;
+    }
 }
