@@ -40,3 +40,9 @@ out/
 dev_log/
 live_log/
 LOG_FILE_IS_UNDEFINED/
+
+### Secret
+api/src/main/resources/application-live.yml
+api/src/main/resources/application-dev.yml
+api/src/main/resources/application-local.yml
+api/src/main/resources/linkzupzup-firebase-adminsdk-cdcfv-3ab66a888d.json
