@@ -67,7 +67,7 @@ public class LastAccessAtCheckAspect {
 
         
         // Authorization argument만 찾기
-        Member member = memberService.getMemberOnebyAccessToken(modifiedArgs[0].toString());
+        Member member = memberService.findByToken(modifiedArgs[0].toString());
 
         if (member.getTokenExpiredTime().isBefore(LocalDateTime.now())) {
             return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(member));
