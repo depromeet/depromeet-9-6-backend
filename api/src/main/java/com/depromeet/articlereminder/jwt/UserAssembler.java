@@ -40,6 +40,7 @@ public class UserAssembler {
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setUserId(user.getId());
         loginResponse.setToken(jwtService.create(user.getId()));
+        loginResponse.setName(user.getName());
         return loginResponse;
     }
 }
