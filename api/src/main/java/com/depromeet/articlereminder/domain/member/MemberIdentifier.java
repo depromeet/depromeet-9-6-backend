@@ -20,18 +20,18 @@ public class MemberIdentifier extends BaseEntity {
     private Long id;
 
 //    @Column(unique = true)
-    private Long loginId; // 임시 loginId
+    private String loginId; // 임시 loginId
 
     private String appleUserIdentifier; // apple Token
 
     public static MemberIdentifier createMemberLoginId(String appleUserIdentifier) {
         MemberIdentifier mid = new MemberIdentifier();
-        mid.changeLoginId(getRandomNumber());
+        mid.changeLoginId(getRandomNumber().toString());
         mid.changeAppleUserIdentifier(appleUserIdentifier);
         return mid;
     }
 
-    private void changeLoginId(Long loginId) {
+    private void changeLoginId(String loginId) {
         this.loginId = loginId;
     }
 
