@@ -18,8 +18,8 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
     private final String API_URL = "https://fcm.googleapis.com/fcm/send";
-
-    public ResponseEntity<String> sendMessageTo(String FCMToken, String UserToken, String title, String body) throws Exception {
+    private final String FCM_TOKEN = "AAAAbFXwImY:APA91bF2D6vJ9k4qi-TLbZKe8o6cUhSdJkIDl2puals343FpMd5WlQK6d926UW0K4vbWsMrXjvusbTc0el6W3PWT2Hw_qYJrvK-iy6zfFCigO5l76ygLL3yAmYMzajazycT_u9j1qS1S";
+    public ResponseEntity<String> sendMessageTo(String FCMToken, String title, String body) throws Exception {
 
         // create headers
         HttpHeaders headers = new HttpHeaders();
@@ -27,7 +27,7 @@ public class FirebaseCloudMessageService {
         headers.setContentType(org.springframework.http.MediaType.APPLICATION_JSON);
         // set `accept` header
         headers.setAccept(Collections.singletonList(org.springframework.http.MediaType.APPLICATION_JSON));
-        headers.set("Authorization", "key="+UserToken);
+        headers.set("Authorization", "key="+FCM_TOKEN);
 
         AlaramBatchDataDTO alaramBatchDataDTO = new AlaramBatchDataDTO(title, body);
 
