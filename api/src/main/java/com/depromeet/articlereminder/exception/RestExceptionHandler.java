@@ -112,4 +112,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler({IllegalLoginParamException.class})
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalLoginParamException ex) {
+        return new ResponseEntity<>(
+                BaseResponse.of(
+                        "400", ex.getMessage() , null),
+                new HttpHeaders(),
+                HttpStatus.OK
+        );
+    }
+
 }

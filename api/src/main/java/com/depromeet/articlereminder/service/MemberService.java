@@ -127,4 +127,6 @@ public class MemberService {
 
         return new AppleMemberIdResponse(loginId, (member == null) ? null : member.getName());
     }
+
+
 }

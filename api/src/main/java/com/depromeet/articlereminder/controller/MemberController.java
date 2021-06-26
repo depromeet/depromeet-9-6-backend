@@ -2,11 +2,13 @@ package com.depromeet.articlereminder.controller;
 
 import com.depromeet.articlereminder.common.ResponseHandler;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
+import com.depromeet.articlereminder.domain.member.DeviceType;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.domain.member.MemberStatus;
 import com.depromeet.articlereminder.dto.*;
 import com.depromeet.articlereminder.dto.member.AppleMemberIdResponse;
 import com.depromeet.articlereminder.dto.member.PushTokenRequest;
+import com.depromeet.articlereminder.exception.IllegalLoginParamException;
 import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
@@ -49,20 +51,22 @@ public class MemberController {
             }
             // 로그인 시 만료시간 늘림
             user = memberService.findByLoginId(userDto.getLoginId());
+
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.setPushToken(userDto.getPushToken());
             user.setToken(userAssembler.toLoginResponse(user).getToken());
+
             memberService.update(user);
             return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
         } else { // 존재하지 않으면 회원가입
             user.setName(userDto.getName());
             user.setLoginId(userDto.getLoginId());
 
+            user.setToken(userAssembler.toLoginResponse(user).getToken());
 
             user.changeDeviceType(userDto.getDeviceType().toUpperCase());
             user.changeSocialType(userDto.getSocialType().toUpperCase());
-
 
             user.setCreatedAt(LocalDateTime.now());
             user.setStatus(AlarmStatus.ENABLED);
@@ -77,6 +81,12 @@ public class MemberController {
             return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }
     }
+
+//    private boolean isEqualToOriginDeviceType(String current, DeviceType origin) {
+////        if (current.equalsIgnoreCase(origin.toString())) {
+////            throw new IllegalLoginParamException("기존 접근하신 디바이스 타입과");
+////        }
+//    }
 
 //    @ApiOperation("로그아웃")
 //    @PutMapping("logout")
@@ -125,11 +135,11 @@ public class MemberController {
         return ResponseHandler.generateResponse("사용자의 pushToken이 업데이트되었습니다.", "203", userAssembler.toLoginResponse(member));
     }
 
-    @ApiOperation("Sign in with Apple 을 위한 loginId <--> userIdentifier 매핑 API (임시)")
-    @GetMapping(value = "/mapping")
-    public ResponseEntity<Object> getLoginIdForAppleUser(@RequestHeader("userIdentifier") String userIdentifier) {
-        AppleMemberIdResponse loginId = memberService.getLoginId(userIdentifier);
-        return ResponseHandler.generateResponse("userIdentifier " + userIdentifier + "에 해당하는 loginId를 조회하는데 성공했습니다.", "200", loginId);
-    }
+//    @ApiOperation("Sign in with Apple 을 위한 loginId <--> userIdentifier 매핑 API (임시)")
+//    @GetMapping(value = "/mapping")
+//    public ResponseEntity<Object> getLoginIdForAppleUser(@RequestHeader("userIdentifier") String userIdentifier) {
+//        AppleMemberIdResponse loginId = memberService.getLoginId(userIdentifier);
+//        return ResponseHandler.generateResponse("userIdentifier " + userIdentifier + "에 해당하는 loginId를 조회하는데 성공했습니다.", "200", loginId);
+//    }
 
 }
