@@ -67,6 +67,11 @@ public class MemberService {
         return member;
     }
 
+    public Member findByToken(String token) {
+        Member member = memberRepository.findByToken(token).orElseThrow(() -> new UserNotFoundException("해당 사용자를 찾을 수 없습니다"));
+        return member;
+    }
+
     public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId).stream()
                 .filter(member -> loginId.equals(member.getLoginId()))
@@ -127,6 +132,5 @@ public class MemberService {
 
         return new AppleMemberIdResponse(loginId, (member == null) ? null : member.getName());
     }
-
 
 }
