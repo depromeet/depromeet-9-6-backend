@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Log
+dev_log/
+live_log/
+LOG_FILE_IS_UNDEFINED/
