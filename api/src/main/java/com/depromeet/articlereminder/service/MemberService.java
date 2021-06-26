@@ -43,7 +43,7 @@ public class MemberService {
         }
     }
 
-    public boolean findMemberCheckByEmail(long loginId) {
+    public boolean findMemberCheckByEmail(String loginId) {
         List<Member> findMembers = memberRepository.findByLoginId(loginId);
         if (!findMembers.isEmpty()) {
             return false;
@@ -67,13 +67,7 @@ public class MemberService {
         return member;
     }
 
-    public Member findByToken(String token) {
-        Member member = memberRepository.findByToken(token).orElseThrow(() -> new UserNotFoundException("해당 사용자를 찾을 수 없습니다"));
-        return member;
-    }
-
-
-    public Member findByLoginId(Long loginId) {
+    public Member findByLoginId(String loginId) {
         return memberRepository.findByLoginId(loginId).stream()
                 .filter(member -> loginId.equals(member.getLoginId()))
                 .findAny()
@@ -81,7 +75,7 @@ public class MemberService {
     }
 
     @Transactional
-    public void withdraw(Long loginId) {
+    public void withdraw(String loginId) {
         Member member = findByLoginId(loginId);
 
         linkService.deleteUserLinks(member);
@@ -91,7 +85,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Member updatePushToken(Long loginId, String pushToken) {
+    public Member updatePushToken(String loginId, String pushToken) {
         Member member = findByLoginId(loginId);
 
         member.changePushToken(pushToken);
@@ -127,22 +121,10 @@ public class MemberService {
     public AppleMemberIdResponse getLoginId(String userIdentifier) {
         MemberIdentifier identifier = memberIdentifierService.getLoginIdByUserIdentifier(userIdentifier);
 
-        Long loginId = identifier.getLoginId();
+        String loginId = identifier.getLoginId();
 
         Member member = findByLoginId(loginId);
 
         return new AppleMemberIdResponse(loginId, (member == null) ? null : member.getName());
-    }
-
-//    @Transactional
-//    public Page<MemberBadge> getMemberbyAccessToken(String token) {
-//        Member member = findById(token);
-//        return memberBadgeService.findMemberBadgesByUserId(member, pageable);
-//    }
-
-    @Transactional
-    public Member getMemberOnebyAccessToken(String token) {
-        Member member = findByToken(token);
-        return member;
     }
 }

@@ -5,11 +5,11 @@ import lombok.Data;
 @Data
 public class AppleMemberIdResponse {
 
-    private Long loginId;
+    private String loginId;
 
     private String nickName;
 
-    public AppleMemberIdResponse(Long loginId, String nickName) {
+    public AppleMemberIdResponse(String loginId, String nickName) {
         this.loginId = loginId;
         this.nickName = nickName;
     }

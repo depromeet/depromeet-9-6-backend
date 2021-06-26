@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     List<Member> findByName(String name);
-    List<Member> findByLoginId(Long loginId);
+    List<Member> findByLoginId(String loginId);
 
 
     @Query(

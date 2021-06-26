@@ -24,8 +24,14 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id; // 사용자 id
 
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType; // 소셜 로그인 타입
+
+    @Enumerated(EnumType.STRING)
+    private DeviceType deviceType;
+
     //20210607 topojs8 oauth 인증시 메일 비동의 할수 있어서 email -> long값으로 대체
-    private Long loginId;
+    private String loginId;
 
     private String name; // 닉네임
 
@@ -80,10 +86,16 @@ public class Member extends BaseEntity {
         this.status = AlarmStatus.ENABLED;
     }
 
-    public Member changePushToken(String pushToken) {
-        this.pushToken = pushToken;
-        return this;
+    public void changeDeviceType(String deviceType) {
+        this.deviceType = DeviceType.valueOf(deviceType);
     }
 
+    public void changeSocialType(String socialType) {
+        this.socialType = SocialType.valueOf(socialType);
+    }
+
+    public void changePushToken(String pushToken) {
+        this.pushToken = pushToken;
+    }
 
 }

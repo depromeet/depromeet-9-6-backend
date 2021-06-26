@@ -35,7 +35,7 @@ public class HashtagDTO {
     public LocalDateTime createdAt; // 등록 시각 (생성 시각)
 
     public HashtagDTO(LinkHashtag linkHashtag) {
-        hashtagId = linkHashtag.getId();
+        hashtagId = linkHashtag.getHashtag().getId();
         hashtagName = linkHashtag.getHashtag().getName();
         createdAt = linkHashtag.getHashtag().getCreatedAt();
     }
