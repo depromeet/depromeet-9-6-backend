@@ -1,4 +1,4 @@
-package com.depromeet.articlereminder.controller;
+package com.depromeet.articlereminder.controller.schedule;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;

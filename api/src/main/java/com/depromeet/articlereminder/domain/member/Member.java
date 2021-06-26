@@ -6,6 +6,7 @@ import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

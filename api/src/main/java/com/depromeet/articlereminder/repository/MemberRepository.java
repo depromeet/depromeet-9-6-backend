@@ -13,9 +13,17 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByName(String name);
     List<Member> findByLoginId(Long loginId);
 
+
     @Query(
             value = "select m From Member m join fetch m.memberBadges" +
                     " where m.id = :userId"
     )
     Optional<Member> findByIdAndGetBadge(@Param("userId") Long userId);
+
+
+    @Query(
+            value = "select m From Member m" +
+                    " where m.token = :token"
+    )
+    Optional<Member> findByToken(@Param("token") String token);
 }
