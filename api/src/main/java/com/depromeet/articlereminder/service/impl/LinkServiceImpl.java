@@ -232,4 +232,9 @@ public class LinkServiceImpl implements LinkService {
 
         return linkRepository.findReadCountOfSeason(member, LinkStatus.READ, formattedString);
     }
+
+    @Override
+    public List<Link> getLinksByUserId(Member member) {
+        return linkRepository.findByMemberId(member);
+    }
 }

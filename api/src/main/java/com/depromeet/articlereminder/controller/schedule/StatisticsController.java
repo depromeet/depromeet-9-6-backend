@@ -2,8 +2,12 @@ package com.depromeet.articlereminder.controller.schedule;
 
 import com.depromeet.articlereminder.domain.alarm.Alarm;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
+import com.depromeet.articlereminder.domain.link.Link;
+import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.service.AlarmService;
 import com.depromeet.articlereminder.service.FirebaseCloudMessageService;
+import com.depromeet.articlereminder.service.LinkService;
+import com.depromeet.articlereminder.service.MemberService;
 import com.depromeet.articlereminder.util.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,78 +30,45 @@ import java.util.Locale;
 public class StatisticsController {
 
     private final FirebaseCloudMessageService firebaseCloudMessageService;
-    private final AlarmService alarmService;
-    private static final int FRIDAY = 5;
-    private static final int SATURDAY = 6;
-    private static final int SUNDAY = 7;
-    private static final Integer WEEKEND_START_FRIDAY_CUT_OFF_HOUR = 22;
-    private static final Integer WEEKEND_END_SUNDAY_CUT_OFF_HOUR = 23;
-    private static List<Integer> weekendDaysList = Arrays.asList(FRIDAY, SATURDAY, SUNDAY);
+    private final MemberService memberService;
+    private final LinkService linkService;
 
-    // 50초 마다 확인
-    @Scheduled(fixedRateString = "50000", initialDelay = 10000)
-    public ResponseEntity<String> pushFcmMessage() throws Exception {
-
-        List<Alarm> alarmList = alarmService.findAllAlarams();
+    // 일요일 오후 6시에 실행
+    @Scheduled(cron = "0 0 18 * * ?* SUN")
+    public ResponseEntity<String> pushFcmStaticsMessage() throws Exception {
         ResponseEntity<String> response = null;
 
+        List<Member> memberList = memberService.findMembers();
+        LocalTime now = LocalTime.now();
+        for (int i = 0; i < memberList.size(); ++i) {
 
-        for (int i = 0; i < alarmList.size(); ++i) {
-            LocalTime alaramTime = DateUtil.getStringTOLocalDateTime(alarmList.get(i).getNotifyTime());
-            LocalTime now = LocalTime.now();
-            DayOfWeek CurrentDay = DayOfWeek.of(LocalDateTime.now().getDayOfMonth() % 7 + 1);
-            String nowDay = CurrentDay.getDisplayName(TextStyle.FULL, Locale.US).toUpperCase();
-            if (alarmList.get(i).getAlarmStatus() == AlarmStatus.ENABLED) {
-                switch (alarmList.get(i).getRepeatedDate()) {
-                    case EVERYDAY:
-                        if (alaramTime.getHour() == now.getHour() && alaramTime.getMinute() == now.getMinute())
-                            response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                    "링줍 EVERYDAY 알람 입니다", "링크를 봐주세요~");
-                        break;
-                    case WEEKDAYS:
-                        if (nowDay.equals("MONDAY") || nowDay.equals("TUESDAY") || nowDay.equals("WEDNESDAY") || nowDay.equals("THURSDAY") || nowDay.equals("FRIDAY"))
-                            if (alaramTime.getHour() == now.getHour() && alaramTime.getMinute() == now.getMinute())
-                                response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                        "링줍 EVERYDAY 알람 입니다", "링크를 봐주세요~");
-                        break;
-                    case WEEKENDS:
-                        if (nowDay.equals("SATURDAY") || nowDay.equals("SUNDAY"))
-                            if (alaramTime.getHour() == now.getHour() && alaramTime.getMinute() == now.getMinute())
-                                response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                        "링줍 EVERYDAY 알람 입니다", "링크를 봐주세요~");
-                        break;
-                    // TODO 주말 체크 알고리즘
-                    //    case EVERYDAY_EXCEPT_HOLIDAYS:
-                    //        break;
-                    //    case WEEKDAYS_EXCEPT_HOLIDAYS:
-                    //        break;
-                    //    case WEEKENDS_EXCEPT_HOLIDAYS:
-                    //        break;
-                    case TEST:
-                        response = firebaseCloudMessageService.sendMessageTo(alarmList.get(i).getMember().getPushToken(),
-                                "링줍 EVERYDAY 알람 입니다", "링크를 봐주세요~");
-                        break;
+            //members Links
+            List<Link> linkList = linkService.getLinksByUserId(memberList.get(i));
+            for (int j = 0; j<linkList.size(); ++j) {
+                //해당 멤버의 링크가 completed인지 개수 파악 후 발송!
+                int weekReadTotalCount=0;
+                if(linkList.get(j).getCompletedAt().isBefore(ChronoLocalDateTime.from(now))&&
+                        linkList.get(j).getCompletedAt().isAfter(ChronoLocalDateTime.from(now.minusHours(168)))){
+                    weekReadTotalCount+=1;
+                }
 
+                if(weekReadTotalCount>5){
+                    response = firebaseCloudMessageService.sendMessageTo("읽으신 개수입니다."+weekReadTotalCount,
+                            "링줍 통계 알람 입니다", "링크를 봐주세요~");
+                }
+                else if(weekReadTotalCount<5){
+                    response = firebaseCloudMessageService.sendMessageTo("읽으신 개수입니다."+weekReadTotalCount,
+                            "링줍 통계 알람 입니다", "링크를 봐주세요~");
+                } else if (memberList.get(i).getLastAccessedAt().isBefore(ChronoLocalDateTime.from(now.minusHours(120)))) {
+                    response = firebaseCloudMessageService.sendMessageTo("읽으신 개수입니다."+weekReadTotalCount,
+                            "링줍 통계 알람 입니다", "링크를 봐주세요~");
+                }
+                else if (memberList.get(i).getLastAccessedAt().isBefore(ChronoLocalDateTime.from(now.minusHours(120))) && weekReadTotalCount==0) {
+                    response = firebaseCloudMessageService.sendMessageTo("읽으신 개수입니다."+weekReadTotalCount,
+                            "링줍 통계 알람 입니다", "링크를 봐주세요~");
                 }
             }
         }
-
         return response;
-    }
-
-    public static boolean isWeekend(LocalDateTime dateTime) {
-        // System.out.print("Date - "+dateTime+" , ");
-        if (weekendDaysList.contains(dateTime.getDayOfWeek().getValue())) {
-            if (SATURDAY == dateTime.getDayOfWeek().getValue()) {
-                return true;
-            }
-            if (FRIDAY == dateTime.getDayOfWeek().getValue() && dateTime.getHour() >= WEEKEND_START_FRIDAY_CUT_OFF_HOUR) {
-                return true;
-            } else if (SUNDAY == dateTime.getDayOfWeek().getValue() && dateTime.getHour() < WEEKEND_END_SUNDAY_CUT_OFF_HOUR) {
-                return true;
-            }
-        }
-        //Checks if dateTime falls in between Friday's 22:00 GMT and Sunday's 23:00 GMT
-        return false;
     }
 }
