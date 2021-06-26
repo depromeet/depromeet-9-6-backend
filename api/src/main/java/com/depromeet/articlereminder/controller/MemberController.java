@@ -63,8 +63,6 @@ public class MemberController {
             user.setName(userDto.getName());
             user.setLoginId(userDto.getLoginId());
 
-            user.setToken(userAssembler.toLoginResponse(user).getToken());
-
             user.changeDeviceType(userDto.getDeviceType().toUpperCase());
             user.changeSocialType(userDto.getSocialType().toUpperCase());
 
