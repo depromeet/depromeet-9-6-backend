@@ -1,5 +1,6 @@
 package com.depromeet.articlereminder.controller;
 
+import com.depromeet.articlereminder.aop.NoUpdateLastAccessedAt;
 import com.depromeet.articlereminder.common.ResponseHandler;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.member.DeviceType;
@@ -34,6 +35,7 @@ public class MemberController {
     @ApiOperation("로그인시 email로 회원을 찾고 없다면 가입, 있다면 로그인 하여 토큰을 발급받습니다.")
     @PostMapping("login")
     @Transactional
+    @NoUpdateLastAccessedAt
     public ResponseEntity<Object> login(@RequestBody MemberLoginDTO userDto) {
         Member user = new Member();
         // 존재한다면 로그인
@@ -52,10 +54,13 @@ public class MemberController {
             // 로그인 시 만료시간 늘림
             user = memberService.findByLoginId(userDto.getLoginId());
 
+            // TODO socialType이 바뀌어서 들어오는 경우에 대한 처리 필요 (deviceType은 변경 가능성이 있음)
+
             user.setMemberStatus(MemberStatus.LOGIN);
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.setPushToken(userDto.getPushToken());
             user.setToken(userAssembler.toLoginResponse(user).getToken());
+            user.updateLastAccessedAt(LocalDateTime.now());
 
             memberService.update(user);
             return ResponseHandler.generateResponse("정상 로그인되었습니다", "200", userAssembler.toLoginResponse(user));
@@ -73,30 +78,14 @@ public class MemberController {
             user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
             user.changePushToken(userDto.getPushToken());
 
+            user.updateLastAccessedAt(LocalDateTime.now());
+
             memberService.join(user);
 
             // TODO 사용자 회원가입 시 accessToken 저장
             return ResponseHandler.generateResponse("정상 가입되었습니다.", "201", userAssembler.toLoginResponse(user));
         }
     }
-
-//    private boolean isEqualToOriginDeviceType(String current, DeviceType origin) {
-////        if (current.equalsIgnoreCase(origin.toString())) {
-////            throw new IllegalLoginParamException("기존 접근하신 디바이스 타입과");
-////        }
-//    }
-
-//    @ApiOperation("로그아웃")
-//    @PutMapping("logout")
-//    @Transactional
-//    public ResponseEntity<Object> logout(@RequestBody MemberLoginDTO userDto) {
-//        // 토큰 만료시간을 현재 시간으로 바꿔서 재로그인 유도
-//        Member user = memberService.findByLoginId(userDto.getLoginId());
-//        user.setMemberStatus(MemberStatus.LOGOUT);
-//        user.setTokenExpiredTime(LocalDateTime.now().plusHours(100L));
-//        memberService.update(user);
-//        return ResponseHandler.generateResponse("로그아웃되었습니다.", "204", userAssembler.toLoginResponse(user));
-//    }
 
     @ApiOperation("로그아웃")
     @PutMapping("logout")

@@ -35,11 +35,12 @@ public class LastAccessAtCheckAspect {
 
 
     //except schedule controller
-    @Pointcut("execution(* com.depromeet.articlereminder.controller.*.*(..))" +
+    @Pointcut("!@annotation(com.depromeet.articlereminder.aop.NoUpdateLastAccessedAt) && (execution(* com.depromeet.articlereminder.controller.*.*(..))" +
             "|| execution(* com.depromeet.articlereminder.controller.member.*.*(..))" +
             "|| execution(* com.depromeet.articlereminder.controller.ranking.*.*(..))" +
             "|| execution(* com.depromeet.articlereminder.controller.link.*.*(..))" +
-            "|| execution(* com.depromeet.articlereminder.controller.alarm.*.*(..))")
+            "|| execution(* com.depromeet.articlereminder.controller.alarm.*.*(..))" +
+            ")")
     public void updateAccessAt() throws Throwable {
 
     }
@@ -47,33 +48,19 @@ public class LastAccessAtCheckAspect {
     @Around("updateAccessAt()")
     public Object doAccessAt(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String header = request.getHeader("Authorization");
 
-        Object[] modifiedArgs = proceedingJoinPoint.getArgs();
+        String accessToken = header.split(" ")[1];
 
-        Long id = null;
-        String token = null;
-        String parameterName;
+        Member member = memberService.findByToken(accessToken);
 
-        MethodSignature signature = (MethodSignature) proceedingJoinPoint.getSignature();
-        Method method = signature.getMethod();
-
-        for (int i = 0; i < method.getParameters().length; i++) {
-            parameterName = method.getParameters()[i].getName();
-            if (parameterName.equals("userId"))
-                id = (Long) modifiedArgs[i];
-            if (parameterName.equals("token"))
-                token = (String) modifiedArgs[i];
-        }
-
-        
-        // Authorization argument만 찾기
-        Member member = memberService.findByToken(modifiedArgs[0].toString());
+        member.updateLastAccessedAt(LocalDateTime.now());
 
         if (member.getTokenExpiredTime().isBefore(LocalDateTime.now())) {
             return ResponseHandler.generateResponse("토큰시간이 만료되었습니다. 재로그인 해주세요","403", userAssembler.toLoginResponse(member));
         }
 
-        return proceedingJoinPoint.proceed(modifiedArgs);
+        return proceedingJoinPoint.proceed();
 
     }
 }
