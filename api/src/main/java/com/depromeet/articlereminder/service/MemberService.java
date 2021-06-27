@@ -3,8 +3,6 @@ package com.depromeet.articlereminder.service;
 import com.depromeet.articlereminder.domain.MemberBadge;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
 import com.depromeet.articlereminder.domain.member.Member;
-import com.depromeet.articlereminder.domain.member.MemberIdentifier;
-import com.depromeet.articlereminder.dto.member.AppleMemberIdResponse;
 import com.depromeet.articlereminder.exception.UserNotFoundException;
 import com.depromeet.articlereminder.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +22,6 @@ public class MemberService {
     private final LinkService linkService;
     private final AlarmService alarmService;
     private final MemberBadgeService memberBadgeService;
-    private final MemberIdentifierService memberIdentifierService;
 
     @Transactional
     public Long join(Member member) {
@@ -119,18 +116,6 @@ public class MemberService {
     public Page<MemberBadge> getMemberBadges(Long userId, Pageable pageable) {
         Member member = findById(userId);
         return memberBadgeService.findMemberBadgesByUserId(member, pageable);
-    }
-
-
-    @Transactional
-    public AppleMemberIdResponse getLoginId(String userIdentifier) {
-        MemberIdentifier identifier = memberIdentifierService.getLoginIdByUserIdentifier(userIdentifier);
-
-        String loginId = identifier.getLoginId();
-
-        Member member = findByLoginId(loginId);
-
-        return new AppleMemberIdResponse(loginId, (member == null) ? null : member.getName());
     }
 
 }

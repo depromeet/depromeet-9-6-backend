@@ -3,20 +3,16 @@ package com.depromeet.articlereminder.controller;
 import com.depromeet.articlereminder.aop.NoUpdateLastAccessedAt;
 import com.depromeet.articlereminder.common.ResponseHandler;
 import com.depromeet.articlereminder.domain.alarm.AlarmStatus;
-import com.depromeet.articlereminder.domain.member.DeviceType;
 import com.depromeet.articlereminder.domain.member.Member;
 import com.depromeet.articlereminder.domain.member.MemberStatus;
 import com.depromeet.articlereminder.dto.*;
-import com.depromeet.articlereminder.dto.member.AppleMemberIdResponse;
 import com.depromeet.articlereminder.dto.member.PushTokenRequest;
-import com.depromeet.articlereminder.exception.IllegalLoginParamException;
 import com.depromeet.articlereminder.jwt.UserAssembler;
 import com.depromeet.articlereminder.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -121,12 +117,5 @@ public class MemberController {
 
         return ResponseHandler.generateResponse("사용자의 pushToken이 업데이트되었습니다.", "203", userAssembler.toLoginResponse(member));
     }
-
-//    @ApiOperation("Sign in with Apple 을 위한 loginId <--> userIdentifier 매핑 API (임시)")
-//    @GetMapping(value = "/mapping")
-//    public ResponseEntity<Object> getLoginIdForAppleUser(@RequestHeader("userIdentifier") String userIdentifier) {
-//        AppleMemberIdResponse loginId = memberService.getLoginId(userIdentifier);
-//        return ResponseHandler.generateResponse("userIdentifier " + userIdentifier + "에 해당하는 loginId를 조회하는데 성공했습니다.", "200", loginId);
-//    }
 
 }
