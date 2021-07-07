@@ -24,6 +24,7 @@ logging:
   level:
     org.hibernate.SQL: info
     com.depromeet.articlereminder: debug
+    org.springframework.web.filter.CommonsRequestLoggingFilter: debug
   file:
     name: dev_log
     path: /home/ec2-user/dev/logs
